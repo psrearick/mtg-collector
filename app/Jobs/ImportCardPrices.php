@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Actions\DownloadFileAction;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -30,6 +31,13 @@ class ImportCardPrices implements ShouldQueue
      */
     public function handle()
     {
-        //
+        // Pricing data URL
+        $file = [
+            'url'           => "https://mtgjson.com/api/v5/AllPrices.json",
+            'format'        => 'json',
+            'storage_path'  => 'dumps/pricing',
+        ];
+
+        $save_file_loc = (new DownloadFileAction())->execute($file, 'Ymd', 5);
     }
 }

@@ -34,13 +34,11 @@ class ImportCardData implements ShouldQueue
      */
     public function handle()
     {
-        echo 'running';
-
         // Pricing data URL
         $file = [
-            'url'           => "https://mtgjson.com/api/v5/AllPrices.json",
+            'url'           => "https://mtgjson.com/api/v5/AllPrintings.json",
             'format'        => 'json',
-            'storage_path'  => 'dumps/pricing',
+            'storage_path'  => 'dumps/printings',
         ];
 
         $save_file_loc = (new DownloadFileAction())->execute($file, 'Ymd', 5);

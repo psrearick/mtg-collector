@@ -14,7 +14,7 @@ class DownloadFileAction
     public function execute(array $file, string $date_format = '', int $clean = 0) : string
     {
         // get file name
-        $file_name = $file['name'] ?: $this->getFileName($file, $date_format);
+        $file_name = array_key_exists('name', $file) ? $file['name'] : $this->getFileName($file, $date_format);
 
         // get download directory
         $dir = $this->getFileDirectory($file['storage_path']);
