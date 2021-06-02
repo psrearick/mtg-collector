@@ -39,11 +39,12 @@ class CreateTokensTable extends Migration
             $table->text('originalText')->nullable();
             $table->string('originalType')->nullable();
             $table->string('power')->nullable();
+            $table->integer('price_foil')->nullable();
+            $table->integer('price_normal')->nullable();
             $table->string('promoTypes')->nullable();
             $table->string('scryfallId')->nullable();
             $table->string('scryfallIllustrationId')->nullable();
             $table->string('scryfallOracleId')->nullable();
-            $table->string('setCode')->nullable();
             $table->string('side')->nullable();
             $table->string('tcgplayerProductId')->nullable();
             $table->text('text')->nullable();

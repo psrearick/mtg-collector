@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSetTranslationsTable extends Migration
+class CreateSetableTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateSetTranslationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('set_translations', function (Blueprint $table) {
+        Schema::create('setable', function (Blueprint $table) {
             $table->id();
-            $table->string('language')->nullable();
             $table->unsignedBigInteger('set_id');
-            $table->text('translation')->nullable();
+            $table->unsignedBigInteger('setable_id');
+            $table->string('setable_type');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateSetTranslationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('set_translations');
+        Schema::dropIfExists('setable');
     }
 }
