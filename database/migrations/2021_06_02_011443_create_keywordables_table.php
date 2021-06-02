@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Schema;
 class CreateKeywordablesTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('keywordables');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -20,15 +30,5 @@ class CreateKeywordablesTable extends Migration
             $table->string('keywordable_type');
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('keywordables');
     }
 }

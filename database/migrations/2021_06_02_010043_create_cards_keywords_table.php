@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Schema;
 class CreateCardsKeywordsTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('cards_keywords');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -19,15 +29,5 @@ class CreateCardsKeywordsTable extends Migration
             $table->unsignedBigInteger('token_id');
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('cards_keywords');
     }
 }

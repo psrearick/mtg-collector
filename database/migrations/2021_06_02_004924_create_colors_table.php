@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Schema;
 class CreateColorsTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('colors');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -19,15 +29,5 @@ class CreateColorsTable extends Migration
             $table->string('name')->nullable();
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('colors');
     }
 }

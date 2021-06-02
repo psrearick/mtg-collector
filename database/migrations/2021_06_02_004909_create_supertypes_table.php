@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Schema;
 class CreateSupertypesTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('supertypes');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -18,15 +28,5 @@ class CreateSupertypesTable extends Migration
             $table->string('name');
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('supertypes');
     }
 }

@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Schema;
 class CreateSetsTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('sets');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -36,15 +46,5 @@ class CreateSetsTable extends Migration
             $table->string('type')->nullable();
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('sets');
     }
 }

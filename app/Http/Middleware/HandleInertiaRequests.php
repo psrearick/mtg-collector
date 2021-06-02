@@ -15,17 +15,6 @@ class HandleInertiaRequests extends Middleware
     protected $rootView = 'app';
 
     /**
-     * Determine the current asset version.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return string|null
-     */
-    public function version(Request $request)
-    {
-        return parent::version($request);
-    }
-
-    /**
      * Define the props that are shared by default.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -38,5 +27,16 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
         ]);
+    }
+
+    /**
+     * Determine the current asset version.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return string|null
+     */
+    public function version(Request $request)
+    {
+        return parent::version($request);
     }
 }

@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Schema;
 class CreateForeignDataTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('foreign_data');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -24,15 +34,5 @@ class CreateForeignDataTable extends Migration
             $table->unsignedBigInteger('card_id');
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('foreign_data');
     }
 }

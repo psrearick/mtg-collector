@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Schema;
 class CreateTypeablesTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('typeables');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -20,15 +30,5 @@ class CreateTypeablesTable extends Migration
             $table->string('typeable_type');
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('typeables');
     }
 }

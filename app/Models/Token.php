@@ -10,23 +10,23 @@ class Token extends Model
     protected $guarded = ['id'];
 
     /**
+     * get all cards that use this token
+     *
+     * @return BelongsToMany
+     */
+    public function cards() : BelongsToMany
+    {
+        return $this->belongsToMany(Card::class);
+    }
+
+    /**
      * get all colors this token is assigned to
      *
      * @return MorphToMany
      */
-    public function colors(): MorphToMany
+    public function colors() : MorphToMany
     {
         return $this->morphToMany(Color::class, 'colorable');
-    }
-
-    /**
-     * get the set this token is assigned to
-     *
-     * @return MorphToMany
-     */
-    public function set(): MorphToMany
-    {
-        return $this->morphToMany(Set::class, 'setable');
     }
 
     /**
@@ -34,29 +34,28 @@ class Token extends Model
      *
      * @return MorphToMany
      */
-    public function keywords(): MorphToMany
+    public function keywords() : MorphToMany
     {
         return $this->morphToMany(Keyword::class, 'keywordable');
     }
 
+    /**
+     * get the set this token is assigned to
+     *
+     * @return MorphToMany
+     */
+    public function set() : MorphToMany
+    {
+        return $this->morphToMany(Set::class, 'setable');
+    }
 
     /**
      * get all of this token's types
      *
      * @return MorphToMany
      */
-    public function types(): MorphToMany
+    public function types() : MorphToMany
     {
         return $this->morphToMany(Type::class, 'typeable');
-    }
-
-    /**
-     * get all cards that use this token
-     *
-     * @return BelongsToMany
-     */
-    public function cards(): BelongsToMany
-    {
-        return $this->belongsToMany(Card::class);
     }
 }

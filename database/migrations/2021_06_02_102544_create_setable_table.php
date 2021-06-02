@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Schema;
 class CreateSetableTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('setable');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -20,15 +30,5 @@ class CreateSetableTable extends Migration
             $table->string('setable_type');
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('setable');
     }
 }

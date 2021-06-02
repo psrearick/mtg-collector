@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Schema;
 class CreateVariationsTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('variations');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -19,15 +29,5 @@ class CreateVariationsTable extends Migration
             $table->unsignedBigInteger('variation_id');
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('variations');
     }
 }

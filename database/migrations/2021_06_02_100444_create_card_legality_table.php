@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Schema;
 class CreateCardLegalityTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('card_legality');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -19,15 +29,5 @@ class CreateCardLegalityTable extends Migration
             $table->unsignedBigInteger('legality_id');
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('card_legality');
     }
 }

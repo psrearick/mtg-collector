@@ -13,7 +13,7 @@ class Set extends Model
      *
      * @return HasMany
      */
-    public function cards(): HasMany
+    public function cards() : HasMany
     {
         return $this->hasMany(Card::class);
     }
@@ -23,7 +23,7 @@ class Set extends Model
      *
      * @return HasMany
      */
-    public function tokens(): HasMany
+    public function tokens() : HasMany
     {
         return $this->hasMany(Token::class);
     }

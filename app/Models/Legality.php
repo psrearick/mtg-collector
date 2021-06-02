@@ -13,7 +13,7 @@ class Legality extends Model
      *
      * @return BelongsToMany
      */
-    public function cards(): BelongsToMany
+    public function cards() : BelongsToMany
     {
         return $this->belongsToMany(Card::class);
     }

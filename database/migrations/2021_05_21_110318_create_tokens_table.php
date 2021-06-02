@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Schema;
 class CreateTokensTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('tokens');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -53,15 +63,5 @@ class CreateTokensTable extends Migration
             $table->char('uuid', 36)->unique();
             $table->text('watermark')->nullable();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('tokens');
     }
 }

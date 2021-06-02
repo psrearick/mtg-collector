@@ -16,7 +16,7 @@ class Card extends Model
      *
      * @return MorphToMany
      */
-    public function colors(): MorphToMany
+    public function colors() : MorphToMany
     {
         return $this->morphToMany(Color::class, 'colorable');
     }
@@ -26,9 +26,29 @@ class Card extends Model
      *
      * @return HasMany
      */
-    public function foreignData(): HasMany
+    public function foreignData() : HasMany
     {
         return $this->hasMany(ForeignData::class);
+    }
+
+    /**
+     * get all frame effects for this card
+     *
+     * @return MorphToMany
+     */
+    public function frameEffects() : MorphToMany
+    {
+        return $this->morphToMany(FrameEffect::class, 'frame_effectable');
+    }
+
+    /**
+     * get all keywords for this card
+     *
+     * @return MorphToMany
+     */
+    public function keywords() : MorphToMany
+    {
+        return $this->morphToMany(Keyword::class, 'keywordable');
     }
 
     /**
@@ -36,7 +56,7 @@ class Card extends Model
      *
      * @return BelongsToMany
      */
-    public function legalities(): BelongsToMany
+    public function legalities() : BelongsToMany
     {
         return $this->belongsToMany(Legality::class);
     }
@@ -46,7 +66,7 @@ class Card extends Model
      *
      * @return BelongsToMany
      */
-    public function printings(): BelongsToMany
+    public function printings() : BelongsToMany
     {
         return $this->belongsToMany(Card::class, 'card_card', 'card_id', 'related_card_id');
     }
@@ -56,9 +76,19 @@ class Card extends Model
      *
      * @return HasMany
      */
-    public function rulings(): HasMany
+    public function rulings() : HasMany
     {
         return $this->hasMany(Ruling::class);
+    }
+
+    /**
+     * get the set this card is assigned to
+     *
+     * @return MorphToMany
+     */
+    public function set() : MorphToMany
+    {
+        return $this->morphToMany(Set::class, 'setable');
     }
 
     /**
@@ -66,7 +96,7 @@ class Card extends Model
      *
      * @return MorphToMany
      */
-    public function subtypes(): MorphToMany
+    public function subtypes() : MorphToMany
     {
         return $this->morphToMany(Subtype::class, 'subtypeable');
     }
@@ -76,39 +106,9 @@ class Card extends Model
      *
      * @return MorphToMany
      */
-    public function supertypes(): MorphToMany
+    public function supertypes() : MorphToMany
     {
         return $this->morphToMany(Supertype::class, 'supertypeable');
-    }
-
-    /**
-     * get all of this card's types
-     *
-     * @return MorphToMany
-     */
-    public function types(): MorphToMany
-    {
-        return $this->morphToMany(Type::class, 'typeable');
-    }
-
-    /**
-     * get the set this card is assigned to
-     *
-     * @return MorphToMany
-     */
-    public function set(): MorphToMany
-    {
-        return $this->morphToMany(Set::class, 'setable');
-    }
-
-    /**
-     * get all frame effects for this card
-     *
-     * @return MorphToMany
-     */
-    public function frameEffects(): MorphToMany
-    {
-        return $this->morphToMany(FrameEffect::class, 'frame_effectable');
     }
 
     /**
@@ -116,9 +116,19 @@ class Card extends Model
      *
      * @return BelongsToMany
      */
-    public function tokens(): BelongsToMany
+    public function tokens() : BelongsToMany
     {
         return $this->belongsToMany(Token::class);
+    }
+
+    /**
+     * get all of this card's types
+     *
+     * @return MorphToMany
+     */
+    public function types() : MorphToMany
+    {
+        return $this->morphToMany(Type::class, 'typeable');
     }
 
     /**
@@ -126,18 +136,8 @@ class Card extends Model
      *
      * @return BelongsToMany
      */
-    public function variations(): BelongsToMany
+    public function variations() : BelongsToMany
     {
         return $this->belongsToMany(Card::class, 'variations', 'card_id', 'variation_id');
-    }
-
-    /**
-     * get all keywords for this card
-     *
-     * @return MorphToMany
-     */
-    public function keywords(): MorphToMany
-    {
-        return $this->morphToMany(Keyword::class, 'keywordable');
     }
 }

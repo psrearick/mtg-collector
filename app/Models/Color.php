@@ -13,7 +13,7 @@ class Color extends Model
      *
      * @return MorphToMany
      */
-    public function cards(): MorphToMany
+    public function cards() : MorphToMany
     {
         return $this->morphedByMany(Card::class, 'colorable');
     }
@@ -23,7 +23,7 @@ class Color extends Model
      *
      * @return MorphToMany
      */
-    public function tokens(): MorphToMany
+    public function tokens() : MorphToMany
     {
         return $this->morphedByMany(Token::class, 'colorable');
     }

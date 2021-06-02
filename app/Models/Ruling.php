@@ -13,7 +13,7 @@ class Ruling extends Model
      *
      * @return BelongsTo
      */
-    public function cards(): BelongsTo
+    public function cards() : BelongsTo
     {
         return $this->belongsTo(Card::class);
     }

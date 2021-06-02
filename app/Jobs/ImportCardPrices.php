@@ -36,7 +36,7 @@ class ImportCardPrices implements ShouldQueue
     {
         // Pricing data URL
         $file = [
-            'url'           => "https://mtgjson.com/api/v5/AllPrices.json",
+            'url'           => 'https://mtgjson.com/api/v5/AllPrices.json',
             'format'        => 'json',
             'storage_path'  => 'dumps/pricing',
         ];

@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Schema;
 class CreateCardsTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('cards');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -84,15 +94,5 @@ class CreateCardsTable extends Migration
             $table->text('variations')->nullable();
             $table->text('watermark')->nullable();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('cards');
     }
 }

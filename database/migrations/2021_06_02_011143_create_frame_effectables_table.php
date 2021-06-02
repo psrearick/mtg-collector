@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Schema;
 class CreateFrameEffectablesTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('frame_efectables');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -20,15 +30,5 @@ class CreateFrameEffectablesTable extends Migration
             $table->string('frame_effectable_type');
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('frame_efectables');
     }
 }

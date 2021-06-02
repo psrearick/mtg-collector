@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Schema;
 class CreateCardTokenTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('card_token');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -19,15 +29,5 @@ class CreateCardTokenTable extends Migration
             $table->unsignedBigInteger('token_id');
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('card_token');
     }
 }

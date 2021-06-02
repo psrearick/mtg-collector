@@ -13,7 +13,7 @@ class FrameEffect extends Model
      *
      * @return MorphToMany
      */
-    public function cards(): MorphToMany
+    public function cards() : MorphToMany
     {
         return $this->morphedByMany(Card::class, 'frame_effectable');
     }
