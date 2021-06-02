@@ -16,7 +16,7 @@ class CreateSetTranslationsTable extends Migration
         Schema::create('set_translations', function (Blueprint $table) {
             $table->id();
             $table->string('language')->nullable();
-            $table->string('setCode')->nullable();
+            $table->unsignedBigInteger('set_id');
             $table->text('translation')->nullable();
             $table->timestamps();
         });
