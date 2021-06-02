@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCardPricesTable extends Migration
+class CreateCardTokenTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateCardPricesTable extends Migration
      */
     public function up()
     {
-        Schema::create('card_prices', function (Blueprint $table) {
+        Schema::create('card_token', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->unsignedBigInteger('card_id');
-            $table->float('normal')->nullable();
-            $table->float('foil')->nullable();
+            $table->unsignedBigInteger('token_id');
+            $table->timestamps();
         });
     }
 
@@ -29,6 +28,6 @@ class CreateCardPricesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('card_prices');
+        Schema::dropIfExists('card_token');
     }
 }
