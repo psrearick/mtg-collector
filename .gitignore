@@ -7,6 +7,7 @@
 /storage/dumps
 /vendor
 tools/php-cs-fixer/vendor
+.php-cs-fixer.cache
 .idea
 .env
 .env.backup
