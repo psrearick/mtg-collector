@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->job(new ImportCardData)->everyMinute();
+        $schedule->job(new ImportCardData())->everyMinute();
 //        $schedule->job(new ImportCardPrices)->everyMinute();
     }
 

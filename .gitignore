@@ -6,6 +6,7 @@
 /storage/*.key
 /storage/dumps
 /vendor
+tools/php-cs-fixer/vendor
 .idea
 .env
 .env.backup

@@ -1,17 +1,16 @@
 <?php
 
-
 namespace App\Actions;
-
 
 use Carbon\Carbon;
 
 class DownloadFileAction
 {
     public function __construct()
-    {}
+    {
+    }
 
-    public function execute(array $file, string $date_format = '', int $clean = 0) : string
+    public function execute(array $file, string $date_format = '', int $clean = 0): string
     {
         // get file name
         $file_name = array_key_exists('name', $file) ? $file['name'] : $this->getFileName($file, $date_format);
@@ -29,7 +28,7 @@ class DownloadFileAction
         return $save_file_loc;
     }
 
-    private function saveFile(string $path, string $url) : void
+    private function saveFile(string $path, string $url): void
     {
         // Only create the file if it doesn't exist
         if (file_exists($path)) {
@@ -59,7 +58,7 @@ class DownloadFileAction
      * @param string $date_format
      * @return string
      */
-    private function getFileName(array $file, string $date_format) : string
+    private function getFileName(array $file, string $date_format): string
     {
         $date = '';
         if ($date_format) {
@@ -76,7 +75,7 @@ class DownloadFileAction
      * @param string $path
      * @return string
      */
-    private function getFileDirectory(string $path) : string
+    private function getFileDirectory(string $path): string
     {
         $dir = storage_path($path);
 
@@ -93,7 +92,7 @@ class DownloadFileAction
      * @param int $max
      * @param string $dir
      */
-    private function clean(int $max, string $dir) : void
+    private function clean(int $max, string $dir): void
     {
         if (!($dir && $max) || $max < 1) {
             return;
@@ -104,20 +103,20 @@ class DownloadFileAction
 
         // remove old files
         $count = 1;
-        foreach ($files as $file => $time){
-            if($count > $max){
+        foreach ($files as $file => $time) {
+            if ($count > $max) {
                 unlink($file);
             }
             $count++;
         }
     }
 
-    private function getFilesInDirectory(string $dir) : array
+    private function getFilesInDirectory(string $dir): array
     {
         //get all the files
         $files = array();
-        foreach(scandir($dir) as $file){
-            if(is_file($file)) {
+        foreach (scandir($dir) as $file) {
+            if (is_file($file)) {
                 $files[$file] = filemtime($file);
             }
         }
