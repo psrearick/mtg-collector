@@ -28,11 +28,11 @@ class CreateSetsTable extends Migration
             $table->integer('baseSetSize')->nullable();
             $table->string('block')->nullable();
             $table->string('code', 8)->unique();
-            $table->integer('isFoilOnly')->nullable();
-            $table->integer('isForeignOnly')->nullable();
-            $table->integer('isNonFoilOnly')->nullable();
-            $table->integer('isOnlineOnly')->nullable();
-            $table->integer('isPartialPreview')->nullable();
+            $table->boolean('isFoilOnly')->nullable();
+            $table->boolean('isForeignOnly')->nullable();
+            $table->boolean('isNonFoilOnly')->nullable();
+            $table->boolean('isOnlineOnly')->nullable();
+            $table->boolean('isPartialPreview')->nullable();
             $table->string('keyruneCode')->nullable();
             $table->integer('mcmid')->nullable();
             $table->integer('mcmIdExtras')->nullable();

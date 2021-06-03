@@ -25,7 +25,6 @@ class CreateCardsTable extends Migration
     {
         Schema::create('cards', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->string('name');
             $table->string('artist')->nullable();
             $table->string('asciiName')->nullable();
@@ -48,7 +47,7 @@ class CreateCardsTable extends Migration
             $table->integer('hasContentWarning')->nullable();
             $table->integer('hasFoil')->nullable();
             $table->integer('hasNonFoil')->nullable();
-            $table->string('image_path')->nullable();
+            $table->string('imagePath')->nullable();
             $table->integer('isAlternative')->nullable();
             $table->integer('isFullArt')->nullable();
             $table->integer('isOnlineOnly')->nullable();
@@ -90,9 +89,10 @@ class CreateCardsTable extends Migration
             $table->text('text')->nullable();
             $table->string('toughness')->nullable();
             $table->string('type')->nullable();
-            $table->char('uuid', 36)->unique();
+            $table->string('uuid')->unique();
             $table->text('variations')->nullable();
             $table->text('watermark')->nullable();
+            $table->timestamps();
         });
     }
 }

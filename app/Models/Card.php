@@ -7,19 +7,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
-class Card extends Model
+class Card extends CardGeneric
 {
     protected $guarded = ['id'];
-
-    /**
-     * get all colors this card is assigned to
-     *
-     * @return MorphToMany
-     */
-    public function colors() : MorphToMany
-    {
-        return $this->morphToMany(Color::class, 'colorable');
-    }
 
     /**
      * get all foreign data for this card
@@ -39,16 +29,6 @@ class Card extends Model
     public function frameEffects() : MorphToMany
     {
         return $this->morphToMany(FrameEffect::class, 'frame_effectable');
-    }
-
-    /**
-     * get all keywords for this card
-     *
-     * @return MorphToMany
-     */
-    public function keywords() : MorphToMany
-    {
-        return $this->morphToMany(Keyword::class, 'keywordable');
     }
 
     /**
@@ -82,36 +62,6 @@ class Card extends Model
     }
 
     /**
-     * get the set this card is assigned to
-     *
-     * @return MorphToMany
-     */
-    public function set() : MorphToMany
-    {
-        return $this->morphToMany(Set::class, 'setable');
-    }
-
-    /**
-     * get all subtypes for this card
-     *
-     * @return MorphToMany
-     */
-    public function subtypes() : MorphToMany
-    {
-        return $this->morphToMany(Subtype::class, 'subtypeable');
-    }
-
-    /**
-     * get all supertypes for this card
-     *
-     * @return MorphToMany
-     */
-    public function supertypes() : MorphToMany
-    {
-        return $this->morphToMany(Supertype::class, 'supertypeable');
-    }
-
-    /**
      * get all tokens associated with this card
      *
      * @return BelongsToMany
@@ -119,16 +69,6 @@ class Card extends Model
     public function tokens() : BelongsToMany
     {
         return $this->belongsToMany(Token::class);
-    }
-
-    /**
-     * get all of this card's types
-     *
-     * @return MorphToMany
-     */
-    public function types() : MorphToMany
-    {
-        return $this->morphToMany(Type::class, 'typeable');
     }
 
     /**
