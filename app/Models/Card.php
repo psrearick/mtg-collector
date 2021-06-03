@@ -12,6 +12,16 @@ class Card extends CardGeneric
     protected $guarded = ['id'];
 
     /**
+     * Get the other face of this card
+     *
+     * @return BelongsToMany
+     */
+    public function faces() : BelongsToMany
+    {
+        return $this->belongsToMany(Card::class, 'card_faces', 'card_id', 'related_card_id');
+    }
+
+    /**
      * get all foreign data for this card
      *
      * @return HasMany
@@ -32,13 +42,22 @@ class Card extends CardGeneric
     }
 
     /**
-     * get all legalities for this card
-     *
+     * get all leadership  skill for this cards
      * @return BelongsToMany
      */
-    public function legalities() : BelongsToMany
+    public function leadershipSkills() : BelongsToMany
     {
-        return $this->belongsToMany(Legality::class);
+        return $this->belongsToMany(LeadershipSkill::class);
+    }
+
+    /**
+     * get all legalities for this card
+     *
+     * @return HasMany
+     */
+    public function legalities() : HasMany
+    {
+        return $this->hasMany(Legality::class);
     }
 
     /**

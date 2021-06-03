@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class CardGeneric extends Model
@@ -29,11 +31,11 @@ class CardGeneric extends Model
     /**
      * get the set this card is assigned to
      *
-     * @return MorphToMany
+     * @return BelongsTo
      */
-    public function set() : MorphToMany
+    public function set() : BelongsTo
     {
-        return $this->morphToMany(Set::class, 'setable');
+        return $this->belongsTo(Set::class);
     }
 
     /**

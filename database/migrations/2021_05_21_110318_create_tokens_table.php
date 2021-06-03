@@ -55,6 +55,7 @@ class CreateTokensTable extends Migration
             $table->string('scryfallId')->nullable();
             $table->string('scryfallIllustrationId')->nullable();
             $table->string('scryfallOracleId')->nullable();
+            $table->unsignedBigInteger('set_id')->nullable();
             $table->string('side')->nullable();
             $table->string('tcgplayerProductId')->nullable();
             $table->text('text')->nullable();

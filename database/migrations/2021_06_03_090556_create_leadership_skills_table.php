@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSetableTable extends Migration
+class CreateLeadershipSkillsTable extends Migration
 {
     /**
      * Reverse the migrations.
@@ -13,7 +13,7 @@ class CreateSetableTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('setable');
+        Schema::dropIfExists('leadership_skills');
     }
 
     /**
@@ -23,11 +23,9 @@ class CreateSetableTable extends Migration
      */
     public function up()
     {
-        Schema::create('setable', function (Blueprint $table) {
+        Schema::create('leadership_skills', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('set_id');
-            $table->unsignedBigInteger('setable_id');
-            $table->string('setable_type');
+            $table->string('name');
             $table->timestamps();
         });
     }

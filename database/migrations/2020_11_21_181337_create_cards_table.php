@@ -84,12 +84,13 @@ class CreateCardsTable extends Migration
             $table->string('scryfallId')->nullable();
             $table->string('scryfallIllustrationId')->nullable();
             $table->string('scryfallOracleId')->nullable();
+            $table->unsignedBigInteger('set_id')->nullable();
             $table->string('side')->nullable();
             $table->string('tcgplayerProductId')->nullable();
             $table->text('text')->nullable();
             $table->string('toughness')->nullable();
             $table->string('type')->nullable();
-            $table->string('uuid')->unique();
+            $table->string('uuid')->nullable();
             $table->text('variations')->nullable();
             $table->text('watermark')->nullable();
             $table->timestamps();

@@ -25,7 +25,7 @@ class CreateFrameEffectablesTable extends Migration
     {
         Schema::create('frame_effectables', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('frame_effects_id');
+            $table->unsignedBigInteger('frame_effect_id');
             $table->unsignedBigInteger('frame_effectable_id');
             $table->string('frame_effectable_type');
             $table->timestamps();

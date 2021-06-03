@@ -6,12 +6,14 @@ use App\Actions\DownloadFileAction;
 use App\Models\Card;
 use App\Models\CardGeneric;
 use App\Models\Color;
-use App\Models\FrameEffect;
 use App\Models\Keyword;
+use App\Models\LeadershipSkill;
 use App\Models\Set;
 use App\Models\Subtype;
 use App\Models\Supertype;
 use App\Models\Token;
+use App\Models\Type;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -22,7 +24,6 @@ use pcrov\JsonReader\Exception;
 use pcrov\JsonReader\InputStream\IOException;
 use pcrov\JsonReader\InvalidArgumentException;
 use pcrov\JsonReader\JsonReader;
-use phpDocumentor\Reflection\Type;
 use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
 
@@ -80,12 +81,15 @@ class ImportCardData implements ShouldQueue
             echo 'set: ' . $set->name . PHP_EOL;
 
             foreach ($data['cards'] as $cardData) {
+                echo 'Saving: ' . $set->name . ' - ' . $cardData['name'] . ' [' . Carbon::now()->toDateTimeString() . ']' . PHP_EOL;
                 $card = $this->saveCard($cardData);
-                $set->cards()->attach($card->id);
+                $set->cards()->save($card);
                 $this->attachColors($cardData, $card);
+                $this->attachFaces($cardData, $card);
                 $this->attachForeignData($cardData, $card);
                 $this->attachFrameEffects($cardData, $card);
                 $this->attachKeywords($cardData, $card);
+                $this->attachLeadershipSkills($cardData, $card);
                 $this->attachLegalities($cardData, $card);
                 $this->attachPrintings($cardData, $card);
                 $this->attachRulings($cardData, $card);
@@ -106,7 +110,7 @@ class ImportCardData implements ShouldQueue
             if ($tokens = $this->ifKey($data, 'tokens')) {
                 foreach ($tokens as $tokenData) {
                     $token = $this->saveToken($tokenData);
-                    $set->tokens()->attach($token->id);
+                    $set->tokens()->save($token);
                     $this->attachColors($tokenData, $token);
                     $this->attachKeywords($tokenData, $token);
                     $this->attachSubtypes($tokenData, $token);
@@ -135,10 +139,10 @@ class ImportCardData implements ShouldQueue
     {
         if ($related = $this->ifKey($data, 'reverseRelated')) {
             foreach ($related as $item) {
-                $card = $set->cards()->firstOrCreate([
-                    'name' => $item,
-                ]);
-                $token->cards()->attach($card->id);
+                $card = $set->cards()->where('name', '=', $item)->first();
+                if ($card) {
+                    $token->cards()->attach($card->id);
+                }
             }
         }
     }
@@ -162,6 +166,24 @@ class ImportCardData implements ShouldQueue
     }
 
     /**
+     * Attach an array of faces to a card
+     *
+     * @param array $data
+     * @param CardGeneric $card
+     */
+    private function attachFaces(array $data, CardGeneric $card) : void
+    {
+        if ($faces = $this->ifKey($data, 'otherFaceIds')) {
+            foreach ($faces as $faceUuid) {
+                $face = Card::firstOrCreate([
+                    'uuid' => $faceUuid,
+                ]);
+                $card->faces()->attach($face->id);
+            }
+        }
+    }
+
+    /**
      * Attach an array of foreign data to a card
      *
      * @param array $data
@@ -174,13 +196,13 @@ class ImportCardData implements ShouldQueue
                 $card->foreignData()->updateOrCreate(
                     [
                         'language'     => $foreignData['language'],
-                        'multiverseid' => $foreignData['multiverseId'],
                     ],
                     [
-                        'flavorText'  => $this->ifKey($foreignData, 'flavorText'),
-                        'name'        => $this->ifKey($foreignData, 'name'),
-                        'text'        => $this->ifKey($foreignData, 'text'),
-                        'type'        => $this->ifKey($foreignData, 'type'),
+                        'multiverseid' => $this->ifKey($foreignData, 'multiverseId'),
+                        'flavorText'   => $this->ifKey($foreignData, 'flavorText'),
+                        'name'         => $this->ifKey($foreignData, 'name'),
+                        'text'         => $this->ifKey($foreignData, 'text'),
+                        'type'         => $this->ifKey($foreignData, 'type'),
                     ]
                 );
             }
@@ -197,12 +219,11 @@ class ImportCardData implements ShouldQueue
     {
         if ($frameEffects = $this->ifKey($data, 'frameEffects')) {
             foreach ($frameEffects as $effect) {
-                $frameEffect = FrameEffect::firstOrCreate(
+                $card->frameEffects()->firstOrCreate(
                     [
                         'name' => $effect,
                     ]
                 );
-                $card->frameEffects()->attach($frameEffect);
             }
         }
     }
@@ -223,6 +244,29 @@ class ImportCardData implements ShouldQueue
                 $card->keywords()->attach($keyword->id);
             }
         }
+    }
+
+    /**
+     * attach an array of leadership skills to a card
+     *
+     * @param array $data
+     * @param CardGeneric $card
+     */
+    private function attachLeadershipSkills(array $data, CardGeneric $card) : void
+    {
+        $leadershipSkillsSync = [];
+        if ($leadershipSkills = $this->ifKey($data, 'leadershipSkills')) {
+            foreach ($leadershipSkills as $leadershipSkill => $value) {
+                if (!$value) {
+                    continue;
+                }
+                $skill = LeadershipSkill::firstOrCreate([
+                    'name' => $leadershipSkill,
+                ]);
+                $leadershipSkillsSync[] = $skill->id;
+            }
+        }
+        $card->leadershipSkills()->sync($leadershipSkillsSync);
     }
 
     /**
@@ -406,11 +450,7 @@ class ImportCardData implements ShouldQueue
      */
     private function saveCard(array $data) : Card
     {
-        return Card::updateOrCreate(
-            [
-                'uuid' => $data['uuid'],
-                'name' => $data['name'],
-            ],
+        $fields =
             [
                 'artist'                   => $this->ifKey($data, 'artist'),
                 'asciiName'                => $this->ifKey($data, 'asciiName'),
@@ -441,7 +481,6 @@ class ImportCardData implements ShouldQueue
                 'isTextless'               => $this->ifKey($data, 'isTextless'),
                 'isTimeshifted'            => $this->ifKey($data, 'isTimeshifted'),
                 'layout'                   => $this->ifKey($data, 'layout'),
-                'leadershipSkills'         => $this->ifKey($data, 'leadershipSkills'),
                 'life'                     => $this->ifKey($data, 'life'),
                 'loyalty'                  => $this->ifKey($data, 'loyalty'),
                 'manaCost'                 => $this->ifKey($data, 'manaCost'),
@@ -452,11 +491,11 @@ class ImportCardData implements ShouldQueue
                 'mtgoFoilId'               => $this->recursiveFind($data, 'mtgoFoilId'),
                 'mtgoId'                   => $this->recursiveFind($data, 'mtgoId'),
                 'multiverseId'             => $this->recursiveFind($data, 'multiverseId'),
+                'name'                     => $data['name'],
                 'number'                   => $this->ifKey($data, 'number'),
                 'originalReleaseDate'      => $this->ifKey($data, 'originalReleaseDate'),
                 'originalText'             => $this->ifKey($data, 'originalText'),
                 'originalType'             => $this->ifKey($data, 'originalType'),
-                'otherFaceIds'             => $this->ifKey($data, 'otherFaceIds'),
                 'power'                    => $this->ifKey($data, 'power'),
                 'rarity'                   => $this->ifKey($data, 'rarity'),
                 'scryfallId'               => $this->recursiveFind($data, 'scryfallId'),
@@ -466,9 +505,19 @@ class ImportCardData implements ShouldQueue
                 'tcgplayerProductId'       => $this->recursiveFind($data, 'tcgplayerProductId'),
                 'text'                     => $this->ifKey($data, 'text'),
                 'toughness'                => $this->ifKey($data, 'toughness'),
+                'uuid'                     => $data['uuid'],
                 'watermark'                => $this->ifKey($data, 'watermark'),
-            ]
-        );
+            ];
+
+        $card = Card::where('name', $data['name'])->whereNull('uuid')->first();
+        if (!$card) {
+            $card = Card::where('uuid', $data['uuid'])->whereNull('name')->first();
+        }
+        if (!$card) {
+            return Card::create($fields);
+        }
+
+        return $card->update($fields);
     }
 
     /**
