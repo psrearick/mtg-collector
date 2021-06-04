@@ -50,7 +50,7 @@ class ImportCardData implements ShouldQueue
      * @return void
      * @throws Exception
      */
-    public function handle()
+    public function handle() : void
     {
         // Pricing data URL
         $file = [
@@ -100,10 +100,6 @@ class ImportCardData implements ShouldQueue
                 /*
                  * availability
                  * colorIdentity
-                 * leadershipSkills
-                 * imagePath
-                 * price_foil
-                 * price_normal
                  */
             }
 
@@ -517,7 +513,8 @@ class ImportCardData implements ShouldQueue
             return Card::create($fields);
         }
 
-        return $card->update($fields);
+        $card->update($fields);
+        return $card;
     }
 
     /**

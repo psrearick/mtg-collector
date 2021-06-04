@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -22,7 +21,7 @@ class Card extends CardGeneric
     }
 
     /**
-     * get all foreign data for this card
+     * Get all foreign data for this card
      *
      * @return HasMany
      */
@@ -32,7 +31,7 @@ class Card extends CardGeneric
     }
 
     /**
-     * get all frame effects for this card
+     * Get all frame effects for this card
      *
      * @return MorphToMany
      */
@@ -42,7 +41,7 @@ class Card extends CardGeneric
     }
 
     /**
-     * get all leadership  skill for this cards
+     * Get all leadership  skill for this cards
      * @return BelongsToMany
      */
     public function leadershipSkills() : BelongsToMany
@@ -51,7 +50,7 @@ class Card extends CardGeneric
     }
 
     /**
-     * get all legalities for this card
+     * Get all legalities for this card
      *
      * @return HasMany
      */
@@ -61,7 +60,17 @@ class Card extends CardGeneric
     }
 
     /**
-     * get all printings for this card
+     * Get all prices for this card
+     *
+     * @return HasMany
+     */
+    public function prices() : HasMany
+    {
+        return $this->hasMany(Price::class);
+    }
+
+    /**
+     * Get all printings for this card
      *
      * @return BelongsToMany
      */
@@ -71,7 +80,7 @@ class Card extends CardGeneric
     }
 
     /**
-     * get all rulings for this card
+     * Get all rulings for this card
      *
      * @return HasMany
      */
@@ -81,7 +90,7 @@ class Card extends CardGeneric
     }
 
     /**
-     * get all tokens associated with this card
+     * Get all tokens associated with this card
      *
      * @return BelongsToMany
      */
@@ -91,7 +100,7 @@ class Card extends CardGeneric
     }
 
     /**
-     * get all variations of this card
+     * Get all variations of this card
      *
      * @return BelongsToMany
      */

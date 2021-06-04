@@ -38,7 +38,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->job(new ImportCardData())->hourly();
+        $schedule
+            ->job(new ImportCardData())
+            ->hourly();
 //        $schedule->job(new ImportCardPrices)->everyMinute();
     }
 }
