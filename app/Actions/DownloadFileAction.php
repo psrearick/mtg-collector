@@ -64,7 +64,7 @@ class DownloadFileAction
         $dir = storage_path($path);
 
         if (!is_dir($dir)) {
-            mkdir($dir);
+            mkdir($dir, 0777, true);
         }
 
         return $dir;
