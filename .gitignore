@@ -3,6 +3,7 @@
 /public/storage
 /public/js
 /public/css
+/resources/js/ziggy.js
 /storage/*.key
 /storage/dumps
 /vendor

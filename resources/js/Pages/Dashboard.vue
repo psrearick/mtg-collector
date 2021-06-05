@@ -19,16 +19,16 @@
 </template>
 
 <script>
-    import BreezeAuthenticatedLayout from '@/Layouts/Authenticated'
+import BreezeAuthenticatedLayout from "@/Layouts/Authenticated";
 
-    export default {
-        components: {
-            BreezeAuthenticatedLayout,
-        },
+export default {
+    components: {
+        BreezeAuthenticatedLayout,
+    },
 
-        props: {
-            auth: Object,
-            errors: Object,
-        },
-    }
+    props: {
+        auth: { type: Object, default: () => {} },
+        errors: { type: Object, default: () => {} },
+    },
+};
 </script>
