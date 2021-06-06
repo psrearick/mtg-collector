@@ -21,13 +21,13 @@
           Icon when menu is closed.
           Menu open: "hidden", Menu closed: "block"
         -->
-        <Icon icon="outline-menu" :classes="{ block: !show, hidden: show }" />
+        <Icon icon="outline-menu" :classes="show ? 'hidden' : 'block'" />
 
         <!--
           Icon when menu is open.
           Menu open: "block", Menu closed: "hidden"
         -->
-        <Icon icon="outline-x" :classes="{ hidden: !show, block: show }" />
+        <Icon icon="outline-x" :classes="show ? 'block' : 'hidden'" />
     </button>
 </template>
 

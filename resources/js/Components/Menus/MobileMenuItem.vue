@@ -3,7 +3,7 @@
         :href="href"
         :class="classes"
         :method="method"
-        :type="linkType"
+        :as="linkType"
     >
         <slot />
     </inertia-link>
@@ -35,7 +35,7 @@ export default {
     computed: {
         classes() {
             return (
-                "block px-3 py-2 rounded-md text-base font-medium " +
+                "block w-full text-left px-3 py-2 rounded-md text-base font-medium " +
                 (this.current
                     ? "bg-gray-900 text-white"
                     : "text-gray-300 hover:bg-gray-700 hover:text-white")
