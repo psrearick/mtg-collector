@@ -40,7 +40,8 @@ class Kernel extends ConsoleKernel
     {
         $schedule
             ->job(new ImportCardData())
-            ->weeklyOn(7, '2:00');
-//        $schedule->job(new ImportCardPrices())->dailyAt('2:00');
+            ->weeklyOn(7, '1:00');
+        $schedule->job(new ImportCardPrices())
+            ->dailyAt('2:30');
     }
 }

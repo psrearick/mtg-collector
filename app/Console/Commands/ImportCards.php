@@ -9,18 +9,18 @@ use pcrov\JsonReader\Exception;
 class ImportCards extends Command
 {
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'import:cards';
-
-    /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Run card import job';
+
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'import:cards';
 
     /**
      * Create a new command instance.

@@ -48,7 +48,7 @@ class ImportCardPrices implements ShouldQueue
         ];
 
         // Get file
-        echo "Downloading Pricing Data" . PHP_EOL;
+        echo 'Downloading Pricing Data' . PHP_EOL;
         $save_file_loc = (new DownloadFileAction())->execute($file, 'Ymd', 5);
 
         // Read data
@@ -72,12 +72,13 @@ class ImportCardPrices implements ShouldQueue
 
 //            echo $uuid . PHP_EOL;
 
-            echo "Saving Pricing For: " . $uuid . PHP_EOL;
+            echo 'Saving Pricing For: ' . $uuid . PHP_EOL;
             $card      = Card::firstOrCreate(['uuid' => $uuid]);
             $providers = $this->ifKey($data, 'paper');
 
             if (!$providers) {
                 $reader->next();
+
                 continue;
             }
 
@@ -114,14 +115,14 @@ class ImportCardPrices implements ShouldQueue
             $reader->next();
         }
 
-        echo "Complete" . PHP_EOL;
+        echo 'Complete' . PHP_EOL;
     }
 
     private function getLatestPrice(array $prices) : float
     {
         $mostRecentDate = 0;
         $key            = null;
-        foreach(array_keys($prices) as $date){
+        foreach (array_keys($prices) as $date) {
             $curDate = strtotime($date);
             if ($curDate > $mostRecentDate) {
                 $mostRecentDate = $curDate;

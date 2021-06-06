@@ -514,6 +514,7 @@ class ImportCardData implements ShouldQueue
         }
 
         $card->update($fields);
+
         return $card;
     }
 

@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Schema;
 class CreatePricesTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('prices');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -21,15 +31,5 @@ class CreatePricesTable extends Migration
             $table->boolean('foil');
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('prices');
     }
 }
