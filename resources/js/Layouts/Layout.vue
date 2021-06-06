@@ -7,5 +7,6 @@
 <script>
 export default {
     name: "Layout",
+    title: "MTG Collector",
 };
 </script>

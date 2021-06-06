@@ -41,6 +41,8 @@
 import Logo from "@/Components/Logo";
 
 export default {
+    title: "MTG Collector",
+
     components: {
         Logo,
     },

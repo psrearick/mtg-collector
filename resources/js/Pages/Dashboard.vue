@@ -16,6 +16,10 @@ import Layout from "@/Layouts/Authenticated";
 export default {
     layout: Layout,
 
+    title: "MTG Collector - Dashboard",
+
+    header: "Dashboard",
+
     props: {
         auth: { type: Object, default: () => {} },
         errors: { type: Object, default: () => {} },
