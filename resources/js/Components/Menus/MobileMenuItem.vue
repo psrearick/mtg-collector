@@ -1,10 +1,5 @@
 <template>
-    <inertia-link
-        :href="href"
-        :class="classes"
-        :method="method"
-        :as="linkType"
-    >
+    <inertia-link :href="href" :class="classes" :method="method" :as="linkType">
         <slot />
     </inertia-link>
 </template>

@@ -12,8 +12,9 @@
     >
         <div>
             <inertia-link href="/">
-                <breeze-application-logo
-                    class="w-20 h-20 fill-current text-gray-500"
+                <Logo
+                    classes="w-20 h-20 fill-current text-gray-500"
+                    text-class="text-gray-500 text-xl"
                 />
             </inertia-link>
         </div>
@@ -37,11 +38,11 @@
 </template>
 
 <script>
-import BreezeApplicationLogo from "@/Components/ApplicationLogo";
+import Logo from "@/Components/Logo";
 
 export default {
     components: {
-        BreezeApplicationLogo,
+        Logo,
     },
 };
 </script>

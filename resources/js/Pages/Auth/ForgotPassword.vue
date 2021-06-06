@@ -26,31 +26,37 @@
         </div>
 
         <div class="flex items-center justify-end mt-4">
-            <breeze-button
+            <Button
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
             >
                 Email Password Reset Link
-            </breeze-button>
+            </Button>
+        </div>
+        <div class="flex items-center justify-end mt-2">
+            <inertia-link
+                href="login"
+                class="underline text-sm text-gray-600 hover:text-gray-900"
+            >
+                Remembered you password?
+            </inertia-link>
         </div>
     </form>
 </template>
 
 <script>
-import BreezeButton from "@/Components/Buttons/Button";
-import BreezeGuestLayout from "@/Layouts/Guest";
+import Button from "@/Components/Buttons/Button";
 import BreezeInput from "@/Components/Input";
 import BreezeLabel from "@/Components/Label";
 import BreezeValidationErrors from "@/Components/ValidationErrors";
 
 export default {
     components: {
-        BreezeButton,
+        Button,
         BreezeInput,
         BreezeLabel,
         BreezeValidationErrors,
     },
-    layout: BreezeGuestLayout,
 
     props: {
         auth: { type: Object, default: () => {} },

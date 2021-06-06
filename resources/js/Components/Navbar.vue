@@ -5,7 +5,10 @@
             <div class="relative flex items-center justify-between h-16">
                 <div class="flex items-center px-2 lg:px-0">
                     <inertia-link href="/">
-                        <Logo class="text-gray-300 fill-current" />
+                        <Logo
+                            class="text-gray-300 fill-current"
+                            :show-text="false"
+                        />
                     </inertia-link>
                     <div class="hidden lg:block lg:ml-6">
                         <div class="flex space-x-4">

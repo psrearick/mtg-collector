@@ -14,10 +14,6 @@
 import Layout from "@/Layouts/Authenticated";
 
 export default {
-    components: {
-        Layout,
-    },
-
     layout: Layout,
 
     props: {

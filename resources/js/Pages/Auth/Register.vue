@@ -75,7 +75,6 @@
 
 <script>
 import BreezeButton from "@/Components/Buttons/Button";
-import BreezeGuestLayout from "@/Layouts/Guest";
 import BreezeInput from "@/Components/Input";
 import BreezeLabel from "@/Components/Label";
 import BreezeValidationErrors from "@/Components/ValidationErrors";
@@ -87,7 +86,6 @@ export default {
         BreezeLabel,
         BreezeValidationErrors,
     },
-    layout: BreezeGuestLayout,
 
     props: {
         auth: { type: Object, default: () => {} },
