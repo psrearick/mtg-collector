@@ -26,25 +26,32 @@ Route::get('/', function () {
 })->middleware(RedirectIfAuthenticated::class);
 
 Route::middleware(['auth', 'verified'])->group(function () {
+
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    Route::get('/profile', function () {
-//        return Inertia::render('Profile');
-    })->name('profile');
+    Route::prefix('user')->group(function () {
+        Route::get('/profile', function () {
+            return Inertia::render('User/Profile');
+        })->name('user.profile');
 
-    Route::get('/settings', function () {
-//        return Inertia::render('Settings');
-    })->name('settings');
+        Route::get('/settings', function () {
+            return Inertia::render('User/Settings');
+        })->name('user.settings');
+    });
 
-    Route::get('/collections', function () {
-//        return Inertia::render('Collections');
-    })->name('collections');
+    Route::prefix('collections')->group(function () {
+        Route::get('/collections', function () {
+            return Inertia::render('Collections/Index');
+        })->name('collections.index');
+    });
 
-    Route::get('/cards', function () {
-//        return Inertia::render('Cards');
-    })->name('cards');
+    Route::prefix('cards')->group(function () {
+        Route::get('/cards', function () {
+        return Inertia::render('Cards/Index');
+        })->name('cards.index');
+    });
 });
 
 require __DIR__ . '/auth.php';

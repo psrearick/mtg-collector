@@ -1,15 +1,16 @@
-import HeaderMixin from "@/Shared/Mixins/HeaderMixin";
-
 require("./bootstrap");
 
 import Guest from "@/Layouts/Guest";
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/inertia-vue3";
 import { InertiaProgress } from "@inertiajs/progress";
-import mitt from "mitt";
-import TitleMixin from "@/Shared/Mixins/TitleMixin";
 
+import TitleMixin from "@/Shared/Mixins/TitleMixin";
+import HeaderMixin from "@/Shared/Mixins/HeaderMixin";
+
+import mitt from "mitt";
 const emitter = mitt();
+
 createInertiaApp({
     resolve: (name) => {
         const page = require(`./Pages/${name}`).default;

@@ -53,7 +53,7 @@
                 </div>
                 <div class="lg:block lg:ml-4">
                     <div class="flex items-center">
-                        <notification-button class="hidden lg:block" />
+                        <!--                        <notification-button class="hidden lg:block" />-->
 
                         <!-- Profile dropdown -->
                         <div class="ml-4 relative flex-shrink-0">
@@ -140,7 +140,7 @@
                             </div>
                         </div>
                     </div>
-                    <notification-button />
+                    <!--<notification-button />-->
                 </div>
             </div>
             <mobile-menu-items>
