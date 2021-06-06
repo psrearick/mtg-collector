@@ -1,7 +1,7 @@
 function getHeader(vm) {
     const { header } = vm.$options;
     if (header) {
-        return typeof header === "function" ? header.call(vm) :header;
+        return typeof header === "function" ? header.call(vm) : header;
     }
 }
 export default {

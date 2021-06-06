@@ -10,7 +10,7 @@ import mitt from "mitt";
 import TitleMixin from "@/Shared/Mixins/TitleMixin";
 
 const emitter = mitt();
-const app = createInertiaApp({
+createInertiaApp({
     resolve: (name) => {
         const page = require(`./Pages/${name}`).default;
         page.layout = page.layout || Guest;
