@@ -1,4 +1,4 @@
-<template></template>
+<template><div></div></template>
 
 <script>
 import Layout from "@/Layouts/Authenticated";

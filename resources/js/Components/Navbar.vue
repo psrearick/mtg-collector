@@ -14,19 +14,19 @@
                         <div class="flex space-x-4">
                             <nav-link
                                 :href="route('dashboard')"
-                                :active="route().current('dashboard')"
+                                :active="isRoute('dashboard')"
                             >
                                 Dashboard
                             </nav-link>
                             <nav-link
                                 :href="route('collections.index')"
-                                :active="route().current('collections')"
+                                :active="isRoute('collections.index')"
                             >
                                 Collections
                             </nav-link>
                             <nav-link
                                 :href="route('cards.index')"
-                                :active="route().current('cards')"
+                                :active="isRoute('cards.index')"
                             >
                                 Cards
                             </nav-link>
@@ -192,11 +192,20 @@ export default {
         return {
             mobileMenuOpen: false,
             profileMenuOpen: false,
+            currentRoute: "",
         };
+    },
+    created() {
+        this.emitter.on("currentRoute", (e) => {
+            this.currentRoute = e;
+        });
     },
     methods: {
         logout() {
             axios.post("/logout");
+        },
+        isRoute(checkRoute) {
+            return checkRoute === this.currentRoute;
         },
     },
 };

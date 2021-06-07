@@ -1,3 +1,5 @@
+import ActivePageMixin from "@/Shared/Mixins/ActivePageMixin";
+
 require("./bootstrap");
 
 import Guest from "@/Layouts/Guest";
@@ -22,6 +24,7 @@ createInertiaApp({
             .mixin({ methods: { route } })
             .mixin(TitleMixin)
             .mixin(HeaderMixin)
+            .mixin(ActivePageMixin)
             .use(plugin);
         vueApp.config.globalProperties.emitter = emitter;
         vueApp.mount(el);
