@@ -19,13 +19,13 @@
                                 Dashboard
                             </nav-link>
                             <nav-link
-                                :href="route('collections')"
+                                :href="route('collections.index')"
                                 :active="route().current('collections')"
                             >
                                 Collections
                             </nav-link>
                             <nav-link
-                                :href="route('cards')"
+                                :href="route('cards.index')"
                                 :active="route().current('cards')"
                             >
                                 Cards
@@ -118,10 +118,10 @@
                 <mobile-menu-item href="dashboard">
                     Dashboard
                 </mobile-menu-item>
-                <mobile-menu-item href="collections">
+                <mobile-menu-item href="collections.index">
                     Collections
                 </mobile-menu-item>
-                <mobile-menu-item href="cards"> Cards </mobile-menu-item>
+                <mobile-menu-item href="cards.index"> Cards </mobile-menu-item>
             </mobile-menu-items>
             <div class="pt-4 pb-3 border-t border-gray-700">
                 <div class="flex justify-between px-5">

@@ -8,7 +8,7 @@ export default {
     created() {
         const header = getHeader(this);
         if (header) {
-            this.emitter.emit("pageTitle", "Dashboard");
+            this.emitter.emit("pageTitle", header);
         }
     },
 };

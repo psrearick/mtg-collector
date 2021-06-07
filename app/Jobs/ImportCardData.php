@@ -3,16 +3,16 @@
 namespace App\Jobs;
 
 use App\Actions\DownloadFileAction;
-use App\Models\Card;
-use App\Models\CardGeneric;
-use App\Models\Color;
-use App\Models\Keyword;
-use App\Models\LeadershipSkill;
-use App\Models\Set;
-use App\Models\Subtype;
-use App\Models\Supertype;
-use App\Models\Token;
-use App\Models\Type;
+use App\Domain\Base\Models\Card;
+use App\Domain\Base\Models\CardGeneric;
+use App\Domain\Base\Models\Color;
+use App\Domain\Base\Models\Keyword;
+use App\Domain\Base\Models\LeadershipSkill;
+use App\Domain\Base\Models\Set;
+use App\Domain\Base\Models\Subtype;
+use App\Domain\Base\Models\Supertype;
+use App\Domain\Base\Models\Token;
+use App\Domain\Base\Models\Type;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;

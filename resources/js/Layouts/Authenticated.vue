@@ -37,7 +37,10 @@ export default {
     },
 
     created() {
-        this.emitter.on("pageTitle", (e) => (this.headerText = e));
+        this.emitter.on("pageTitle", (e) => {
+            console.log(e);
+            this.headerText = e;
+        });
     },
 };
 </script>
