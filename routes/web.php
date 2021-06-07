@@ -27,7 +27,6 @@ Route::get('/', function () {
 })->middleware(RedirectIfAuthenticated::class);
 
 Route::middleware(['auth', 'verified'])->group(function () {
-
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
