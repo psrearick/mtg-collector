@@ -3,8 +3,8 @@
 namespace App\Jobs;
 
 use App\Actions\DownloadFileAction;
-use App\Domain\Base\Models\Card;
-use App\Domain\Base\Models\PriceProvider;
+use App\Domain\Cards\Models\Card;
+use App\Domain\Prices\Models\PriceProvider;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

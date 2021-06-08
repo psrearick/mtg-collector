@@ -7,7 +7,7 @@ use App\Domain\CardAttributes\Models\FrameEffect;
 use App\Domain\CardAttributes\Models\LeadershipSkill;
 use App\Domain\CardAttributes\Models\Legality;
 use App\Domain\CardAttributes\Models\Ruling;
-use App\Domain\Price\Models\Price;
+use App\Domain\Prices\Models\Price;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
