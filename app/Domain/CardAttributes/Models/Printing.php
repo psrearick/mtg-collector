@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Domain\CardAttributes\Models;
-
 
 use App\Domain\Base\Models\Model;
 use App\Domain\Sets\Models\Set;

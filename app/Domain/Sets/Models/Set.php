@@ -22,16 +22,6 @@ class Set extends Model
     }
 
     /**
-     * get all tokens in this set
-     *
-     * @return HasMany
-     */
-    public function tokens() : HasMany
-    {
-        return $this->hasMany(Token::class);
-    }
-
-    /**
      * return this cards printing record
      *
      * @return HasMany
@@ -39,5 +29,15 @@ class Set extends Model
     public function printings() : HasMany
     {
         return $this->hasMany(Printing::class);
+    }
+
+    /**
+     * get all tokens in this set
+     *
+     * @return HasMany
+     */
+    public function tokens() : HasMany
+    {
+        return $this->hasMany(Token::class);
     }
 }

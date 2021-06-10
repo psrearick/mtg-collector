@@ -306,7 +306,7 @@ class ImportCardData implements ShouldQueue
 //                ]);
 //                $card->printings()->attach($setPrinting->id);
                 Printing::firstOrCreate([
-                    'set_id'        => $set->id,
+                    'set_id'           => $set->id,
                     'scryfallOracleId' => $card->scryfallOracleId,
                 ]);
             }
@@ -396,9 +396,9 @@ class ImportCardData implements ShouldQueue
         if ($variations = $this->ifKey($data, 'variations')) {
             foreach ($variations as $variation) {
                 $variationCard = Card::where('uuid', $card->uuid)->first();
-               if ($variationCard) {
-                   $card->variations()->attach($variationCard->id);
-               }
+                if ($variationCard) {
+                    $card->variations()->attach($variationCard->id);
+                }
 
 //                $variationCard = Card::firstOrCreate(
 //                    [
