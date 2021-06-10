@@ -6,16 +6,16 @@ use App\Domain\CardAttributes\Models\ForeignData;
 use App\Domain\CardAttributes\Models\FrameEffect;
 use App\Domain\CardAttributes\Models\LeadershipSkill;
 use App\Domain\CardAttributes\Models\Legality;
+use App\Domain\CardAttributes\Models\Printing;
 use App\Domain\CardAttributes\Models\Ruling;
 use App\Domain\Prices\Models\Price;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Support\Collection;
 
 class Card extends CardGeneric
 {
-    protected $guarded = ['id'];
-
     /**
      * Get the other face of this card
      *
@@ -82,7 +82,13 @@ class Card extends CardGeneric
      */
     public function printings() : BelongsToMany
     {
-        return $this->belongsToMany(Card::class, 'card_card', 'card_id', 'related_card_id');
+//        return $this->belongsToMany(Card::class, 'card_card', 'card_id', 'related_card_id');
+        return Card::where('scryfallOracleId', $this->scryfallOracleId)->get();
+    }
+
+    public function printingSets() : Collection
+    {
+        return Printing::where('scryfallOracleId', '=', $this->scryfallOracleId)->get();
     }
 
     /**

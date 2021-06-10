@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PriceProvider extends Model
 {
-    protected $guarded = ['id'];
-
     /**
      * Get all prices provided by this price provider
      *

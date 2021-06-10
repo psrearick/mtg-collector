@@ -1,7 +1,12 @@
 <template>
     <div>
         <Search />
-        <Table class="mt-4" :data="data" :fields="fields" v-model:sort="sort" />
+        <Table
+            v-model:sort="sortFields"
+            class="mt-4"
+            :data="data"
+            :fields="fields"
+        />
     </div>
 </template>
 
@@ -40,12 +45,15 @@ export default {
     data() {
         return {
             tableData: {},
+            sortFields: {},
         };
     },
 
-    methods: {
+    mounted() {
+        this.sortFields = this.sort;
+    },
 
-    }
+    methods: {},
 };
 </script>
 

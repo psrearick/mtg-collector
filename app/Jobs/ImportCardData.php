@@ -5,6 +5,8 @@ namespace App\Jobs;
 use App\Actions\DownloadFileAction;
 use App\Domain\CardAttributes\Models\Color;
 use App\Domain\CardAttributes\Models\Keyword;
+use App\Domain\CardAttributes\Models\LeadershipSkill;
+use App\Domain\CardAttributes\Models\Printing;
 use App\Domain\CardAttributes\Models\Subtype;
 use App\Domain\CardAttributes\Models\Supertype;
 use App\Domain\CardAttributes\Models\Type;
@@ -14,7 +16,6 @@ use App\Domain\Cards\Models\Token;
 use App\Domain\Sets\Models\Set;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -292,14 +293,22 @@ class ImportCardData implements ShouldQueue
     {
         if ($printings = $this->ifKey($data, 'printings')) {
             foreach ($printings as $printing) {
-                if ($printing == $card->set->code) {
+//                if ($printing == $card->set->code) {
+//                    continue;
+//                }
+
+                $set         = Set::where(['code' => $printing])->first();
+                if (!$set) {
                     continue;
                 }
-                $set         = Set::firstOrCreate(['code' => $printing]);
-                $setPrinting = $set->cards()->firstOrCreate([
-                    'name' => $card->name,
+//                $setPrinting = $set->cards()->firstOrCreate([
+//                    'name' => $card->name,
+//                ]);
+//                $card->printings()->attach($setPrinting->id);
+                Printing::firstOrCreate([
+                    'set_id'        => $set->id,
+                    'scryfallOracleId' => $card->scryfallOracleId,
                 ]);
-                $card->printings()->attach($setPrinting->id);
             }
         }
     }
@@ -386,13 +395,20 @@ class ImportCardData implements ShouldQueue
     {
         if ($variations = $this->ifKey($data, 'variations')) {
             foreach ($variations as $variation) {
-                $variationCard = Card::firstOrCreate(
-                    [
-                        'uuid' => $variation,
-                        'name' => $card->name,
-                    ]
-                );
-                $card->variations()->attach($variationCard->id);
+                $variationCard = Card::where('uuid', $card->uuid)->first();
+               if ($variationCard) {
+                   $card->variations()->attach($variationCard->id);
+               }
+
+//                $variationCard = Card::firstOrCreate(
+//                    [
+//                        'uuid' => $variation,
+//                    ],
+//                    [
+//                        'name' => $card->name,
+//                    ]
+//                );
+//                $card->variations()->attach($variationCard->id);
             }
         }
     }
@@ -504,14 +520,16 @@ class ImportCardData implements ShouldQueue
                 'watermark'                => $this->ifKey($data, 'watermark'),
             ];
 
-        $card = Card::where('name', $data['name'])->whereNull('uuid')->first();
+        $card = Card::where('name', $data['name'])->whereNull('mcmid')->first();
         if (!$card) {
-            $card = Card::where('uuid', $data['uuid'])->whereNull('name')->first();
+            $card = Card::where('uuid', $data['uuid'])->first();
         }
         if (!$card) {
             return Card::create($fields);
         }
-
+        if ($card->name && $card->uuid && $card->mcmid) {
+            return $card;
+        }
         $card->update($fields);
 
         return $card;

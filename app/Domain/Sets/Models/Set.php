@@ -3,14 +3,14 @@
 namespace App\Domain\Sets\Models;
 
 use App\Domain\Base\Models\Model;
+use App\Domain\CardAttributes\Models\Printing;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Cards\Models\Token;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Set extends Model
 {
-    protected $guarded = ['id'];
-
     /**
      * get all cards in this set
      *
@@ -29,5 +29,15 @@ class Set extends Model
     public function tokens() : HasMany
     {
         return $this->hasMany(Token::class);
+    }
+
+    /**
+     * return this cards printing record
+     *
+     * @return HasMany
+     */
+    public function printings() : HasMany
+    {
+        return $this->hasMany(Printing::class);
     }
 }

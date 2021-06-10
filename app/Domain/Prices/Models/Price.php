@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Price extends Model
 {
-    protected $guarded = ['id'];
-
     /**
      * Get the card associated with this price
      * @return BelongsTo

@@ -9,8 +9,6 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Keyword extends Model
 {
-    protected $guarded = ['id'];
-
     /**
      * Get all cards with this keyword
      *

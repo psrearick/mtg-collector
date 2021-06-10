@@ -70,10 +70,12 @@ class ImportCardPrices implements ShouldQueue
             $uuid      = $reader->name();
             $data      = $reader->value();
 
-//            echo $uuid . PHP_EOL;
-
+            $card = Card::where('uuid', '=', $uuid)->first();
+            if (!$card) {
+                $reader->next();
+                continue;
+            }
             echo 'Saving Pricing For: ' . $uuid . PHP_EOL;
-            $card      = Card::firstOrCreate(['uuid' => $uuid]);
             $providers = $this->ifKey($data, 'paper');
 
             if (!$providers) {

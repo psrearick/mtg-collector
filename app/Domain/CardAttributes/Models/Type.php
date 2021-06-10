@@ -9,8 +9,6 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Type extends Model
 {
-    protected $guarded = ['id'];
-
     /**
      * Get all cards assigned to this type
      *

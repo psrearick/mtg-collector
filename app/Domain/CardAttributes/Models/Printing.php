@@ -1,20 +1,21 @@
 <?php
 
+
 namespace App\Domain\CardAttributes\Models;
 
-use App\Domain\Base\Models\Model;
-use App\Domain\Cards\Models\Card;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Ruling extends Model
+use App\Domain\Base\Models\Model;
+use App\Domain\Sets\Models\Set;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Printing extends Model
 {
     /**
-     * get the card that owns this ruling
-     *
      * @return BelongsTo
      */
-    public function cards() : BelongsTo
+    public function Set() : BelongsTo
     {
-        return $this->belongsTo(Card::class);
+        return $this->belongsTo(Set::class);
     }
 }

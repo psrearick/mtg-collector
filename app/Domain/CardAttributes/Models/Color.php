@@ -9,8 +9,6 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Color extends Model
 {
-    protected $guarded = ['id'];
-
     /**
      * get all cards assigned to this color
      *

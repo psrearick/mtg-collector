@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Token extends CardGeneric
 {
-    protected $guarded = ['id'];
-
     /**
      * get all cards that use this token
      *

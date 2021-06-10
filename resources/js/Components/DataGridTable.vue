@@ -58,6 +58,10 @@
                                 >
                                     <a
                                         v-if="field.link"
+                                        class="
+                                            text-blue-700
+                                            hover:text-blue-900
+                                        "
                                         href="#"
                                         @click.prevent="click(key, fieldKey)"
                                     >
