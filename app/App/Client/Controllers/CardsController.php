@@ -3,6 +3,7 @@
 namespace App\App\Client\Controllers;
 
 use App\App\Base\Controller;
+use App\Domain\Cards\Models\Card;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -48,7 +49,9 @@ class CardsController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Cards/Index');
+        return Inertia::render('Cards/Index', [
+            'cards' => Card::with('set')->paginate(15),
+        ]);
     }
 
     /**

@@ -2,9 +2,14 @@
     <p v-if="field.type === 'text' || field.type === 'array'">
         {{ fieldValue }}
     </p>
+    <p v-if="field.type === 'currency'">
+        {{ fieldValue }}
+    </p>
 </template>
 
 <script>
+import formatCurrency from "@/shared/api/ConvertValue";
+
 export default {
     name: "DataGridTableField",
 
@@ -21,12 +26,22 @@ export default {
 
     emits: ["click"],
 
+    setup(props) {
+        let value = props.data[props.field.key];
+        if (value && props.field.type === "currency") {
+            value = formatCurrency(value);
+        }
+        return {
+            value,
+        };
+    },
+
     computed: {
         fieldValue() {
             if (this.field.type === "array") {
-                return this.data[this.field.key].join(", ");
+                return this.value.join(", ");
             }
-            return this.data[this.field.key];
+            return this.value;
         },
     },
 

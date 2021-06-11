@@ -1,6 +1,6 @@
 <template>
     <data-grid
-        :data="data"
+        :data="table.data"
         :fields="table.fields"
         :search-term="searchTerm"
         :filter="table.filter"
@@ -19,6 +19,13 @@ export default {
 
     layout: Layout,
 
+    props: {
+        cards: {
+            type: Object,
+            default: () => {},
+        },
+    },
+
     title: "MTG Collector - Card Index",
 
     header: "Cards",
@@ -26,45 +33,8 @@ export default {
     data() {
         return {
             searchTerm: "",
-            data: [
-                {
-                    id: 1,
-                    card_name: "Force of Will",
-                    card_id: 1,
-                    set_name: "EMA",
-                    set_id: 1,
-                    features: ["Foil"],
-                    quantity_collected: 3,
-                    foil_collected: 1,
-                    nonfoil_collected: 2,
-                    edit_collection: "Edit",
-                },
-                {
-                    id: 1,
-                    card_name: "Counterspell",
-                    card_id: 2,
-                    set_name: "MP2",
-                    set_id: 2,
-                    features: ["Foil", "Masterpiece"],
-                    quantity_collected: 1,
-                    foil_collected: 1,
-                    nonfoil_collected: 0,
-                    edit_collection: "Edit",
-                },
-                {
-                    id: 1,
-                    card_name: "Chrome Mox",
-                    card_id: 2,
-                    set_name: "MPS",
-                    set_id: 3,
-                    features: ["Foil", "Masterpiece"],
-                    quantity_collected: 0,
-                    foil_collected: 0,
-                    nonfoil_collected: 0,
-                    edit_collection: "Edit",
-                },
-            ],
             table: {
+                data: [],
                 filter: [],
                 sort: {},
                 fields: [
@@ -95,6 +65,24 @@ export default {
                         label: "Features",
                         key: "features",
                         sortable: false,
+                        filterable: true,
+                    },
+                    {
+                        visible: true,
+                        type: "currency",
+                        link: false,
+                        label: "Non-Foil Price",
+                        key: "price",
+                        sortable: true,
+                        filterable: true,
+                    },
+                    {
+                        visible: true,
+                        type: "currency",
+                        link: false,
+                        label: "Foil Price",
+                        key: "foil_price",
+                        sortable: true,
                         filterable: true,
                     },
                     {
@@ -137,6 +125,24 @@ export default {
                 ],
             },
         };
+    },
+    mounted() {
+        this.table.data = this.cards.data.map((card) => {
+            return {
+                id: card.id,
+                card_name: card.name,
+                card_id: card.id,
+                set_name: card.set.name,
+                set_id: card.set_id,
+                price: card.price_normal,
+                foil_price: card.price_foil,
+                features: [],
+                quantity_collected: 0,
+                foil_collected: 0,
+                nonfoil_collected: 0,
+                edit_collection: "Edit",
+            };
+        });
     },
 };
 </script>
