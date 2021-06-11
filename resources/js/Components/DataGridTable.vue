@@ -127,13 +127,14 @@ export default {
 
     methods: {
         sortField(field) {
+            // eslint-disable-next-line no-undef
             this.sorts[field] = _.has(this.sorts, field)
                 ? !this.sorts[field]
                 : true;
 
             this.$emit("update:sort", this.sorts);
         },
-        click(itemKey, fieldKey) {},
+        click() {},
     },
 };
 </script>

@@ -27,6 +27,7 @@ export default {
     emits: ["click"],
 
     setup(props) {
+        // eslint-disable-next-line vue/no-setup-props-destructure
         let value = props.data[props.field.key];
         if (value && props.field.type === "currency") {
             value = formatCurrency(value);

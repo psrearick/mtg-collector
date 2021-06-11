@@ -47,6 +47,26 @@ class Card extends CardGeneric
         return $this->morphToMany(FrameEffect::class, 'frame_effectable');
     }
 
+    public function getPriceFoilAttribute()
+    {
+        $provider = PriceProvider::where('name', '=', 'tcgplayer')->first();
+        foreach ($this->prices as $price) {
+            if ($price->provider_id == $provider->id && $price->foil == true) {
+                return $price->price;
+            }
+        }
+    }
+
+    public function getPriceNormalAttribute()
+    {
+        $provider = PriceProvider::where('name', '=', 'tcgplayer')->first();
+        foreach ($this->prices as $price) {
+            if ($price->provider_id == $provider->id && !$price->foil) {
+                return $price->price;
+            }
+        }
+    }
+
     /**
      * Get all leadership  skill for this cards
      * @return BelongsToMany
@@ -120,25 +140,5 @@ class Card extends CardGeneric
     public function variations() : BelongsToMany
     {
         return $this->belongsToMany(Card::class, 'variations', 'card_id', 'variation_id');
-    }
-
-    public function getPriceNormalAttribute()
-    {
-        $provider = PriceProvider::where('name', '=', 'tcgplayer')->first();
-        foreach ($this->prices as $price) {
-            if ($price->provider_id == $provider->id && !$price->foil) {
-                return $price->price;
-            }
-        }
-    }
-
-    public function getPriceFoilAttribute()
-    {
-        $provider = PriceProvider::where('name', '=', 'tcgplayer')->first();
-        foreach ($this->prices as $price) {
-            if ($price->provider_id == $provider->id && $price->foil == true) {
-                return $price->price;
-            }
-        }
     }
 }
