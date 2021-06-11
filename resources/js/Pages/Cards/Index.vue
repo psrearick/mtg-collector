@@ -10,7 +10,7 @@
 
 <script>
 import Layout from "@/Layouts/Authenticated";
-import DataGrid from "@/Components/DataGrid";
+import DataGrid from "@/Components/DataGrid/DataGrid";
 
 export default {
     name: "CardIndex",

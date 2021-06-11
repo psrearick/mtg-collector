@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import DataGridTableField from "@/Components/DataGridTableField";
+import DataGridTableField from "@/Components/DataGrid/DataGridTableField";
 
 export default {
     name: "Table",

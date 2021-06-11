@@ -7,11 +7,12 @@
             :data="data"
             :fields="fields"
         />
+
     </div>
 </template>
 
 <script>
-import Table from "@/Components/DataGridTable";
+import Table from "@/Components/DataGrid/DataGridTable";
 import Search from "@/Components/Form/Search";
 
 export default {

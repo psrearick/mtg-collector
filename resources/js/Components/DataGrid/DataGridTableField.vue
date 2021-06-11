@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import formatCurrency from "@/shared/api/ConvertValue";
+import formatCurrency from "@/Shared/api/ConvertValue";
 
 export default {
     name: "DataGridTableField",
