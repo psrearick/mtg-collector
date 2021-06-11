@@ -7,7 +7,6 @@
             :data="data"
             :fields="fields"
         />
-
     </div>
 </template>
 
