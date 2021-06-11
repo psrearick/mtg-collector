@@ -90,7 +90,7 @@
 import DataGridTableField from "@/Components/DataGrid/DataGridTableField";
 
 export default {
-    name: "Table",
+    name: "DataTable",
 
     components: { DataGridTableField },
 

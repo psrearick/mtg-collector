@@ -5,6 +5,7 @@
         :search-term="searchTerm"
         :filter="table.filter"
         :sort="table.sort"
+        :pagination="table.pagination"
     />
 </template>
 
@@ -123,6 +124,16 @@ export default {
                         filterable: false,
                     },
                 ],
+                pagination: {
+                    current_page: this.cards.current_page,
+                    first_page_url: this.cards.first_page_url,
+                    last_page: this.cards.last_page,
+                    last_page_url: this.cards.last_page_url,
+                    next_page_url: this.cards.next_page_url,
+                    previous_page_url: this.cards.previous_page_url,
+                    links: this.cards.links,
+                    pages: 10,
+                },
             },
         };
     },

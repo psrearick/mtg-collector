@@ -47,24 +47,37 @@ class Card extends CardGeneric
         return $this->morphToMany(FrameEffect::class, 'frame_effectable');
     }
 
-    public function getPriceFoilAttribute()
+    public function getPriceOfType(bool $foil)
     {
-        $provider = PriceProvider::where('name', '=', 'tcgplayer')->first();
-        foreach ($this->prices as $price) {
-            if ($price->provider_id == $provider->id && $price->foil == true) {
+        $providerPreference = [
+            'tcgplayer',
+            'cardkingdom',
+            'cardmarket',
+        ];
+
+        $providers = PriceProvider::all();
+
+        $returnPrice = "";
+        foreach ($providerPreference as $providerName) {
+            $price = $this->prices()
+                ->where('provider_id', '=',
+                    $providers->where('name', '=', $providerName)->first()->id)
+                ->where('foil', '=', $foil)
+                ->first();
+            if ($price && $price->price > 0) {
                 return $price->price;
             }
         }
     }
 
+    public function getPriceFoilAttribute()
+    {
+        return $this->getPriceOfType(true);
+    }
+
     public function getPriceNormalAttribute()
     {
-        $provider = PriceProvider::where('name', '=', 'tcgplayer')->first();
-        foreach ($this->prices as $price) {
-            if ($price->provider_id == $provider->id && !$price->foil) {
-                return $price->price;
-            }
-        }
+        return $this->getPriceOfType(false);
     }
 
     /**

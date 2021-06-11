@@ -1,23 +1,25 @@
 <template>
     <div>
         <Search />
-        <Table
+        <data-table
             v-model:sort="sortFields"
             class="mt-4"
             :data="data"
             :fields="fields"
         />
+        <data-grid-pagination :pagination="pagination" />
     </div>
 </template>
 
 <script>
-import Table from "@/Components/DataGrid/DataGridTable";
+import DataTable from "@/Components/DataGrid/DataGridTable";
 import Search from "@/Components/Form/Search";
+import DataGridPagination from "@/Components/DataGrid/DataGridPagination";
 
 export default {
     name: "DataGrid",
 
-    components: { Table, Search },
+    components: { DataTable, Search, DataGridPagination },
 
     props: {
         searchTerm: {
@@ -38,6 +40,10 @@ export default {
         },
         filter: {
             type: Array,
+            default: () => {},
+        },
+        pagination: {
+            type: Object,
             default: () => {},
         },
     },
