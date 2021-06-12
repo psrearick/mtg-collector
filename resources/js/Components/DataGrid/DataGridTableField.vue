@@ -28,21 +28,31 @@ export default {
 
     setup(props) {
         // eslint-disable-next-line vue/no-setup-props-destructure
-        let value = props.data[props.field.key];
-        if (value && props.field.type === "currency") {
-            value = formatCurrency(value);
-        }
-        return {
-            value,
-        };
+        // let value = props.data[props.field.key];
+        // if (value && props.field.type === "currency") {
+        //     value = formatCurrency(value);
+        // }
+        // return {
+        //     value,
+        // };
     },
 
     computed: {
+        formattedValue() {
+            let value = this.data[this.field.key];
+            if (value && this.field.type === "currency") {
+                value = formatCurrency(value);
+            }
+            return value;
+            // return {
+            //     value,
+            // };
+        },
         fieldValue() {
             if (this.field.type === "array") {
-                return this.value.join(", ");
+                return this.formattedValue.join(", ");
             }
-            return this.value;
+            return this.formattedValue;
         },
     },
 

@@ -7,6 +7,7 @@ use App\Domain\Cards\Models\Card;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use ProtoneMedia\LaravelCrossEloquentSearch\Search;
 
 class CardsController extends Controller
 {
@@ -50,10 +51,18 @@ class CardsController extends Controller
     public function index(Request $request)
     {
         $perPage = 15;
-        $cards   = null;
+        $cards   = [];
         if ($request->search) {
-            $cards = Card::search($request->search)->paginate($perPage);
-            dd($cards);
+
+            $cards = Search::new()
+                ->add(Card::with('set'), 'name')
+                ->paginate($perPage)
+//                ->soundsLike()
+                ->get($request->search);
+//            dd($cards);
+
+//            $cards = Card::search($request->search)->paginate($perPage);
+//            dd($cards);
 //            $q = $request->search;
 
 //            $cards = Cards::search($q, function (SearchIndex $algolia, string $query, array $options) {
@@ -64,10 +73,11 @@ class CardsController extends Controller
 //            })->whereNotNull('name')->orderBy('name')->paginate($perPage);
         }
 
-//        $cards = $cards ?: Card::with('set')->whereNotNull('name')->orderBy('name')->paginate($perPage);
+        $cards = $cards ?: Card::with('set')->whereNotNull('name')->orderBy('name')->paginate($perPage);
+//        dd($cards);
         return Inertia::render('Cards/Index', [
             'cards'     => $cards,
-            'cardCount' => $cards->total(),
+            'cardCount' => count($cards),
             'perPage'   => $perPage,
         ]);
     }

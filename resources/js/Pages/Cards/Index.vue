@@ -134,46 +134,59 @@ export default {
                         filterable: false,
                     },
                 ],
-                pagination: {
-                    current_page: this.cards.current_page,
-                    first_page_url: this.cards.first_page_url,
-                    last_page: this.cards.last_page,
-                    last_page_url: this.cards.last_page_url,
-                    next_page_url: this.cards.next_page_url,
-                    previous_page_url: this.cards.previous_page_url,
-                    links: this.cards.links,
-                    pages: 10,
-                    per_page: this.perPage,
-                    card_count: this.cardCount,
-                    card_count_on_page: this.cards.data.length,
-                },
+                pagination: {},
             },
         };
     },
 
     watch: {
         searchTerm(value) {
-            this.$inertia.reload({ data: { search: value } });
+            this.$inertia.reload({
+                data: { search: value },
+                onSuccess: (res) => {
+                    this.mount();
+                },
+            });
         },
     },
 
     mounted() {
-        this.table.data = this.cards.data.map((card) => {
-            return {
-                id: card.id,
-                card_name: card.name,
-                card_id: card.id,
-                set_name: card.set.name,
-                set_id: card.set_id,
-                price: card.price_normal,
-                foil_price: card.price_foil,
-                features: [],
-                quantity_collected: 0,
-                foil_collected: 0,
-                nonfoil_collected: 0,
-                edit_collection: "Edit",
+        this.mount();
+    },
+
+    methods: {
+        mount() {
+            this.table.data = this.cards.data.map((card) => {
+                return {
+                    id: card.id,
+                    card_name: card.name,
+                    card_id: card.id,
+                    set_name: card.set.name,
+                    set_id: card.set_id,
+                    price: card.price_normal,
+                    foil_price: card.price_foil,
+                    features: [],
+                    quantity_collected: 0,
+                    foil_collected: 0,
+                    nonfoil_collected: 0,
+                    edit_collection: "Edit",
+                };
+            });
+
+            this.pagination = {
+                current_page: this.cards.current_page,
+                first_page_url: this.cards.first_page_url,
+                last_page: this.cards.last_page,
+                last_page_url: this.cards.last_page_url,
+                next_page_url: this.cards.next_page_url,
+                previous_page_url: this.cards.previous_page_url,
+                links: this.cards.links,
+                pages: 10,
+                per_page: this.perPage,
+                card_count: this.cardCount,
+                card_count_on_page: this.cards.data.length,
             };
-        });
+        },
     },
 };
 </script>
