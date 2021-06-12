@@ -50,9 +50,8 @@ class CardsController extends Controller
     public function index(Request $request)
     {
         $perPage = 15;
-        $cards = null;
-        if($request->search)
-        {
+        $cards   = null;
+        if ($request->search) {
             $cards = Card::search($request->search)->paginate($perPage);
             dd($cards);
 //            $q = $request->search;

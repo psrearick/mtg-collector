@@ -47,6 +47,16 @@ class Card extends CardGeneric
         return $this->morphToMany(FrameEffect::class, 'frame_effectable');
     }
 
+    public function getPriceFoilAttribute()
+    {
+        return $this->getPriceOfType(true);
+    }
+
+    public function getPriceNormalAttribute()
+    {
+        return $this->getPriceOfType(false);
+    }
+
     public function getPriceOfType(bool $foil)
     {
         $providerPreference = [
@@ -57,7 +67,7 @@ class Card extends CardGeneric
 
         $providers = PriceProvider::all();
 
-        $returnPrice = "";
+        $returnPrice = '';
         foreach ($providerPreference as $providerName) {
             $price = $this->prices()
                 ->where('provider_id', '=',
@@ -68,16 +78,6 @@ class Card extends CardGeneric
                 return $price->price;
             }
         }
-    }
-
-    public function getPriceFoilAttribute()
-    {
-        return $this->getPriceOfType(true);
-    }
-
-    public function getPriceNormalAttribute()
-    {
-        return $this->getPriceOfType(false);
     }
 
     /**
