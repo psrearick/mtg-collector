@@ -58,11 +58,11 @@
             <div>
                 <p class="text-sm text-gray-700">
                     Showing
-                    <span class="font-medium">{{ currentPageItem }}</span>
+                    <span class="font-medium">{{ pagination.from }}</span>
                     to
-                    <span class="font-medium">{{ lastItemOnPage }}</span>
+                    <span class="font-medium">{{ pagination.to }}</span>
                     of
-                    <span class="font-medium">{{ pagination.card_count }}</span>
+                    <span class="font-medium">{{ pagination.total }}</span>
                     results
                 </p>
             </div>
@@ -116,20 +116,6 @@ export default {
         pagination: {
             type: Object,
             default: () => {},
-        },
-    },
-
-    computed: {
-        currentPageItem: function () {
-            return (
-                (this.pagination.current_page - 1) * this.pagination.per_page +
-                1
-            );
-        },
-        lastItemOnPage: function () {
-            return (
-                this.currentPageItem + this.pagination.card_count_on_page - 1
-            );
         },
     },
 };

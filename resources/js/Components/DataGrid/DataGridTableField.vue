@@ -26,17 +26,6 @@ export default {
 
     emits: ["click"],
 
-    setup(props) {
-        // eslint-disable-next-line vue/no-setup-props-destructure
-        // let value = props.data[props.field.key];
-        // if (value && props.field.type === "currency") {
-        //     value = formatCurrency(value);
-        // }
-        // return {
-        //     value,
-        // };
-    },
-
     computed: {
         formattedValue() {
             let value = this.data[this.field.key];
@@ -44,9 +33,6 @@ export default {
                 value = formatCurrency(value);
             }
             return value;
-            // return {
-            //     value,
-            // };
         },
         fieldValue() {
             if (this.field.type === "array") {

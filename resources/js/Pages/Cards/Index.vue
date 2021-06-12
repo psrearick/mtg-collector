@@ -31,9 +31,9 @@ export default {
             type: Number,
             default: 0,
         },
-        cardCount: {
-            type: Number,
-            default: 0,
+        query: {
+            type: String,
+            default: "",
         },
     },
 
@@ -142,21 +142,22 @@ export default {
     watch: {
         searchTerm(value) {
             this.$inertia.reload({
-                data: { search: value },
-                onSuccess: (res) => {
+                data: { q: value },
+                onSuccess: () => {
                     this.mount();
                 },
             });
         },
     },
 
-    mounted() {
+    created() {
         this.mount();
     },
 
     methods: {
         mount() {
-            this.table.data = this.cards.data.map((card) => {
+            // eslint-disable-next-line no-undef
+            this.table.data = _.map(this.cards.data, (card) => {
                 return {
                     id: card.id,
                     card_name: card.name,
@@ -173,7 +174,7 @@ export default {
                 };
             });
 
-            this.pagination = {
+            this.table.pagination = {
                 current_page: this.cards.current_page,
                 first_page_url: this.cards.first_page_url,
                 last_page: this.cards.last_page,
@@ -183,9 +184,13 @@ export default {
                 links: this.cards.links,
                 pages: 10,
                 per_page: this.perPage,
-                card_count: this.cardCount,
                 card_count_on_page: this.cards.data.length,
+                from: this.cards.from,
+                to: this.cards.to,
+                total: this.cards.total,
             };
+
+            this.searchTerm = this.query;
         },
     },
 };

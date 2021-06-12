@@ -14,9 +14,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Collection;
+use Laravel\Scout\Searchable;
 
 class Card extends CardGeneric
 {
+    use Searchable;
+
+    public $asYoyType = true;
+
     /**
      * Get the other face of this card
      *
@@ -146,6 +151,19 @@ class Card extends CardGeneric
     }
 
     /**
+     * @return array
+     */
+    public function toSearchableArray() : array
+    {
+        return [
+            'id'        => $this->id,
+            'name'      => $this->name,
+            'set_code'  => optional($this->set)->code,
+            'set_name'  => optional($this->set)->name,
+        ];
+    }
+
+    /**
      * Get all variations of this card
      *
      * @return BelongsToMany
@@ -153,5 +171,14 @@ class Card extends CardGeneric
     public function variations() : BelongsToMany
     {
         return $this->belongsToMany(Card::class, 'variations', 'card_id', 'variation_id');
+    }
+
+    /**
+     * @param $query
+     * @return mixed
+     */
+    protected function makeAllSearchableUsing($query)
+    {
+        return $query->with('set');
     }
 }
