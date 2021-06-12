@@ -6,6 +6,7 @@
 /resources/js/ziggy.js
 /storage/*.key
 /storage/dumps
+/storage/*.index
 /vendor
 tools/php-cs-fixer/vendor
 .php-cs-fixer.cache
