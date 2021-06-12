@@ -150,6 +150,13 @@ export default {
             },
         };
     },
+
+    watch: {
+        searchTerm(value) {
+            this.$inertia.reload({ data: { search: value } });
+        },
+    },
+
     mounted() {
         this.table.data = this.cards.data.map((card) => {
             return {

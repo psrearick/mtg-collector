@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "ext-curl": "*",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
@@ -14,9 +15,7 @@
         "laravel/sanctum": "^2.6",
         "laravel/tinker": "^2.5",
         "pcrov/jsonreader": "^1.0",
-        "tightenco/ziggy": "^1.0",
-        "ext-curl": "*"
-
+        "tightenco/ziggy": "^1.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

@@ -47,10 +47,25 @@ class CardsController extends Controller
      *
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $perPage = 15;
-        $cards   = Card::with('set')->whereNotNull('name')->orderBy('name')->paginate($perPage);
+        $cards = null;
+        if($request->search)
+        {
+            $cards = Card::search($request->search)->paginate($perPage);
+            dd($cards);
+//            $q = $request->search;
+
+//            $cards = Cards::search($q, function (SearchIndex $algolia, string $query, array $options) {
+//                return $algolia->search($query, [
+//                    'typoTolerance' => true,
+//                    'minWordSizefor1Typo' => 2,
+//                ]);
+//            })->whereNotNull('name')->orderBy('name')->paginate($perPage);
+        }
+
+//        $cards = $cards ?: Card::with('set')->whereNotNull('name')->orderBy('name')->paginate($perPage);
         return Inertia::render('Cards/Index', [
             'cards'     => $cards,
             'cardCount' => $cards->total(),
