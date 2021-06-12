@@ -1,8 +1,10 @@
 <template>
     <data-grid
+        v-model:search-term="searchTerm"
         :data="table.data"
         :fields="table.fields"
-        :search-term="searchTerm"
+        :show-search="true"
+        :show-pagination="true"
         :filter="table.filter"
         :sort="table.sort"
         :pagination="table.pagination"
@@ -24,6 +26,14 @@ export default {
         cards: {
             type: Object,
             default: () => {},
+        },
+        perPage: {
+            type: Number,
+            default: 0,
+        },
+        cardCount: {
+            type: Number,
+            default: 0,
         },
     },
 
@@ -133,6 +143,9 @@ export default {
                     previous_page_url: this.cards.previous_page_url,
                     links: this.cards.links,
                     pages: 10,
+                    per_page: this.perPage,
+                    card_count: this.cardCount,
+                    card_count_on_page: this.cards.data.length,
                 },
             },
         };

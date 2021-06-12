@@ -1,13 +1,13 @@
 <template>
     <div>
-        <Search />
+        <Search v-if="showSearch" v-model="passThroughSearchTerm" />
         <data-table
             v-model:sort="sortFields"
             class="mt-4"
             :data="data"
             :fields="fields"
         />
-        <data-grid-pagination :pagination="pagination" />
+        <data-grid-pagination v-if="showPagination" :pagination="pagination" />
     </div>
 </template>
 
@@ -25,6 +25,14 @@ export default {
         searchTerm: {
             type: String,
             default: "",
+        },
+        showSearch: {
+            type: Boolean,
+            default: true,
+        },
+        showPagination: {
+            type: Boolean,
+            default: true,
         },
         data: {
             type: Array,
@@ -48,18 +56,26 @@ export default {
         },
     },
 
+    emits: ["update:searchTerm"],
+
     data() {
         return {
             tableData: {},
             sortFields: {},
+            passThroughSearchTerm: "",
         };
+    },
+
+    watch: {
+        passThroughSearchTerm(value) {
+            this.$emit("update:searchTerm", value);
+        },
     },
 
     mounted() {
         this.sortFields = this.sort;
+        this.passThroughSearchTerm = this.searchTerm;
     },
-
-    methods: {},
 };
 </script>
 

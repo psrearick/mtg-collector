@@ -58,11 +58,11 @@
             <div>
                 <p class="text-sm text-gray-700">
                     Showing
-                    <span class="font-medium">1</span>
+                    <span class="font-medium">{{ currentPageItem }}</span>
                     to
-                    <span class="font-medium">10</span>
+                    <span class="font-medium">{{ lastItemOnPage }}</span>
                     of
-                    <span class="font-medium">97</span>
+                    <span class="font-medium">{{ pagination.card_count }}</span>
                     results
                 </p>
             </div>
@@ -79,38 +79,20 @@
                     aria-label="Pagination"
                 >
                     <data-grid-pagination-button
-                        class-additions="rounded-l-md"
-                        :href="pagination.previous_page_url"
-                    >
-                        <span class="sr-only">Previous</span>
-                        <icon icon="chevron-left" />
-                    </data-grid-pagination-button>
-
-                    <data-grid-pagination-button
-                        v-for="(page, index) in pages"
+                        v-for="(page, index) in pagination.links"
                         :key="index"
                         :href="page.url"
                         :active="page.active"
                     >
-                        {{ page.label }}
-                    </data-grid-pagination-button>
-
-                    <data-grid-pagination-button
-                        >...</data-grid-pagination-button
-                    >
-
-                    <data-grid-pagination-button
-                        :href="pagination.last_page_url"
-                    >
-                        {{ pagination.last_page }}
-                    </data-grid-pagination-button>
-
-                    <data-grid-pagination-button
-                        class-additions="rounded-r-md"
-                        :href="pagination.next_page_url"
-                    >
-                        <span class="sr-only">Next</span>
-                        <icon icon="chevron-right" />
+                        <span v-if="index === 0">
+                            <icon icon="chevron-left" />
+                        </span>
+                        <span v-else-if="index === pagination.links.length - 1">
+                            <icon icon="chevron-right" />
+                        </span>
+                        <span v-else>
+                            {{ page.label }}
+                        </span>
                     </data-grid-pagination-button>
                 </nav>
             </div>
@@ -138,16 +120,17 @@ export default {
     },
 
     computed: {
-        pages: function () {
-            let links = _.cloneDeep(this.pagination.links);
-            links.shift();
-            links.pop();
-            links.pop();
-            return _.slice(links, 0, this.pagination.pages);
-            return [];
+        currentPageItem: function () {
+            return (
+                (this.pagination.current_page - 1) * this.pagination.per_page +
+                1
+            );
+        },
+        lastItemOnPage: function () {
+            return (
+                this.currentPageItem + this.pagination.card_count_on_page - 1
+            );
         },
     },
 };
 </script>
-
-<style scoped></style>

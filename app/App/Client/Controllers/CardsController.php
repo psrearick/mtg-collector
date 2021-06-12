@@ -49,8 +49,12 @@ class CardsController extends Controller
      */
     public function index()
     {
+        $perPage = 15;
+        $cards   = Card::with('set')->whereNotNull('name')->orderBy('name')->paginate($perPage);
         return Inertia::render('Cards/Index', [
-            'cards' => Card::with('set')->whereNotNull('name')->orderBy('name')->paginate(15),
+            'cards'     => $cards,
+            'cardCount' => $cards->total(),
+            'perPage'   => $perPage,
         ]);
     }
 

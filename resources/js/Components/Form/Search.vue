@@ -13,7 +13,6 @@
                     pointer-events-none
                 "
             >
-                <!-- Heroicon name: solid/search -->
                 <Icon icon="search" />
             </div>
             <input
@@ -22,6 +21,8 @@
                 :class="classes"
                 placeholder="Search"
                 type="search"
+                :value="modelValue"
+                @input="$emit('update:modelValue', $event.target.value)"
             />
         </div>
     </div>
@@ -39,7 +40,12 @@ export default {
             type: Boolean,
             default: false,
         },
+        modelValue: {
+            type: String,
+            default: "",
+        },
     },
+    emits: ["update:modelValue"],
 
     computed: {
         classes() {
