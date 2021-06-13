@@ -1,6 +1,6 @@
 <template>
     <div class="mx-auto text-center">
-        <Icon icon="logo" :classes="'mx-auto ' + classes" />
+        <Icon icon="logo" :classes="'mx-auto hover:text-blue-500 ' + classes" />
         <p v-if="showText" :class="textClass">MTG Collector</p>
     </div>
 </template>

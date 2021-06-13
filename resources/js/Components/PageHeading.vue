@@ -12,7 +12,10 @@
                 md:justify-between
             "
         >
-            <h1 class="text-3xl font-bold text-white">{{ text }}</h1>
+            <div>
+                <h1 v-if="headerText" class="text-3xl font-bold text-white">{{ headerText }}</h1>
+                <p v-if="subheaderText" class="text-white">{{ subheaderText }}</p>
+            </div>
             <div class="mt-4 flex md:mt-0 md:ml-4">
                 <slot name="header-right" />
             </div>
@@ -29,6 +32,28 @@ export default {
             type: String,
             default: "",
         },
+        subheading: {
+            type: String,
+            default: "",
+        },
+    },
+
+    data() {
+        return {
+            headerText: "",
+            subheaderText: "",
+        };
+    },
+
+    created() {
+        this.headerText = this.text;
+        this.subheaderText = this.subheading;
+        this.emitter.on("pageTitle", (e) => {
+            this.headerText = e;
+        });
+        this.emitter.on("pageSubTitle", (e) => {
+            this.subheaderText = e;
+        });
     },
 };
 </script>

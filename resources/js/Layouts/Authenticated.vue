@@ -2,7 +2,10 @@
     <div class="min-h-screen bg-gray-100">
         <div class="bg-gray-800 pb-32">
             <Navbar></Navbar>
-            <PageHeading :text="headerText"></PageHeading>
+            <PageHeading
+                :text="headerText"
+                :subheading="subheading"
+            ></PageHeading>
         </div>
         <main class="-mt-32">
             <div class="max-w-7xl mx-auto pb-12 px-4 sm:px-6 lg:px-8">
@@ -33,13 +36,11 @@ export default {
     data() {
         return {
             headerText: "",
+            subheading: "",
         };
     },
 
     created() {
-        this.emitter.on("pageTitle", (e) => {
-            this.headerText = e;
-        });
     },
 };
 </script>

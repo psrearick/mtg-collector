@@ -6,22 +6,17 @@
             items-center
             px-4
             py-2
-            bg-gray-800
-            border border-transparent
             rounded-md
             font-semibold
-            text-xs text-white
+            text-xs
             uppercase
             tracking-widest
-            hover:bg-gray-700
-            active:bg-gray-900
             focus:outline-none
-            focus:border-gray-900
-            focus:shadow-outline-gray
             transition
             ease-in-out
             duration-150
         "
+        :class="classes"
     >
         <slot />
     </button>
@@ -33,6 +28,11 @@ export default {
         type: {
             type: String,
             default: "submit",
+        },
+        classes: {
+            type: String,
+            default:
+                "bg-gray-800 focus:shadow-outline-gray focus:border-gray-900 active:bg-gray-900 hover:bg-gray-700 border border-transparent text-white",
         },
     },
 };

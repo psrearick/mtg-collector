@@ -28,6 +28,11 @@ class Card extends CardGeneric
 
     public $asYoyType = true;
 
+    public function collections() : BelongsToMany
+    {
+        return $this->belongsToMany(\App\Domain\Collections\Models\Collection::class, 'card_collections');
+    }
+
     /**
      * Get the other face of this card
      *

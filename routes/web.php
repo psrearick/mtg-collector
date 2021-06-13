@@ -1,6 +1,7 @@
 <?php
 
 use App\App\Client\Controllers\CardsController;
+use App\App\Client\Controllers\CollectionsController;
 use App\App\Client\Middleware\RedirectIfAuthenticated;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -42,9 +43,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('collections')->group(function () {
-        Route::get('/collections', function () {
-            return Inertia::render('Collections/Index');
-        })->name('collections.index');
+        Route::resource('collections', CollectionsController::class);
     });
 
     Route::prefix('cards')->group(function () {

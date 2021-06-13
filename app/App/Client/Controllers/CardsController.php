@@ -3,6 +3,7 @@
 namespace App\App\Client\Controllers;
 
 use App\App\Base\Controller;
+use App\App\Client\Repositories\CardsRepository;
 use App\Domain\Cards\Models\Card;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -10,6 +11,13 @@ use Inertia\Response;
 
 class CardsController extends Controller
 {
+    private $repository;
+
+    public function __construct()
+    {
+        $this->repository = new CardsRepository();
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -50,22 +58,12 @@ class CardsController extends Controller
     public function index(Request $request)
     {
         $perPage    = 15;
-        $cards      = [];
-        $query      = '';
-        if ($request->q) {
-            $query   = $request->q;
-            $page    = $request->page ? (int) $request->page : null;
-            $results = Card::search($query)->query(function ($builder) {
-                $builder->with('set');
-            })->get();
-            $cards = $results->paginate($perPage, $results->count(), $page)->withQueryString();
-        }
-        $cards = $cards ?: Card::with('set')->whereNotNull('name')->orderBy('name')->paginate($perPage);
+        $cards      = $this->repository->getAllCardsPaginatedFromQuery($perPage, $request);
 
         return Inertia::render('Cards/Index', [
             'cards'         => $cards,
             'perPage'       => $perPage,
-            'query'         => $query,
+            'query'         => $request->q,
         ]);
     }
 

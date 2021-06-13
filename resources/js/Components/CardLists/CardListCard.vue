@@ -4,7 +4,13 @@
             <slot name="left"></slot>
         </div>
         <div class="flex-1 min-w-0">
-            <a v-if="link.length" href="#" class="focus:outline-none"> </a>
+            <inertia-link
+                v-if="link.length"
+                :href="link"
+                class="focus:outline-none"
+            >
+                <slot></slot>
+            </inertia-link>
             <div v-else>
                 <span class="absolute inset-0" aria-hidden="true"></span>
                 <slot></slot>

@@ -2,8 +2,10 @@
 
 namespace App\Domain\Users\Models;
 
+use App\Domain\Collections\Models\Collection;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -41,4 +43,9 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function collections() : HasMany
+    {
+        return $this->hasMany(Collection::class);
+    }
 }
