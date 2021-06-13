@@ -197,12 +197,11 @@ class Card extends CardGeneric
     /**
      * Get all printings for this card
      *
-     * @return BelongsToMany
+     * @return Collection
      */
-    public function printings() : BelongsToMany
+    public function printings() : Collection
     {
-//        return $this->belongsToMany(Card::class, 'card_card', 'card_id', 'related_card_id');
-        return Card::where('scryfallOracleId', $this->scryfallOracleId)->get();
+        return Card::where('scryfallOracleId', $this->scryfallOracleId)->with(['set', 'prices'])->get();
     }
 
     /**

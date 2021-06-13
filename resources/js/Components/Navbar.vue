@@ -115,13 +115,13 @@
         <!-- Mobile menu, show/hide based on menu state. -->
         <mobile-menu v-if="mobileMenuOpen" id="mobile-menu" class="lg:hidden">
             <mobile-menu-items>
-                <mobile-menu-item href="dashboard">
+                <mobile-menu-item :href="route('dashboard')">
                     Dashboard
                 </mobile-menu-item>
-                <mobile-menu-item href="collections.index">
+                <mobile-menu-item :href="route('collections.index')">
                     Collections
                 </mobile-menu-item>
-                <mobile-menu-item href="cards.index"> Cards </mobile-menu-item>
+                <mobile-menu-item :href="route('cards.index')"> Cards </mobile-menu-item>
             </mobile-menu-items>
             <div class="pt-4 pb-3 border-t border-gray-700">
                 <div class="flex justify-between px-5">

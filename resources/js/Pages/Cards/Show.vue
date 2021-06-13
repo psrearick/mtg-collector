@@ -1,34 +1,12 @@
 <template>
     <div>
-        <div class="grid md:grid-cols-3 gap-4">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
                 <img
                     :src="scryfallCard['image_uris']['normal']"
                     :alt="card.name"
-                    class="max-w-xs mb-8"
+                    class="max-w-xs mb-8 mx-auto md:mx-0"
                 />
-                <div>
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">
-                        Legalities
-                    </h3>
-                    <CardList class="pt-4">
-                        <CardListCard
-                            v-for="(legality, index) in scryfallCard.legalities"
-                            :key="index"
-                            :status="status(legality)"
-                        >
-                            <p class="text-sm font-medium text-gray-900">
-                                {{
-                                    index.charAt(0).toUpperCase() +
-                                    index.slice(1)
-                                }}
-                            </p>
-                            <p class="text-sm text-gray-500 truncate">
-                                {{ legality.replace(/_/g, " ") }}
-                            </p>
-                        </CardListCard>
-                    </CardList>
-                </div>
             </div>
             <div class="px-4">
                 <div>
@@ -104,9 +82,31 @@
                             </div>
                         </dl>
                     </div>
+                    <div>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">
+                            Legalities
+                        </h3>
+                        <CardList class="pt-4">
+                            <CardListCard
+                                v-for="(legality, index) in scryfallCard.legalities"
+                                :key="index"
+                                :status="status(legality)"
+                            >
+                                <p class="text-sm font-medium text-gray-900">
+                                    {{
+                                        index.charAt(0).toUpperCase() +
+                                        index.slice(1)
+                                    }}
+                                </p>
+                                <p class="text-sm text-gray-500 truncate">
+                                    {{ legality.replace(/_/g, " ") }}
+                                </p>
+                            </CardListCard>
+                        </CardList>
+                    </div>
                 </div>
             </div>
-            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg md:col-span-2 lg:col-span-1 mt-8 lg:mt-0">
                 <div class="px-4 py-5 sm:px-6">
                     <h3 class="text-lg leading-6 font-medium text-gray-900">
                         Card Details
@@ -330,6 +330,17 @@
                 </div>
             </div>
         </div>
+        <div>
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mt-8 lg:mt-0">
+                All Printings
+            </h3>
+            <DataGrid
+                :data="printingsTable.data"
+                :fields="printingsTable.fields"
+                :show-search="false"
+                :show-pagination="false"
+            />
+        </div>
     </div>
 </template>
 
@@ -338,10 +349,11 @@ import Layout from "@/Layouts/Authenticated";
 import formatCurrency from "@/Shared/api/ConvertValue";
 import CardList from "@/Components/CardList";
 import CardListCard from "@/Components/CardListCard";
+import DataGrid from "@/Components/DataGrid/DataGrid";
 
 export default {
     name: "Show",
-    components: { CardListCard, CardList },
+    components: { DataGrid, CardListCard, CardList },
     layout: Layout,
 
     header: "",
@@ -420,6 +432,61 @@ export default {
     data() {
         return {
             headerText: "",
+            printingsTable: {
+                data: [],
+                fields: [
+                    {
+                        visible: true,
+                        type: "text",
+                        link: true,
+                        hover: true,
+                        label: "Set",
+                        key: "set_name",
+                        events: {
+                            click: "printings_table_set_name_click",
+                            hover: "printings_table_set_name_hover",
+                        },
+                        sortable: false,
+                        filterable: false,
+                    },
+                    {
+                        visible: true,
+                        type: "text",
+                        link: false,
+                        label: "Rarity",
+                        key: "rarity",
+                        sortable: false,
+                        filterable: false,
+                    },
+                    {
+                        visible: true,
+                        type: "text",
+                        link: false,
+                        label: "Features",
+                        key: "feature",
+                        sortable: false,
+                        filterable: false,
+                    },
+                    {
+                        visible: true,
+                        type: "currency",
+                        link: false,
+                        label: "Non-Foil Price",
+                        key: "non_foil_price",
+                        sortable: false,
+                        filterable: false,
+                    },
+                    {
+                        visible: true,
+                        type: "currency",
+                        link: false,
+                        label: "Foil Price",
+                        key: "foil_price",
+                        sortable: false,
+                        filterable: false,
+                    },
+                ],
+            },
         };
     },
 
@@ -460,6 +527,30 @@ export default {
 
     mounted() {
         this.emitter.emit("pageTitle", this.card.name);
+        const allPrintings = [];
+        this.printings.forEach((printing) => {
+            allPrintings.push({
+                id: printing.id,
+                non_foil_price: printing.price_normal,
+                foil_price: printing.price_foil,
+                rarity: printing.rarity,
+                set_name: printing.set.name,
+                release_date: printing.set.releaseDate,
+                feature: printing.feature,
+            });
+        });
+        this.printingsTable.data = allPrintings.sort((first, second) => {
+            if (new Date(first.release_date) < new Date(second.release_date)) {
+                return -1;
+            }
+            return 1;
+        });
+    },
+
+    created() {
+        this.emitter.on("printings_table_set_name_click", (card) => {
+            this.$inertia.get(`/cards/cards/${card.id}`);
+        });
     },
 
     methods: {

@@ -89,7 +89,7 @@ class CardsController extends Controller
             'frameEffects'      => $card->frameEffects,
             'leadershipSkills'  => $card->leadershipSkills,
             'legalities'        => $card->legalities,
-            'printings'         => $card->printings,
+            'printings'         => $card->printings(),
             'printingSets'      => $card->printingSets(),
             'rulings'           => $card->rulings,
             'tokens'            => $card->tokens,
