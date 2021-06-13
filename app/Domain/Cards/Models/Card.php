@@ -24,9 +24,9 @@ class Card extends CardGeneric
 {
     use Searchable;
 
-    public $asYoyType = true;
-
     public $appends = ['feature', 'features'];
+
+    public $asYoyType = true;
 
     /**
      * Get the other face of this card
@@ -63,7 +63,7 @@ class Card extends CardGeneric
      */
     public function getFeatureAttribute() : string
     {
-        $features = $this->features;
+        $features    = $this->features;
         $allFeatures = [
             $features['frameEffectsString'],
             $features['borderColorString'],
@@ -81,12 +81,14 @@ class Card extends CardGeneric
                 $featureStrings[] = $feature;
             }
         }
-        return implode(", ", $featureStrings);
+
+        return implode(', ', $featureStrings);
     }
 
     public function getFeaturesAttribute() : array
     {
         $featureCollector = new GetCardFeatures($this);
+
         return [
             'frameEffects'        => $featureCollector->getFrameEffects(),
             'frameEffectsString'  => $featureCollector->getFrameEffectsString(),
@@ -133,11 +135,6 @@ class Card extends CardGeneric
         return $this->getPriceOfType(false);
     }
 
-    public function getScryfallCardAttribute()
-    {
-        return (new GetScryfallCard())->execute($this->scryfallId);
-    }
-
     /**
      * @param bool $foil
      * @return HigherOrderBuilderProxy|mixed
@@ -163,6 +160,11 @@ class Card extends CardGeneric
                 return $price->price;
             }
         }
+    }
+
+    public function getScryfallCardAttribute()
+    {
+        return (new GetScryfallCard())->execute($this->scryfallId);
     }
 
     /**

@@ -75,7 +75,7 @@ class CardsController extends Controller
      * @param Card $card
      * @return Response
      */
-    public function show(Card $card): Response
+    public function show(Card $card) : Response
     {
         return Inertia::render('Cards/Show', [
             'card'              => $card,

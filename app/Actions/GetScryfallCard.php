@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Actions;
-
 
 use Illuminate\Support\Facades\Http;
 
