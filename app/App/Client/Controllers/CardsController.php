@@ -72,12 +72,30 @@ class CardsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Card $card
+     * @return Response
      */
-    public function show($id)
+    public function show(Card $card): Response
     {
-        //
+        return Inertia::render('Cards/Show', [
+            'card'              => $card,
+            'set'               => $card->set,
+            'colors'            => $card->colors,
+            'keywords'          => $card->keywords,
+            'subtypes'          => $card->subtypes,
+            'supertypes'        => $card->supertypes,
+            'types'             => $card->types,
+            'faces'             => $card->faces,
+            'frameEffects'      => $card->frameEffects,
+            'leadershipSkills'  => $card->leadershipSkills,
+            'legalities'        => $card->legalities,
+            'printings'         => $card->printings,
+            'printingSets'      => $card->printingSets(),
+            'rulings'           => $card->rulings,
+            'tokens'            => $card->tokens,
+            'variations'        => $card->variations,
+            'scryfallCard'      => $card->scryfall_card,
+        ]);
     }
 
     /**

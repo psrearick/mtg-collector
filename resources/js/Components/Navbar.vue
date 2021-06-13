@@ -205,7 +205,9 @@ export default {
             axios.post("/logout");
         },
         isRoute(checkRoute) {
-            return checkRoute === this.currentRoute;
+            const current = this.currentRoute.substr(0, this.currentRoute.indexOf("."))
+            const check = checkRoute.substr(0, checkRoute.indexOf("."));
+            return current === check;
         },
     },
 };

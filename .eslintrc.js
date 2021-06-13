@@ -10,17 +10,20 @@ module.exports = {
         window: true,
         axios: true,
         route: true,
+        _: "readonly",
     },
     parserOptions: {
         parser: "babel-eslint",
         // specifying a module sourcetype prevent eslint from marking import statements as errors
         sourceType: "module",
     },
+    plugins: ["lodash"],
     extends: [
         // use the recommended rule set for both plain javascript and vue
         "eslint:recommended",
         "plugin:vue/vue3-recommended",
         "plugin:prettier/recommended",
+        // "plugin:lodash/recommended",
     ],
     ignorePatterns: ["ziggy.js"],
     rules: {

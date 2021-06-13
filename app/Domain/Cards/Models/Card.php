@@ -2,6 +2,9 @@
 
 namespace App\Domain\Cards\Models;
 
+use App\Actions\GetCardFeatures;
+use App\Actions\GetCardImage;
+use App\Actions\GetScryfallCard;
 use App\Domain\CardAttributes\Models\ForeignData;
 use App\Domain\CardAttributes\Models\FrameEffect;
 use App\Domain\CardAttributes\Models\LeadershipSkill;
@@ -10,6 +13,7 @@ use App\Domain\CardAttributes\Models\Printing;
 use App\Domain\CardAttributes\Models\Ruling;
 use App\Domain\Prices\Models\Price;
 use App\Domain\Prices\Models\PriceProvider;
+use Illuminate\Database\Eloquent\HigherOrderBuilderProxy;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -21,6 +25,8 @@ class Card extends CardGeneric
     use Searchable;
 
     public $asYoyType = true;
+
+    public $appends = ['feature', 'features'];
 
     /**
      * Get the other face of this card
@@ -52,16 +58,90 @@ class Card extends CardGeneric
         return $this->morphToMany(FrameEffect::class, 'frame_effectable');
     }
 
+    /**
+     * @return string
+     */
+    public function getFeatureAttribute() : string
+    {
+        $features = $this->features;
+        $allFeatures = [
+            $features['frameEffectsString'],
+            $features['borderColorString'],
+            $features['fullArtString'],
+            $features['alternateArtString'],
+            $features['foilOnlyString'],
+            $features['promoString'],
+            $features['textlessString'],
+            $features['timeshiftedString'],
+            $features['layoutString'],
+        ];
+        $featureStrings = [];
+        foreach ($allFeatures as $feature) {
+            if ($feature && strlen($feature) > 0) {
+                $featureStrings[] = $feature;
+            }
+        }
+        return implode(", ", $featureStrings);
+    }
+
+    public function getFeaturesAttribute() : array
+    {
+        $featureCollector = new GetCardFeatures($this);
+        return [
+            'frameEffects'        => $featureCollector->getFrameEffects(),
+            'frameEffectsString'  => $featureCollector->getFrameEffectsString(),
+            'borderColor'         => $featureCollector->getBorderColor(),
+            'borderColorString'   => $featureCollector->getBorderColorString(),
+            'fullArt'             => $featureCollector->getFullArt(),
+            'fullArtString'       => $featureCollector->getFullArtString(),
+            'alternateArt'        => $featureCollector->getAlternateArt(),
+            'alternateArtString'  => $featureCollector->getAlternateArtString(),
+            'foilOnly'            => $featureCollector->getFoilOnly(),
+            'foilOnlyString'      => $featureCollector->getFoilOnlyString(),
+            'promo'               => $featureCollector->getPromo(),
+            'promoString'         => $featureCollector->getPromoString(),
+            'textless'            => $featureCollector->getTextless(),
+            'textlessString'      => $featureCollector->getTextlessString(),
+            'timeshifted'         => $featureCollector->getTimeshifted(),
+            'timeshiftedString'   => $featureCollector->getTimeshiftedString(),
+            'layout'              => $featureCollector->getLayout(),
+            'layoutString'        => $featureCollector->getLayoutString(),
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getImageUrlAttribute() : string
+    {
+        return (new GetCardImage)->execute($this->scryfallId);
+    }
+
+    /**
+     * @return HigherOrderBuilderProxy|mixed
+     */
     public function getPriceFoilAttribute()
     {
         return $this->getPriceOfType(true);
     }
 
+    /**
+     * @return HigherOrderBuilderProxy|mixed
+     */
     public function getPriceNormalAttribute()
     {
         return $this->getPriceOfType(false);
     }
 
+    public function getScryfallCardAttribute()
+    {
+        return (new GetScryfallCard())->execute($this->scryfallId);
+    }
+
+    /**
+     * @param bool $foil
+     * @return HigherOrderBuilderProxy|mixed
+     */
     public function getPriceOfType(bool $foil)
     {
         $providerPreference = [
@@ -125,9 +205,12 @@ class Card extends CardGeneric
         return Card::where('scryfallOracleId', $this->scryfallOracleId)->get();
     }
 
+    /**
+     * @return Collection
+     */
     public function printingSets() : Collection
     {
-        return Printing::where('scryfallOracleId', '=', $this->scryfallOracleId)->get();
+        return Printing::where('scryfallOracleId', '=', $this->scryfallOracleId)->with('set')->get();
     }
 
     /**

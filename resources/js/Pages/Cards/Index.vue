@@ -53,9 +53,13 @@ export default {
                         visible: true,
                         type: "text",
                         link: true,
+                        hover: true,
                         label: "Card",
                         key: "card_name",
-                        event: "card_name_click",
+                        events: {
+                            click: "card_name_click",
+                            hover: "card_name_hover",
+                        },
                         sortable: true,
                         filterable: false,
                     },
@@ -71,10 +75,10 @@ export default {
                     },
                     {
                         visible: true,
-                        type: "array",
+                        type: "text",
                         link: false,
                         label: "Features",
-                        key: "features",
+                        key: "feature",
                         sortable: false,
                         filterable: true,
                     },
@@ -152,11 +156,13 @@ export default {
 
     created() {
         this.mount();
+        this.emitter.on("card_name_click", (card) => {
+            this.showCard(card.id);
+        });
     },
 
     methods: {
         mount() {
-            // eslint-disable-next-line no-undef
             this.table.data = _.map(this.cards.data, (card) => {
                 return {
                     id: card.id,
@@ -166,7 +172,7 @@ export default {
                     set_id: card.set_id,
                     price: card.price_normal,
                     foil_price: card.price_foil,
-                    features: [],
+                    feature: card.feature,
                     quantity_collected: 0,
                     foil_collected: 0,
                     nonfoil_collected: 0,
@@ -182,15 +188,15 @@ export default {
                 next_page_url: this.cards.next_page_url,
                 previous_page_url: this.cards.previous_page_url,
                 links: this.cards.links,
-                pages: 10,
-                per_page: this.perPage,
-                card_count_on_page: this.cards.data.length,
                 from: this.cards.from,
                 to: this.cards.to,
                 total: this.cards.total,
             };
 
             this.searchTerm = this.query;
+        },
+        showCard(id) {
+            this.$inertia.get(`/cards/cards/${id}`);
         },
     },
 };

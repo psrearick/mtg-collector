@@ -63,7 +63,7 @@
                                             hover:text-blue-900
                                         "
                                         href="#"
-                                        @click.prevent="click(key, fieldKey)"
+                                        @click.prevent="click(item, field)"
                                     >
                                         <data-grid-table-field
                                             :data="item"
@@ -134,7 +134,9 @@ export default {
 
             this.$emit("update:sort", this.sorts);
         },
-        click() {},
+        click(item, field) {
+            this.emitter.emit(field.events.click, item);
+        },
     },
 };
 </script>
