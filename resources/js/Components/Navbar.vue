@@ -121,7 +121,9 @@
                 <mobile-menu-item :href="route('collections.index')">
                     Collections
                 </mobile-menu-item>
-                <mobile-menu-item :href="route('cards.index')"> Cards </mobile-menu-item>
+                <mobile-menu-item :href="route('cards.index')">
+                    Cards
+                </mobile-menu-item>
             </mobile-menu-items>
             <div class="pt-4 pb-3 border-t border-gray-700">
                 <div class="flex justify-between px-5">
@@ -205,7 +207,10 @@ export default {
             axios.post("/logout");
         },
         isRoute(checkRoute) {
-            const current = this.currentRoute.substr(0, this.currentRoute.indexOf("."))
+            const current = this.currentRoute.substr(
+                0,
+                this.currentRoute.indexOf(".")
+            );
             const check = checkRoute.substr(0, checkRoute.indexOf("."));
             return current === check;
         },

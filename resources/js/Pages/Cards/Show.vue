@@ -88,7 +88,9 @@
                         </h3>
                         <CardList class="pt-4">
                             <CardListCard
-                                v-for="(legality, index) in scryfallCard.legalities"
+                                v-for="(
+                                    legality, index
+                                ) in scryfallCard.legalities"
                                 :key="index"
                                 :status="status(legality)"
                             >
@@ -106,7 +108,18 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-white shadow overflow-hidden sm:rounded-lg md:col-span-2 lg:col-span-1 mt-8 lg:mt-0">
+            <div
+                class="
+                    bg-white
+                    shadow
+                    overflow-hidden
+                    sm:rounded-lg
+                    md:col-span-2
+                    lg:col-span-1
+                    mt-8
+                    lg:mt-0
+                "
+            >
                 <div class="px-4 py-5 sm:px-6">
                     <h3 class="text-lg leading-6 font-medium text-gray-900">
                         Card Details
@@ -331,7 +344,9 @@
             </div>
         </div>
         <div>
-            <h3 class="text-lg leading-6 font-medium text-gray-900 mt-8 lg:mt-0">
+            <h3
+                class="text-lg leading-6 font-medium text-gray-900 mt-8 lg:mt-0"
+            >
                 All Printings
             </h3>
             <DataGrid
