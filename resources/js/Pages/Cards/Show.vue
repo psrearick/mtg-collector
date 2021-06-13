@@ -2,11 +2,24 @@
     <div>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
-                <img
-                    :src="scryfallCard['image_uris']['normal']"
-                    :alt="card.name"
-                    class="max-w-xs mb-8 mx-auto md:mx-0"
-                />
+                <div>
+                    <img
+                        :src="scryfallCard['image_uris']['normal']"
+                        :alt="card.name"
+                        class="max-w-xs mb-8 mx-auto"
+                    />
+                    <p
+                        class="
+                            text-sm
+                            font-medium
+                            text-gray-500
+                            truncate
+                            text-center
+                        "
+                    >
+                        {{ card.set.name }}
+                    </p>
+                </div>
             </div>
             <div class="px-4">
                 <div>

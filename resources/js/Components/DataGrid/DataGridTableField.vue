@@ -31,6 +31,10 @@ export default {
             let value = this.data[this.field.key];
             if (value && this.field.type === "currency") {
                 value = formatCurrency(value);
+                return value !== "0" ? value : "";
+            }
+            if (this.field.type === "currency") {
+                return "";
             }
             return value;
         },

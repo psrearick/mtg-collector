@@ -139,7 +139,7 @@ class Card extends CardGeneric
      * @param bool $foil
      * @return HigherOrderBuilderProxy|mixed
      */
-    public function getPriceOfType(bool $foil)
+    public function getPriceOfType(bool $foil) : float
     {
         $providerPreference = [
             'tcgplayer',
@@ -149,7 +149,6 @@ class Card extends CardGeneric
 
         $providers = PriceProvider::all();
 
-        $returnPrice = '';
         foreach ($providerPreference as $providerName) {
             $price = $this->prices()
                 ->where('provider_id', '=',
@@ -160,6 +159,7 @@ class Card extends CardGeneric
                 return $price->price;
             }
         }
+        return 0.0;
     }
 
     public function getScryfallCardAttribute()
