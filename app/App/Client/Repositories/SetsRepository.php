@@ -1,18 +1,26 @@
 <?php
 
-
 namespace App\App\Client\Repositories;
-
-
-use App\Domain\Sets\Models\Set;
-use Illuminate\Support\Collection;
 
 class SetsRepository extends Repository
 {
-    public function searchSetsStartingWith(string $term) : Collection
+    public string $class = "App\Domain\Sets\Models\Set";
+
+    public string $table = 'sets';
+
+    public function equals(string $term) : SetsRepository
     {
-        return Set::where('name','LIKE', $term . "%")
-            ->orWhere('code','LIKE', $term . "%")
-            ->get();
+        $this->query = $this->query->where('sets.name', '=', $term)
+            ->orWhere('sets.code', '=', $term);
+
+        return $this;
+    }
+
+    public function startsWith(string $term) : SetsRepository
+    {
+        $this->query = $this->query->where('sets.name', 'LIKE', $term . '%')
+            ->orWhere('sets.code', 'LIKE', $term . '%');
+
+        return $this;
     }
 }

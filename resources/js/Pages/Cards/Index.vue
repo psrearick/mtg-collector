@@ -1,6 +1,8 @@
 <template>
     <data-grid
-        v-model:search-term="searchTerm"
+        v-model:card-term="cardSearchTerm"
+        v-model:set-term="setSearchTerm"
+        v-model:searching="searching"
         :data="table.data"
         :fields="table.fields"
         :show-search="true"
@@ -13,7 +15,7 @@
 
 <script>
 import Layout from "@/Layouts/Authenticated";
-import DataGrid from "@/Components/DataGrid/DataGrid";
+import DataGrid from "@/Components/DataGrid/CardIndexDataGrid/DataGrid";
 
 export default {
     name: "CardIndex",
@@ -31,7 +33,11 @@ export default {
             type: Number,
             default: 0,
         },
-        query: {
+        cardQuery: {
+            type: String,
+            default: "",
+        },
+        setQuery: {
             type: String,
             default: "",
         },
@@ -43,7 +49,9 @@ export default {
 
     data() {
         return {
-            searchTerm: "",
+            setSearchTerm: "",
+            cardSearchTerm: "",
+            searching: false,
             table: {
                 data: [],
                 filter: [],
@@ -144,13 +152,11 @@ export default {
     },
 
     watch: {
-        searchTerm(value) {
-            this.$inertia.reload({
-                data: { q: value },
-                onSuccess: () => {
-                    this.mount();
-                },
-            });
+        cardSearchTerm() {
+            this.search();
+        },
+        setSearchTerm() {
+            this.search();
         },
     },
 
@@ -170,8 +176,8 @@ export default {
                     card_id: card.id,
                     set_name: card.set.name,
                     set_id: card.set_id,
-                    price: card.price_normal,
-                    foil_price: card.price_foil,
+                    price: card.hasNonFoil ? card.price_normal : "",
+                    foil_price: card.hasFoil ? card.price_foil : "",
                     feature: card.feature,
                     quantity_collected: 0,
                     foil_collected: 0,
@@ -193,11 +199,26 @@ export default {
                 total: this.cards.total,
             };
 
-            this.searchTerm = this.query;
+            this.cardSearchTerm = this.cardQuery;
+            this.setSearchTerm = this.setQuery;
         },
         showCard(id) {
             this.$inertia.get(`/cards/cards/${id}`);
         },
+        search: _.debounce(function () {
+            this.searching = true;
+            this.table.data = [];
+            this.$inertia.reload({
+                data: {
+                    card: this.cardSearchTerm,
+                    set: this.setSearchTerm,
+                },
+                onSuccess: () => {
+                    this.searching = false;
+                    this.mount();
+                },
+            });
+        }, 1200),
     },
 };
 </script>

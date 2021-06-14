@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\App\Client\Controllers;
-
 
 use App\App\Base\Controller;
 use App\App\Client\Repositories\CardsRepository;
@@ -15,15 +13,6 @@ use Inertia\Response;
 
 class CollectionsController extends Controller
 {
-    private $setRepository;
-    private $cardRepository;
-
-    public function __construct()
-    {
-        $this->setRepository = new SetsRepository();
-        $this->cardRepository = new CardsRepository();
-    }
-
     /**
      * @return Response
      */
@@ -37,19 +26,22 @@ class CollectionsController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function edit(Collection $collection, Request $request): Response
+    public function edit(Collection $collection, Request $request) : Response
     {
-        $sets = [];
         $cards = [];
-        if ($queryValues = $request->all()) {
-            if ($set = $queryValues['set']) {
-                $sets = $this->setRepository->searchSetsStartingWith($set);
-            }
-            if ($card = $queryValues['card']) {
-                $setIds = $sets ? $sets->pluck('id')->toArray() : [];
-                $cards = $this->cardRepository->searchCardsStartingWith($card, $setIds);
-            }
+        $sets  = [];
+
+        if ($request->get('set') || $request->get('card')) {
+            $setRepository  = new SetsRepository();
+            $cardRepository = new CardsRepository();
+            $sets           = $setRepository->fromRequest($request, 'set')->get();
+            $setIds         = $setRepository->getIds();
+            $cards          = $cardRepository
+                ->fromRequest($request, 'card')
+                ->filterOnSets($setIds)->with(['set'])
+                ->getPaginated(50);
         }
+
         return Inertia::render('Collections/Edit', [
             'collection' => $collection,
             'cards'      => $cards,
@@ -60,7 +52,7 @@ class CollectionsController extends Controller
     /**
      * @return Response
      */
-    public function index(): Response
+    public function index() : Response
     {
         return Inertia::render('Collections/Index', [
             'collections' => Collection::where('user_id', '=', Auth::id())
@@ -69,20 +61,22 @@ class CollectionsController extends Controller
         ]);
     }
 
-    public function show(Collection $collection){
+    public function show(Collection $collection)
+    {
         return Inertia::render('Collections/Show', [
             'collection' => $collection,
         ]);
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $form = $request->get('form');
         $card = Collection::create([
             'name'          => $form['name'],
             'description'   => $form['description'],
             'user_id'       => Auth::id(),
         ]);
+
         return redirect()->action([CollectionsController::class, 'show'], ['collection' => $card->id]);
     }
-
 }

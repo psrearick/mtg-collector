@@ -12,7 +12,7 @@
 <script>
 import Layout from "@/Layouts/Authenticated";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
-import DataGrid from "@/Components/CollectionEditDataGrid/DataGrid";
+import DataGrid from "@/Components/DataGrid/CollectionEditDataGrid/DataGrid";
 
 export default {
     name: "EditCollection",

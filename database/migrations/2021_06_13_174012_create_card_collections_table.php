@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Schema;
 class CreateCardCollectionsTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('card_collections');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -25,15 +35,5 @@ class CreateCardCollectionsTable extends Migration
             $table->timestamp('deleted_at')->nullable();
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('card_collections');
     }
 }

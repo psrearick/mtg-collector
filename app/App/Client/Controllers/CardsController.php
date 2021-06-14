@@ -4,6 +4,7 @@ namespace App\App\Client\Controllers;
 
 use App\App\Base\Controller;
 use App\App\Client\Repositories\CardsRepository;
+use App\App\Client\Repositories\SetsRepository;
 use App\Domain\Cards\Models\Card;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -11,13 +12,6 @@ use Inertia\Response;
 
 class CardsController extends Controller
 {
-    private $repository;
-
-    public function __construct()
-    {
-        $this->repository = new CardsRepository();
-    }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -53,17 +47,30 @@ class CardsController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request) : Response
     {
         $perPage    = 15;
-        $cards      = $this->repository->getAllCardsPaginatedFromQuery($perPage, $request);
+        $cards      = [];
+
+        if ($request->get('set') || $request->get('card')) {
+            $setRepository  = new SetsRepository();
+            $cardRepository = new CardsRepository();
+            $sets           = $setRepository->fromRequest($request, 'set')->getIds();
+            $cards          = $cardRepository
+            ->select('cards.*')
+            ->fromRequest($request, 'card')
+            ->filterOnSets($sets)->with(['set'])
+            ->getPaginated($perPage);
+        }
 
         return Inertia::render('Cards/Index', [
             'cards'         => $cards,
             'perPage'       => $perPage,
-            'query'         => $request->q,
+            'cardQuery'     => $request->get('card'),
+            'setQuery'      => $request->get('set'),
         ]);
     }
 

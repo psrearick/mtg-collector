@@ -1,12 +1,16 @@
 <template>
     <CardSetSearch v-model="cardSearchTerm" v-model:setName="setSearchTerm" />
-    <p v-if="searching" class="text-sm text-blue-600">Searching...</p>
-    <CardSetSearchResults v-model:cards="cards" v-model:sets="sets" />
+    <p v-if="searching" class="text-sm text-green-600">Searching...</p>
+    <CardSetSearchResults
+        v-if="cards.data"
+        v-model:cards="cards.data"
+        v-model:sets="sets"
+    />
 </template>
 
 <script>
-import CardSetSearch from "@/Components/CollectionEditDataGrid/CardSetSearch";
-import CardSetSearchResults from "@/Components/CollectionEditDataGrid/CardSetSearchResults";
+import CardSetSearch from "@/Components/DataGrid/CollectionEditDataGrid/CardSetSearch";
+import CardSetSearchResults from "@/Components/DataGrid/CollectionEditDataGrid/CardSetSearchResults";
 export default {
     name: "DataGrid",
 
@@ -33,7 +37,6 @@ export default {
 
     methods: {
         search: _.debounce(function () {
-            console.log("searching");
             this.searching = true;
             this.cards = [];
             this.sets = [];

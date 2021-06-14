@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Domain\Collections\Models;
-
 
 use App\Domain\Base\Models\Model;
 use App\Domain\Users\Models\User;

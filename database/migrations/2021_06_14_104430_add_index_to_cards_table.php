@@ -7,18 +7,6 @@ use Illuminate\Support\Facades\Schema;
 class AddIndexToCardsTable extends Migration
 {
     /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::table('cards', function (Blueprint $table) {
-            $table->index('name');
-        });
-    }
-
-    /**
      * Reverse the migrations.
      *
      * @return void
@@ -27,6 +15,18 @@ class AddIndexToCardsTable extends Migration
     {
         Schema::table('cards', function (Blueprint $table) {
             $table->dropIndex('name');
+        });
+    }
+
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('cards', function (Blueprint $table) {
+            $table->index('name');
         });
     }
 }

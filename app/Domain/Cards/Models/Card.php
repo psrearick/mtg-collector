@@ -164,6 +164,7 @@ class Card extends CardGeneric
                 return $price->price;
             }
         }
+
         return 0.0;
     }
 
