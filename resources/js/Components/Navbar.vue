@@ -194,13 +194,12 @@ export default {
         return {
             mobileMenuOpen: false,
             profileMenuOpen: false,
-            currentRoute: "",
         };
     },
-    created() {
-        this.emitter.on("currentRoute", (e) => {
-            this.currentRoute = e;
-        });
+    computed: {
+        currentRoute() {
+            return this.$store.getters.currentRoute;
+        },
     },
     methods: {
         logout() {

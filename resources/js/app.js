@@ -10,6 +10,7 @@ import { InertiaProgress } from "@inertiajs/progress";
 import TitleMixin from "@/Shared/Mixins/TitleMixin";
 import HeaderMixin from "@/Shared/Mixins/HeaderMixin";
 
+import store from "./Store";
 import mitt from "mitt";
 const emitter = mitt();
 
@@ -22,11 +23,12 @@ createInertiaApp({
     setup({ el, app, props, plugin }) {
         const vueApp = createApp({ render: () => h(app, props) })
             .mixin({ methods: { route } })
+            .mixin(ActivePageMixin)
             .mixin(TitleMixin)
             .mixin(HeaderMixin)
-            .mixin(ActivePageMixin)
             .use(plugin);
         vueApp.config.globalProperties.emitter = emitter;
+        vueApp.use(store);
         vueApp.mount(el);
     },
 });

@@ -1,5 +1,7 @@
 window._ = require("lodash");
 
+import "es6-promise/auto";
+
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the

@@ -553,7 +553,7 @@ export default {
     },
 
     mounted() {
-        this.emitter.emit("pageTitle", this.card.name);
+        this.$store.dispatch("updateHeader", { header: this.card.name });
         const allPrintings = [];
         this.printings.forEach((printing) => {
             allPrintings.push({

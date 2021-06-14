@@ -58,8 +58,10 @@ export default {
     },
 
     mounted() {
-        this.emitter.emit("pageTitle", this.collection.name);
-        this.emitter.emit("pageSubTitle", this.collection.description);
+        this.$store.dispatch("updateHeader", { header: this.collection.name });
+        this.$store.dispatch("updateSubheader", {
+            subheader: this.collection.description,
+        });
     },
 };
 </script>

@@ -8,6 +8,10 @@ export default {
             return;
         }
 
-        this.emitter.emit("currentRoute", route().current());
+        this.$store.dispatch("updateCurrentRoute", {
+            currentRoute: route().current(),
+        });
+        this.$store.dispatch("updateHeader", { header: "" });
+        this.$store.dispatch("updateSubheader", { subHeader: "" });
     },
 };

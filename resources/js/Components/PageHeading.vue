@@ -13,8 +13,12 @@
             "
         >
             <div>
-                <h1 v-if="headerText" class="text-3xl font-bold text-white">{{ headerText }}</h1>
-                <p v-if="subheaderText" class="text-white">{{ subheaderText }}</p>
+                <h1 v-if="headerText" class="text-3xl font-bold text-white">
+                    {{ headerText }}
+                </h1>
+                <p v-if="subheaderText" class="text-white">
+                    {{ subheaderText }}
+                </p>
             </div>
             <div class="mt-4 flex md:mt-0 md:ml-4">
                 <slot name="header-right" />
@@ -27,33 +31,13 @@
 export default {
     name: "PageHeading",
 
-    props: {
-        text: {
-            type: String,
-            default: "",
+    computed: {
+        headerText() {
+            return this.$store.getters.header;
         },
-        subheading: {
-            type: String,
-            default: "",
+        subheaderText() {
+            return this.$store.getters.subheader;
         },
-    },
-
-    data() {
-        return {
-            headerText: "",
-            subheaderText: "",
-        };
-    },
-
-    created() {
-        this.headerText = this.text;
-        this.subheaderText = this.subheading;
-        this.emitter.on("pageTitle", (e) => {
-            this.headerText = e;
-        });
-        this.emitter.on("pageSubTitle", (e) => {
-            this.subheaderText = e;
-        });
     },
 };
 </script>

@@ -8,7 +8,7 @@ export default {
     created() {
         const header = getHeader(this);
         if (header) {
-            this.emitter.emit("pageTitle", header);
+            this.$store.dispatch("updateHeader", { header: header });
         }
     },
 };
