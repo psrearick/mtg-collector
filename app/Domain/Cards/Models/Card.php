@@ -24,7 +24,7 @@ class Card extends CardGeneric
 {
     use Searchable;
 
-    public $appends = ['feature', 'features'];
+    public $appends = ['feature', 'features', 'image_url'];
 
     public $asYoyType = true;
 

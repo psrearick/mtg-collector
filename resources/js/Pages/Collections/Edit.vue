@@ -1,11 +1,10 @@
 <template>
     <div>
-        <h3 class="text-lg leading-6 font-medium text-gray-900">
-            Add Card to Collection
+        <h3 class="text-lg leading-6 font-medium text-gray-900 mb-8">
+            Add Cards to Collection
         </h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
-            <div class="md:col-span-2 lg:col-span-3">Name</div>
-            <div>Set</div>
+        <div class="w-full">
+            <DataGrid />
         </div>
     </div>
 </template>
@@ -13,10 +12,11 @@
 <script>
 import Layout from "@/Layouts/Authenticated";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
+import DataGrid from "@/Components/CollectionEditDataGrid/DataGrid";
 
 export default {
     name: "EditCollection",
-
+    components: { DataGrid },
     layout: Layout,
 
     title: "MTG Collector - Edit Collection",

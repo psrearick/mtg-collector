@@ -7,6 +7,7 @@ namespace App\App\Client\Repositories;
 use App\Domain\Cards\Models\Card;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class CardsRepository extends Repository
 {
@@ -27,5 +28,16 @@ class CardsRepository extends Repository
         return $query->query(function ($builder) use ($with) {
             $builder->with($with);
         });
+    }
+
+    public function searchCardsStartingWith(string $card, array $sets): Collection
+    {
+        $q = Card::select('cards.*')
+        ->where('cards.name', 'LIKE', $card . '%');
+        if ($sets) {
+            $q->whereIn('sets.id', $sets)
+                ->leftJoin('sets', 'sets.id', '=', 'cards.set_id');
+        }
+        return $q->with('set')->limit(50)->get();
     }
 }
