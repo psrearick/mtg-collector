@@ -14,6 +14,9 @@
                             sm:grid-cols-6
                         "
                     >
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">
+                            Collection Details
+                        </h3>
                         <div class="sm:col-span-6">
                             <Input
                                 v-model="form.name"

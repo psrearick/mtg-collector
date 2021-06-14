@@ -40,15 +40,16 @@
 import Layout from "@/Layouts/Authenticated";
 import CardList from "@/Components/CardLists/CardList";
 import CardListCard from "@/Components/CardLists/CardListCard";
+import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 
 export default {
-    name: "Show",
+    name: "ShowCollection",
+
     components: { CardListCard, CardList },
+
     layout: Layout,
 
     title: "MTG Collector - Collection",
-
-    header: "",
 
     props: {
         collection: {
@@ -61,6 +62,17 @@ export default {
         this.$store.dispatch("updateHeader", { header: this.collection.name });
         this.$store.dispatch("updateSubheader", {
             subheader: this.collection.description,
+        });
+        this.$store.dispatch("updateHeaderRightComponent", {
+            component: {
+                is: PrimaryButton,
+                props: {
+                    text: "Edit Collection",
+                    href: route("collections.edit", {
+                        collection: this.collection.id,
+                    }),
+                },
+            },
         });
     },
 };

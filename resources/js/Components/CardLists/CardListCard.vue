@@ -5,8 +5,8 @@
         </div>
         <div class="flex-1 min-w-0">
             <inertia-link
-                v-if="link.length"
-                :href="link"
+                v-if="link && href"
+                :href="href"
                 class="focus:outline-none"
             >
                 <slot></slot>
@@ -24,6 +24,10 @@ export default {
     name: "CardListCard",
     props: {
         link: {
+            type: Boolean,
+            default: false,
+        },
+        href: {
             type: String,
             default: "",
         },
@@ -45,27 +49,27 @@ export default {
             if (this.status === "danger") {
                 classes.push("border-red-300 bg-red-100");
                 hoverClasses.push(
-                    "hover:border-red-400 focus-within:ring-red-500"
+                    "hover:border-red-400 focus-within:ring-red-500 hover:bg-red-200"
                 );
             } else if (this.status === "success") {
                 classes.push("border-green-300 bg-green-100");
                 hoverClasses.push(
-                    "hover:border-green-400 focus-within:ring-green-500"
+                    "hover:border-green-400 focus-within:ring-green-500 hover:bg-green-200"
                 );
             } else if (this.status === "warning") {
                 classes.push("border-yellow-300 bg-yellow-100");
                 hoverClasses.push(
-                    "hover:border-yellow-400 focus-within:ring-yellow-500"
+                    "hover:border-yellow-400 focus-within:ring-yellow-500 hover:bg-yellow-200"
                 );
             } else {
                 classes.push("border-gray-300 bg-white");
                 hoverClasses.push(
-                    "hover:border-gray-400 focus-within:ring-indigo-500"
+                    "hover:border-gray-300 focus-within:ring-indigo-500 hover:bg-gray-50"
                 );
             }
             let classString = classes.join(" ");
 
-            if (this.link.length) {
+            if (this.link) {
                 classString += " " + hoverClasses.join(" ");
             }
 

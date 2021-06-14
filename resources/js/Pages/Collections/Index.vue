@@ -2,18 +2,8 @@
     <div>
         <div v-if="!collections.length">
             <p>You do not have any collections. Please create one.</p>
-            <inertia-link :href="route('collections.create')">
-                <PrimaryButton class="mt-4" type="button"
-                    >Create Collection</PrimaryButton
-                >
-            </inertia-link>
         </div>
         <div v-if="collections.length">
-            <inertia-link :href="route('collections.create')">
-                <PrimaryButton class="mb-4" type="button"
-                    >Create Collection</PrimaryButton
-                >
-            </inertia-link>
             <div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
                 <inertia-link
                     v-for="(collection, index) in collections"
@@ -22,7 +12,7 @@
                         route('collections.show', { collection: collection.id })
                     "
                 >
-                    <CardListCard>{{ collection.name }}</CardListCard>
+                    <CardListCard link>{{ collection.name }}</CardListCard>
                 </inertia-link>
             </div>
         </div>
@@ -49,6 +39,18 @@ export default {
             type: Array,
             default: () => {},
         },
+    },
+
+    mounted() {
+        this.$store.dispatch("updateHeaderRightComponent", {
+            component: {
+                is: PrimaryButton,
+                props: {
+                    text: "Create Collection",
+                    href: route("collections.create"),
+                },
+            },
+        });
     },
 };
 </script>

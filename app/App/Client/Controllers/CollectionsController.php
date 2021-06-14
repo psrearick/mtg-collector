@@ -22,6 +22,17 @@ class CollectionsController extends Controller
     }
 
     /**
+     * @param Collection $collection
+     * @return Response
+     */
+    public function edit(Collection $collection)
+    {
+        return Inertia::render('Collections/Edit', [
+            'collection' => $collection,
+        ]);
+    }
+
+    /**
      * @return Response
      */
     public function index(): Response

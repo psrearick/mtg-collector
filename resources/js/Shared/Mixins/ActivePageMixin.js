@@ -13,5 +13,6 @@ export default {
         });
         this.$store.dispatch("updateHeader", { header: "" });
         this.$store.dispatch("updateSubheader", { subHeader: "" });
+        this.$store.dispatch("updateHeaderRightComponent", { component: {} });
     },
 };
