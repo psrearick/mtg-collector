@@ -37,6 +37,13 @@
                                 class="p-2 mx-4 shadow-md bg-gray-100 w-32"
                             >
                                 <button
+                                    @click="
+                                        emitter.emit('updateCardQuantity', {
+                                            change: 1,
+                                            id: card.id,
+                                            foil: false,
+                                        })
+                                    "
                                     class="
                                         p-2
                                         bg-green-500
@@ -51,6 +58,13 @@
                                     0
                                 </p>
                                 <button
+                                    @click="
+                                        emitter.emit('updateCardQuantity', {
+                                            change: -1,
+                                            id: card.id,
+                                            foil: false,
+                                        })
+                                    "
                                     class="
                                         p-2
                                         bg-blue-500
@@ -77,6 +91,13 @@
                                 class="p-2 mx-4 shadow-md bg-gray-100 w-32"
                             >
                                 <button
+                                    @click="
+                                        emitter.emit('updateCardQuantity', {
+                                            change: 1,
+                                            id: card.id,
+                                            foil: true,
+                                        })
+                                    "
                                     class="
                                         p-2
                                         bg-green-500
@@ -91,6 +112,13 @@
                                     0
                                 </p>
                                 <button
+                                    @click="
+                                        emitter.emit('updateCardQuantity', {
+                                            change: -1,
+                                            id: card.id,
+                                            foil: true,
+                                        })
+                                    "
                                     class="
                                         p-2
                                         bg-blue-500

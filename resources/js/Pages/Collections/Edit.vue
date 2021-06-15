@@ -4,7 +4,7 @@
             Add Cards to Collection
         </h3>
         <div class="w-full">
-            <DataGrid />
+            <DataGrid :collection="collection" />
         </div>
     </div>
 </template>

@@ -17,6 +17,10 @@ class GetCardImage
         }
         $card = Http::get("https://api.scryfall.com/cards/$scryfallId", ['format' => 'json'])->json();
 
-        return optional($card['image_uris'])[$format];
+        if (!$card) {
+            return "";
+        }
+
+        return $card['image_uris'] ? $card['image_uris'][$format] : "";
     }
 }

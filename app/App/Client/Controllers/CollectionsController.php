@@ -37,9 +37,10 @@ class CollectionsController extends Controller
             $sets           = $setRepository->fromRequest($request, 'set')->get();
             $setIds         = $setRepository->getIds();
             $cards          = $cardRepository
+                ->select('cards.*')
                 ->fromRequest($request, 'card')
                 ->filterOnSets($setIds)->with(['set'])
-                ->getPaginated(50);
+                ->getPaginated(25);
         }
 
         return Inertia::render('Collections/Edit', [

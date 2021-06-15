@@ -3,6 +3,7 @@
 namespace App\Domain\Collections\Models;
 
 use App\Domain\Base\Models\Model;
+use App\Domain\Cards\Models\Card;
 use App\Domain\Users\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;

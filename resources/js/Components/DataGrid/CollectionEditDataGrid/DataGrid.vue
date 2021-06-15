@@ -11,10 +11,18 @@
 <script>
 import CardSetSearch from "@/Components/DataGrid/CollectionEditDataGrid/CardSetSearch";
 import CardSetSearchResults from "@/Components/DataGrid/CollectionEditDataGrid/CardSetSearchResults";
+import DataGridPagination from "@/Components/DataGrid/DataGridPagination";
 export default {
     name: "DataGrid",
 
-    components: { CardSetSearchResults, CardSetSearch },
+    components: { DataGridPagination, CardSetSearchResults, CardSetSearch },
+
+    props: {
+        collection: {
+            type: Object,
+            default: () => {},
+        },
+    },
 
     data() {
         return {
@@ -23,6 +31,7 @@ export default {
             cards: [],
             sets: [],
             searching: false,
+            pagination: {},
         };
     },
 
@@ -33,6 +42,26 @@ export default {
         setSearchTerm() {
             this.search();
         },
+        cards() {
+            this.pagination = {
+                current_page: this.cards.current_page,
+                first_page_url: this.cards.first_page_url,
+                last_page: this.cards.last_page,
+                last_page_url: this.cards.last_page_url,
+                next_page_url: this.cards.next_page_url,
+                previous_page_url: this.cards.previous_page_url,
+                links: this.cards.links,
+                from: this.cards.from,
+                to: this.cards.to,
+                total: this.cards.total,
+            };
+        },
+    },
+
+    created() {
+        this.emitter.on("updateCardQuantity", (change) => {
+            this.updateCardQuantity(change);
+        });
     },
 
     methods: {
@@ -52,6 +81,12 @@ export default {
                 },
             });
         }, 1200),
+        updateCardQuantity: function (change) {
+            axios.post("/card-collections/card-collections", {
+                change: change,
+                collection: this.collection.id,
+            });
+        },
     },
 };
 </script>
