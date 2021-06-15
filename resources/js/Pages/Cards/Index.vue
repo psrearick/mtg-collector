@@ -153,14 +153,20 @@ export default {
 
     watch: {
         cardSearchTerm() {
-            this.search();
+            if (this.cardSearchTerm !== this.cardQuery) {
+                this.search();
+            }
         },
         setSearchTerm() {
-            this.search();
+            if (this.setSearchTerm !== this.setQuery) {
+                this.search();
+            }
         },
     },
 
     created() {
+        // this.cardSearchTerm = this.cardQuery;
+        // this.setSearchTerm = this.setQuery;
         this.mount();
         this.emitter.on("card_name_click", (card) => {
             this.showCard(card.id);
@@ -206,18 +212,24 @@ export default {
             this.$inertia.get(`/cards/cards/${id}`);
         },
         search: _.debounce(function () {
-            this.searching = true;
             this.table.data = [];
-            this.$inertia.reload({
-                data: {
+            if (!this.cardSearchTerm && !this.setSearchTerm) {
+                return;
+            }
+            this.searching = true;
+            this.$inertia.get(
+                "/cards/cards",
+                {
                     card: this.cardSearchTerm,
                     set: this.setSearchTerm,
                 },
-                onSuccess: () => {
-                    this.searching = false;
-                    this.mount();
-                },
-            });
+                {
+                    onSuccess: () => {
+                        this.searching = false;
+                        this.mount();
+                    },
+                }
+            );
         }, 1200),
     },
 };
