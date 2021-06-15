@@ -21,7 +21,8 @@ class Collection extends Model
      */
     public function cards() : BelongsToMany
     {
-        return $this->belongsToMany(Card::class, 'card_collections');
+        return $this->belongsToMany(Card::class, 'card_collections')
+            ->withPivot(['price_when_added', 'foil', 'description', 'condition', 'quantity']);
     }
 
     public function user() : BelongsTo

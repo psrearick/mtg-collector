@@ -30,7 +30,8 @@ class Card extends CardGeneric
 
     public function collections() : BelongsToMany
     {
-        return $this->belongsToMany(\App\Domain\Collections\Models\Collection::class, 'card_collections');
+        return $this->belongsToMany(\App\Domain\Collections\Models\Collection::class, 'card_collections')
+            ->withPivot(['price_when_added', 'foil', 'description', 'condition', 'quantity']);
     }
 
     /**
