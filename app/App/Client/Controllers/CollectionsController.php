@@ -5,6 +5,7 @@ namespace App\App\Client\Controllers;
 use App\App\Base\Controller;
 use App\App\Client\Repositories\CardsRepository;
 use App\App\Client\Repositories\SetsRepository;
+use App\App\Client\Traits\WithLoadAttribute;
 use App\Domain\Collections\Models\Collection;
 use Auth;
 use Illuminate\Http\Request;
@@ -13,6 +14,8 @@ use Inertia\Response;
 
 class CollectionsController extends Controller
 {
+    use WithLoadAttribute;
+
     /**
      * @return Response
      */
@@ -41,14 +44,11 @@ class CollectionsController extends Controller
                 ->fromRequest($request, 'card')
                 ->filterOnSets($setIds)->with(['set'])
                 ->getPaginated(15);
-            foreach ($cards as $card) {
-                $card->imagePath = $card->image_url;
-            }
         }
 
         return Inertia::render('Collections/Edit', [
-            'collection' => $collection,
-            'cards'      => $cards,
+            'collection' => $collection->load('cards'),
+            'cards'      => $this->loadAttribute($cards, ['image_url']),
             'sets'       => $sets,
         ]);
     }

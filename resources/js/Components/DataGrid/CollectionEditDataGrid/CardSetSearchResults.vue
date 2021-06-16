@@ -1,7 +1,7 @@
 <template>
     <div class="w-full">
         <div
-            v-if="cards.length || sets.length"
+            v-if="cards || sets.length"
             class="rounded-md mt-4 p-4 bg-gray-200"
         >
             <div v-if="cards.length" class="p-4">
@@ -20,7 +20,7 @@
                     "
                 >
                     <img
-                        :src="card.imagePath"
+                        :src="card.image_url"
                         :alt="card.name"
                         class="h-48 px-4"
                     />
@@ -55,7 +55,7 @@
                                     +
                                 </button>
                                 <p class="text-2xl text-center bg-white w-full">
-                                    0
+                                    {{ card.collectionQuantityNonFoil }}
                                 </p>
                                 <button
                                     class="
@@ -109,7 +109,7 @@
                                     +
                                 </button>
                                 <p class="text-2xl text-center bg-white w-full">
-                                    0
+                                    {{ card.collectionQuantityFoil }}
                                 </p>
                                 <button
                                     class="
@@ -162,15 +162,15 @@
                     </div>
                 </div>
             </div>
-            <div v-if="!cards.length" class="p-4">
-                <button
-                    v-for="(set, index) in sets"
-                    :key="index"
-                    class="block bg-gray-100 rounded-md w-full py-2 px-4 mb-2"
-                >
-                    {{ set.name }}
-                </button>
-            </div>
+            <!--            <div v-if="!cards" class="p-4">-->
+            <!--                <button-->
+            <!--                    v-for="(set, index) in sets"-->
+            <!--                    :key="index"-->
+            <!--                    class="block bg-gray-100 rounded-md w-full py-2 px-4 mb-2"-->
+            <!--                >-->
+            <!--                    {{ set.name }}-->
+            <!--                </button>-->
+            <!--            </div>-->
         </div>
     </div>
 </template>
@@ -181,14 +181,12 @@ import formatCurrency from "@/Shared/api/ConvertValue";
 export default {
     name: "CardSetSearchResults",
 
-    props: {
-        cards: {
-            type: Array,
-            default: () => {},
+    computed: {
+        cards() {
+            return this.$store.getters.cardSearchResults.data;
         },
-        sets: {
-            type: Array,
-            default: () => {},
+        sets() {
+            return this.$store.getters.setSearchResults;
         },
     },
 

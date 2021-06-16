@@ -1,11 +1,7 @@
 <template>
     <CardSetSearch v-model="cardSearchTerm" v-model:setName="setSearchTerm" />
-    <p v-if="searching" class="text-sm text-green-600">Searching...</p>
-    <CardSetSearchResults
-        v-if="cards.data"
-        v-model:cards="cards.data"
-        v-model:sets="sets"
-    />
+    <p v-if="searching" class="text-xs text-gray-400">Searching...</p>
+    <CardSetSearchResults />
 </template>
 
 <script>
@@ -64,6 +60,13 @@ export default {
         });
     },
 
+    mounted() {
+        this.addCollectionsToStore();
+        let clear = { searchResults: [] };
+        this.$store.dispatch("addCardSearchResults", clear);
+        this.$store.dispatch("addSetSearchResults", clear);
+    },
+
     methods: {
         search: _.debounce(function () {
             this.searching = true;
@@ -76,33 +79,32 @@ export default {
                 },
                 onSuccess: (res) => {
                     this.searching = false;
-                    this.cards = res.props.cards;
-                    this.sets = res.props.sets;
+                    this.$store.dispatch("addCardSearchResults", {
+                        searchResults: this.getCardsWithQuantities(
+                            res.props.cards
+                        ),
+                    });
+                    this.$store.dispatch("addSetSearchResults", {
+                        searchResults: res.props.sets,
+                    });
                 },
             });
         }, 1200),
-        saveCard: function (collectionCard) {
-            const storeCollection = this.$store.getters.collection(
-                this.collection.id
-            );
-            if (storeCollection) {
-                this.updateCardInStore(collectionCard);
-            } else {
-                this.$store
-                    .dispatch("addCollection", {
-                        collection: {
-                            id: this.collection.id,
-                        },
-                    })
-                    .then(() => {
-                        this.updateCardInStore(collectionCard);
-                    });
+        addCollectionsToStore: async function () {
+            for (const card of this.collection.cards) {
+                await this.saveCard(card.pivot);
             }
         },
-        deleteCard: function (id) {
+        createCard: function (card) {
+            return this.$store.dispatch("addCardToCollection", {
+                collectionCard: card,
+            });
+        },
+        deleteCard: function (id, foil) {
             const collectionCard = this.$store.getters.collectionCard(
                 this.collection.id,
-                id
+                id,
+                foil
             );
             if (collectionCard) {
                 this.$store.dispatch("removeCardFromCollection", {
@@ -110,20 +112,102 @@ export default {
                 });
             }
         },
-        updateCardInStore: function (card) {
-            const collectionCard = this.$store.getters.collectionCard(
+        getCardsWithQuantities: function (cards) {
+            if (!cards) {
+                return cards;
+            }
+
+            const cardData = [];
+
+            for (let card of cards.data) {
+                let foil = 0;
+                let nonFoil = 0;
+
+                const collectionFoil = this.findCardInStore({
+                    card_id: card.id,
+                    foil: 1,
+                });
+                if (collectionFoil) {
+                    foil = collectionFoil.quantity;
+                }
+
+                const collectionNonFoil = this.findCardInStore({
+                    card_id: card.id,
+                    foil: 0,
+                });
+                if (collectionNonFoil) {
+                    nonFoil = collectionNonFoil.quantity;
+                }
+
+                card.collectionQuantityFoil = foil;
+                card.collectionQuantityNonFoil = nonFoil;
+
+                cardData.push(card);
+            }
+
+            cards.data = cardData;
+            return cards;
+        },
+        findCardInStore: function (card) {
+            return this.$store.getters.collectionCard(
                 this.collection.id,
-                card.card_id
+                card.card_id,
+                card.foil
             );
+        },
+        findCardInStoreOrCreate: async function (card) {
+            const collectionCard = this.findCardInStore(card);
+            if (collectionCard) {
+                return collectionCard;
+            }
+            await this.createCard(card);
+            return this.findCardInStore(card);
+        },
+        findCollectionInStore: function () {
+            return this.$store.getters.collection(this.collection.id);
+        },
+        findCollectionInStoreOrCreate: async function () {
+            const storeCollection = this.findCollectionInStore();
+            if (storeCollection) {
+                return storeCollection;
+            }
+            await this.$store.dispatch("addCollection", {
+                collection: {
+                    id: this.collection.id,
+                },
+            });
+            return this.findCollectionInStore();
+        },
+        saveCard: async function (collectionCard) {
+            await this.findCollectionInStoreOrCreate();
+            await this.updateCardInStore(collectionCard);
+        },
+        updateCardInStore: function (card) {
+            const collectionCard = this.findCardInStore(card);
             if (collectionCard) {
                 this.$store.dispatch("updateCardQuantityInCollection", {
                     collectionCard: card,
                 });
-            } else {
-                this.$store.dispatch("addCardToCollection", {
-                    collectionCard: card,
-                });
             }
+            this.createCard(card);
+        },
+        updateSearchResultsQuantity: function (data, change) {
+            let id = change.id;
+            let foil = change.foil;
+            let quantity = 0;
+            if (data.collectionCard) {
+                quantity = data.collectionCard.quantity;
+            }
+            const card = this.$store.getters.cardSearchResultsCard(id);
+
+            if (!card) {
+                return;
+            }
+            this.$store.dispatch("updateCardSearchResultsCard", {
+                id: id,
+                foil: foil,
+                quantity: quantity,
+            });
         },
         updateCardQuantity: function (change) {
             axios
@@ -133,11 +217,11 @@ export default {
                 })
                 .then((res) => {
                     const data = res.data;
+                    this.updateSearchResultsQuantity(data, change);
                     if (data.collectionCard) {
-                        this.saveCard(data.collectionCard);
-                    } else {
-                        this.deleteCard(change.id);
+                        return this.saveCard(data.collectionCard);
                     }
+                    this.deleteCard(change.id, change.foil);
                 });
         },
     },
