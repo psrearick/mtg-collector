@@ -2,15 +2,15 @@
 
 namespace App\Domain\Cards\Models;
 
-use App\Domain\Cards\Actions\GetCardFeatures;
-use App\Domain\Cards\Actions\GetCardImage;
-use App\Domain\Cards\Actions\GetScryfallCard;
 use App\Domain\CardAttributes\Models\ForeignData;
 use App\Domain\CardAttributes\Models\FrameEffect;
 use App\Domain\CardAttributes\Models\LeadershipSkill;
 use App\Domain\CardAttributes\Models\Legality;
 use App\Domain\CardAttributes\Models\Printing;
 use App\Domain\CardAttributes\Models\Ruling;
+use App\Domain\Cards\Actions\GetCardFeatures;
+use App\Domain\Cards\Actions\GetCardImage;
+use App\Domain\Cards\Actions\GetScryfallCard;
 use App\Domain\Prices\Models\Price;
 use App\Domain\Prices\Models\PriceProvider;
 use Illuminate\Database\Eloquent\HigherOrderBuilderProxy;

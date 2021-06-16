@@ -37,19 +37,19 @@
                                 class="p-2 mx-4 shadow-md bg-gray-100 w-32"
                             >
                                 <button
-                                    @click="
-                                        emitter.emit('updateCardQuantity', {
-                                            change: 1,
-                                            id: card.id,
-                                            foil: false,
-                                        })
-                                    "
                                     class="
                                         p-2
                                         bg-green-500
                                         hover:bg-green-900
                                         text-white
                                         w-full
+                                    "
+                                    @click="
+                                        emitter.emit('updateCardQuantity', {
+                                            change: 1,
+                                            id: card.id,
+                                            foil: false,
+                                        })
                                     "
                                 >
                                     +
@@ -58,19 +58,19 @@
                                     0
                                 </p>
                                 <button
-                                    @click="
-                                        emitter.emit('updateCardQuantity', {
-                                            change: -1,
-                                            id: card.id,
-                                            foil: false,
-                                        })
-                                    "
                                     class="
                                         p-2
                                         bg-blue-500
                                         hover:bg-blue-900
                                         text-white
                                         w-full
+                                    "
+                                    @click="
+                                        emitter.emit('updateCardQuantity', {
+                                            change: -1,
+                                            id: card.id,
+                                            foil: false,
+                                        })
                                     "
                                 >
                                     -
@@ -91,19 +91,19 @@
                                 class="p-2 mx-4 shadow-md bg-gray-100 w-32"
                             >
                                 <button
-                                    @click="
-                                        emitter.emit('updateCardQuantity', {
-                                            change: 1,
-                                            id: card.id,
-                                            foil: true,
-                                        })
-                                    "
                                     class="
                                         p-2
                                         bg-green-500
                                         hover:bg-green-900
                                         text-white
                                         w-full
+                                    "
+                                    @click="
+                                        emitter.emit('updateCardQuantity', {
+                                            change: 1,
+                                            id: card.id,
+                                            foil: true,
+                                        })
                                     "
                                 >
                                     +
@@ -112,19 +112,19 @@
                                     0
                                 </p>
                                 <button
-                                    @click="
-                                        emitter.emit('updateCardQuantity', {
-                                            change: -1,
-                                            id: card.id,
-                                            foil: true,
-                                        })
-                                    "
                                     class="
                                         p-2
                                         bg-blue-500
                                         hover:bg-blue-900
                                         text-white
                                         w-full
+                                    "
+                                    @click="
+                                        emitter.emit('updateCardQuantity', {
+                                            change: -1,
+                                            id: card.id,
+                                            foil: true,
+                                        })
                                     "
                                 >
                                     -

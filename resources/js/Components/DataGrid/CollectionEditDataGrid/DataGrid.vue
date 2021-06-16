@@ -108,7 +108,6 @@ export default {
                 this.$store.dispatch("removeCardFromCollection", {
                     collectionCard: collectionCard,
                 });
-            } else {
             }
         },
         updateCardInStore: function (card) {

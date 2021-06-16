@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Domain\Cards\Actions;
 
 use Illuminate\Support\Collection;
@@ -10,13 +9,14 @@ class ScryfallSearch
 {
     public function autocomplete(string $query)
     {
-        $cardNames = Http::get("https://api.scryfall.com/cards/autocomplete",
+        $cardNames = Http::get('https://api.scryfall.com/cards/autocomplete',
         [
-            'q' => $query
+            'q' => $query,
         ])->json();
         if (!$cardNames) {
             return [];
         }
+
         return $cardNames['data'];
     }
 }

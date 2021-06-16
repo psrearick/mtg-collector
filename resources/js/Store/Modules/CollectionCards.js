@@ -73,8 +73,9 @@ const mutations = {
             .find(
                 (collection) => collection.id === collectionCard.collection_id
             )
-            .cards.find((card) => card.card_id === collectionCard.card_id).quantity =
-            collectionCard.quantity;
+            .cards.find(
+                (card) => card.card_id === collectionCard.card_id
+            ).quantity = collectionCard.quantity;
     },
 };
 
