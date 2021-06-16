@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Actions\DownloadFileAction;
+use App\Domain\Cards\Actions\DownloadFileAction;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Prices\Models\PriceProvider;
 use Illuminate\Bus\Queueable;

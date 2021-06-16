@@ -5,6 +5,7 @@ namespace App\App\Client\Controllers;
 use App\App\Base\Controller;
 use App\App\Client\Repositories\CardsRepository;
 use App\App\Client\Repositories\SetsRepository;
+use App\Domain\Cards\Actions\ScryfallSearch;
 use App\Domain\Cards\Models\Card;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -59,6 +60,20 @@ class CardsController extends Controller
             $setRepository  = new SetsRepository();
             $cardRepository = new CardsRepository();
             $sets           = $setRepository->fromRequest($request, 'set')->getIds();
+
+//            $cardNames = (new ScryfallSearch())->autocomplete($request->get('card'));
+//            dd($cardNames);
+//            if ($cardNames) {
+//                $cards          = $cardRepository
+//                    ->select('cards.*')
+//                    ->in('cards.name', $cardNames)
+//                    ->with(['set'])
+//                    ->getPaginated($perPage);
+//            }
+
+
+
+
             $cards          = $cardRepository
             ->select('cards.*')
             ->fromRequest($request, 'card')

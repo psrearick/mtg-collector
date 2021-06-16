@@ -81,11 +81,65 @@ export default {
                 },
             });
         }, 1200),
+        saveCard: function (collectionCard) {
+            const storeCollection = this.$store.getters.collection(
+                this.collection.id
+            );
+            if (storeCollection) {
+                this.updateCardInStore(collectionCard);
+            } else {
+                this.$store
+                    .dispatch("addCollection", {
+                        collection: {
+                            id: this.collection.id,
+                        },
+                    })
+                    .then(() => {
+                        this.updateCardInStore(collectionCard);
+                    });
+            }
+        },
+        deleteCard: function (id) {
+            const collectionCard = this.$store.getters.collectionCard(
+                this.collection.id,
+                id
+            );
+            if (collectionCard) {
+                this.$store.dispatch("removeCardFromCollection", {
+                    collectionCard: collectionCard,
+                });
+            } else {
+            }
+        },
+        updateCardInStore: function (card) {
+            const collectionCard = this.$store.getters.collectionCard(
+                this.collection.id,
+                card.card_id
+            );
+            if (collectionCard) {
+                this.$store.dispatch("updateCardQuantityInCollection", {
+                    collectionCard: card,
+                });
+            } else {
+                this.$store.dispatch("addCardToCollection", {
+                    collectionCard: card,
+                });
+            }
+        },
         updateCardQuantity: function (change) {
-            axios.post("/card-collections/card-collections", {
-                change: change,
-                collection: this.collection.id,
-            });
+            axios
+                .post("/card-collections/card-collections", {
+                    change: change,
+                    collection: this.collection.id,
+                })
+                .then((res) => {
+                    const data = res.data;
+                    if (data.collectionCard) {
+                        this.saveCard(data.collectionCard);
+                    } else {
+                        this.deleteCard(change.id);
+                    }
+                });
         },
     },
 };

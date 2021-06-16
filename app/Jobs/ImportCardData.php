@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Actions\DownloadFileAction;
+use App\Domain\Cards\Actions\DownloadFileAction;
 use App\Domain\CardAttributes\Models\Color;
 use App\Domain\CardAttributes\Models\Keyword;
 use App\Domain\CardAttributes\Models\LeadershipSkill;

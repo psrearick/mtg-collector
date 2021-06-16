@@ -2,9 +2,9 @@
 
 namespace App\Domain\Cards\Models;
 
-use App\Actions\GetCardFeatures;
-use App\Actions\GetCardImage;
-use App\Actions\GetScryfallCard;
+use App\Domain\Cards\Actions\GetCardFeatures;
+use App\Domain\Cards\Actions\GetCardImage;
+use App\Domain\Cards\Actions\GetScryfallCard;
 use App\Domain\CardAttributes\Models\ForeignData;
 use App\Domain\CardAttributes\Models\FrameEffect;
 use App\Domain\CardAttributes\Models\LeadershipSkill;
@@ -24,7 +24,7 @@ class Card extends CardGeneric
 {
     use Searchable;
 
-    public $appends = ['feature', 'features', 'image_url'];
+    public $appends = ['feature', 'features'];
 
     public $asYoyType = true;
 

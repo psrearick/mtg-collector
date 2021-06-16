@@ -67,6 +67,13 @@ class Repository
         return $this->results->paginate($perPage, $this->results->count(), $page)->withQueryString();
     }
 
+    public function in(string $field, array $values) : Repository
+    {
+        $this->query = $this->query->whereIn($field, $values);
+
+        return $this;
+    }
+
     public function run() : Repository
     {
         $this->results = $this->query->get();

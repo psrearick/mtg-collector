@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions;
+namespace App\Domain\Cards\Actions;
 
 use App\Domain\Cards\Models\Card;
 
