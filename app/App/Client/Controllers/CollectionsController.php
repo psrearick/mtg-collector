@@ -40,7 +40,10 @@ class CollectionsController extends Controller
                 ->select('cards.*')
                 ->fromRequest($request, 'card')
                 ->filterOnSets($setIds)->with(['set'])
-                ->getPaginated(25);
+                ->getPaginated(15);
+            foreach ($cards as $card) {
+                $card->imagePath = $card->image_url;
+            }
         }
 
         return Inertia::render('Collections/Edit', [

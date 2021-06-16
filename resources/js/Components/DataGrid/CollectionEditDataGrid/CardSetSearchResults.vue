@@ -20,7 +20,7 @@
                     "
                 >
                     <img
-                        :src="card.image_url"
+                        :src="card.imagePath"
                         :alt="card.name"
                         class="h-48 px-4"
                     />
