@@ -79,10 +79,12 @@ export default {
                 },
                 onSuccess: (res) => {
                     this.searching = false;
+                    let cards = this.getCardsWithQuantities(
+                        res.props.cards
+                        );
+                    console.log([cards, res.props.cards]);
                     this.$store.dispatch("addCardSearchResults", {
-                        searchResults: this.getCardsWithQuantities(
-                            res.props.cards
-                        ),
+                        searchResults: cards,
                     });
                     this.$store.dispatch("addSetSearchResults", {
                         searchResults: res.props.sets,
@@ -113,7 +115,7 @@ export default {
             }
         },
         getCardsWithQuantities: function (cards) {
-            if (!cards) {
+            if (!Object.keys(cards).length) {
                 return cards;
             }
 

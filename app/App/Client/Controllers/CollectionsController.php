@@ -6,6 +6,7 @@ use App\App\Base\Controller;
 use App\App\Client\Repositories\CardsRepository;
 use App\App\Client\Repositories\SetsRepository;
 use App\App\Client\Traits\WithLoadAttribute;
+use App\Domain\Cards\Actions\CardSearch;
 use App\Domain\Collections\Models\Collection;
 use Auth;
 use Illuminate\Http\Request;
@@ -31,25 +32,13 @@ class CollectionsController extends Controller
      */
     public function edit(Collection $collection, Request $request) : Response
     {
-        $cards = [];
-        $sets  = [];
 
-        if ($request->get('set') || $request->get('card')) {
-            $setRepository  = new SetsRepository();
-            $cardRepository = new CardsRepository();
-            $sets           = $setRepository->fromRequest($request, 'set')->get();
-            $setIds         = $setRepository->getIds();
-            $cards          = $cardRepository
-                ->select('cards.*')
-                ->fromRequest($request, 'card')
-                ->filterOnSets($setIds)->with(['set'])
-                ->getPaginated(15);
-        }
+        $search = CardSearch::search($request);
 
         return Inertia::render('Collections/Edit', [
             'collection' => $collection->load('cards'),
-            'cards'      => $this->loadAttribute($cards, ['image_url']),
-            'sets'       => $sets,
+            'cards'      => $this->loadAttribute($search['cards'], ['image_url']),
+            'sets'       => $search['sets'],
         ]);
     }
 

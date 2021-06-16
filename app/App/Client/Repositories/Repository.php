@@ -51,11 +51,6 @@ class Repository
         return $this->results;
     }
 
-    public function getIds() : array
-    {
-        return $this->get()->pluck('id')->toArray();
-    }
-
     public function getPaginated(int $perPage, int $page = null, Request $request = null) : LengthAwarePaginator
     {
         $request = $request ?: $this->request;
@@ -65,6 +60,14 @@ class Repository
         }
 
         return $this->results->paginate($perPage, $this->results->count(), $page)->withQueryString();
+    }
+
+    public function ids() : array
+    {
+        if (!$this->results) {
+            $this->run();
+        }
+        return $this->results->pluck('id')->toArray();
     }
 
     public function in(string $field, array $values) : Repository

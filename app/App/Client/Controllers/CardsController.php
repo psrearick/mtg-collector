@@ -4,7 +4,9 @@ namespace App\App\Client\Controllers;
 
 use App\App\Base\Controller;
 use App\App\Client\Repositories\CardsRepository;
+use App\App\Client\Repositories\Repository;
 use App\App\Client\Repositories\SetsRepository;
+use App\Domain\Cards\Actions\CardSearch;
 use App\Domain\Cards\Actions\ScryfallSearch;
 use App\Domain\Cards\Models\Card;
 use Illuminate\Http\Request;
@@ -53,27 +55,7 @@ class CardsController extends Controller
      */
     public function index(Request $request) : Response
     {
-        $perPage    = 15;
-        $cards      = [];
-
-        if ($request->get('set') || $request->get('card')) {
-            $setRepository  = new SetsRepository();
-            $cardRepository = new CardsRepository();
-            $sets           = $setRepository->fromRequest($request, 'set')->getIds();
-
-            $cards          = $cardRepository
-            ->select('cards.*')
-            ->fromRequest($request, 'card')
-            ->filterOnSets($sets)->with(['set'])
-            ->getPaginated($perPage);
-        }
-
-        return Inertia::render('Cards/Index', [
-            'cards'         => $cards,
-            'perPage'       => $perPage,
-            'cardQuery'     => $request->get('card'),
-            'setQuery'      => $request->get('set'),
-        ]);
+        return Inertia::render('Cards/Index', CardSearch::search($request));
     }
 
     /**

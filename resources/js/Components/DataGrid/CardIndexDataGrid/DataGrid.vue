@@ -5,7 +5,7 @@
             v-model="cardSearchTerm"
             v-model:setName="setSearchTerm"
         />
-        <p v-if="searching" class="text-sm text-green-600">Searching...</p>
+        <p v-if="searching" class="text-xs text-gray-400">Searching...</p>
         <data-table
             v-if="data.length"
             v-model:sort="sortFields"
