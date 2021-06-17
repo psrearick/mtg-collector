@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Actions\DownloadFileAction;
 use App\Domain\CardAttributes\Models\Color;
 use App\Domain\CardAttributes\Models\Keyword;
 use App\Domain\CardAttributes\Models\LeadershipSkill;
@@ -9,7 +10,6 @@ use App\Domain\CardAttributes\Models\Printing;
 use App\Domain\CardAttributes\Models\Subtype;
 use App\Domain\CardAttributes\Models\Supertype;
 use App\Domain\CardAttributes\Models\Type;
-use App\Domain\Cards\Actions\DownloadFileAction;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Cards\Models\CardGeneric;
 use App\Domain\Cards\Models\Token;

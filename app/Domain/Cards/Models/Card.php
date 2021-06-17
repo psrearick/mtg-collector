@@ -13,11 +13,13 @@ use App\Domain\Cards\Actions\GetCardImage;
 use App\Domain\Cards\Actions\GetScryfallCard;
 use App\Domain\Prices\Models\Price;
 use App\Domain\Prices\Models\PriceProvider;
+use App\Jobs\ImportCardImages;
 use Illuminate\Database\Eloquent\HigherOrderBuilderProxy;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Scout\Searchable;
 
 class Card extends CardGeneric
@@ -122,9 +124,16 @@ class Card extends CardGeneric
      */
     public function getImageUrlAttribute() : string
     {
-        return (new GetCardImage)->execute($this->scryfallId);
+        if ($this->imagePath) {
+            return asset($this->imagePath);
+        }
+        $imageUrl = app(GetCardImage::class)->execute($this->scryfallId);
+        ImportCardImages::dispatchAfterResponse($this, $imageUrl);
+
+        return $imageUrl;
     }
 
+//
 //    /**
 //     * @return HigherOrderBuilderProxy|mixed
 //     */
@@ -134,7 +143,7 @@ class Card extends CardGeneric
 //            ->where('provider.name', 'tcgplayer')
 //            ->where('foil', true)
 //            ->join('providers', 'providers.id', '=', 'prices.provider_id');
-////            ->first();
+    ////            ->first();
 //        return $this->getPriceOfType(true);
 //    }
 //
@@ -147,7 +156,7 @@ class Card extends CardGeneric
 //            ->where('provider.name', 'tcgplayer')
 //            ->where('foil', false)
 //            ->join('providers', 'providers.id', '=', 'prices.provider_id');
-////            ->first();
+    ////            ->first();
 //        return $this->getPriceOfType(false);
 //    }
 //

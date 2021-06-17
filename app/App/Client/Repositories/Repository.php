@@ -67,6 +67,7 @@ class Repository
         if (!$this->results) {
             $this->run();
         }
+
         return $this->results->pluck('id')->toArray();
     }
 

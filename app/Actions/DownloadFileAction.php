@@ -28,6 +28,29 @@ class DownloadFileAction
         return $save_file_loc;
     }
 
+    public function saveFile(string $path, string $url) : void
+    {
+        // Only create the file if it doesn't exist
+        if (file_exists($path)) {
+            return;
+        }
+
+        // Initialize the cURL session and open file
+        $ch = curl_init($url);
+        $fp = fopen($path, 'c');
+
+        // set an option for a cURL transfer
+        curl_setopt($ch, CURLOPT_FILE, $fp);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+
+        // Perform a cURL session
+        curl_exec($ch);
+
+        // Closes a cURL session and file and free all resources
+        curl_close($ch);
+        fclose($fp);
+    }
+
     /**
      * Remove old files
      *
@@ -102,28 +125,5 @@ class DownloadFileAction
         arsort($files);
 
         return $files;
-    }
-
-    private function saveFile(string $path, string $url) : void
-    {
-        // Only create the file if it doesn't exist
-        if (file_exists($path)) {
-            return;
-        }
-
-        // Initialize the cURL session and open file
-        $ch = curl_init($url);
-        $fp = fopen($path, 'c');
-
-        // set an option for a cURL transfer
-        curl_setopt($ch, CURLOPT_FILE, $fp);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-
-        // Perform a cURL session
-        curl_exec($ch);
-
-        // Closes a cURL session and file and free all resources
-        curl_close($ch);
-        fclose($fp);
     }
 }

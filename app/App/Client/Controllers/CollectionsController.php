@@ -32,7 +32,6 @@ class CollectionsController extends Controller
      */
     public function edit(Collection $collection, Request $request) : Response
     {
-
         $search = CardSearch::search($request);
 
         return Inertia::render('Collections/Edit', [
