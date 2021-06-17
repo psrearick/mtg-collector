@@ -1,10 +1,20 @@
 <template>
     <div>
-        <h3 class="text-lg leading-6 font-medium text-gray-900 mb-8">
-            Add Cards to Collection
-        </h3>
-        <div class="w-full">
-            <DataGrid :collection="collection" />
+        <div class="mb-12">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 py-4">
+                Add Cards to Collection
+            </h3>
+            <div class="w-full">
+                <CardSearch :collection="collection" />
+            </div>
+        </div>
+        <div>
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-8">
+                Your Collection
+            </h3>
+            <div class="w-full">
+
+            </div>
         </div>
     </div>
 </template>
@@ -12,11 +22,11 @@
 <script>
 import Layout from "@/Layouts/Authenticated";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
-import DataGrid from "@/Components/DataGrid/CollectionEditDataGrid/DataGrid";
+import CardSearch from "@/Components/Form/CardSearch/CardSearch";
 
 export default {
     name: "EditCollection",
-    components: { DataGrid },
+    components: { CardSearch },
     layout: Layout,
 
     title: "MTG Collector - Edit Collection",

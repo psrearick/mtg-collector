@@ -5,13 +5,12 @@
 </template>
 
 <script>
-import CardSetSearch from "@/Components/DataGrid/CollectionEditDataGrid/CardSetSearch";
-import CardSetSearchResults from "@/Components/DataGrid/CollectionEditDataGrid/CardSetSearchResults";
-import DataGridPagination from "@/Components/DataGrid/DataGridPagination";
+import CardSetSearch from "@/Components/Form/CardSearch/CardSetSearch";
+import CardSetSearchResults from "@/Components/Form/CardSearch/CardSetSearchResults";
 export default {
-    name: "DataGrid",
+    name: "CardSearch",
 
-    components: { DataGridPagination, CardSetSearchResults, CardSetSearch },
+    components: { CardSetSearchResults, CardSetSearch },
 
     props: {
         collection: {
@@ -82,7 +81,6 @@ export default {
                     let cards = this.getCardsWithQuantities(
                         res.props.cards
                         );
-                    console.log([cards, res.props.cards]);
                     this.$store.dispatch("addCardSearchResults", {
                         searchResults: cards,
                     });
@@ -212,6 +210,7 @@ export default {
             });
         },
         updateCardQuantity: function (change) {
+            console.log(change);
             axios
                 .post("/card-collections/card-collections", {
                     change: change,

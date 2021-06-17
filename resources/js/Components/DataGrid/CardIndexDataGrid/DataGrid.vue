@@ -24,7 +24,7 @@
 import DataTable from "@/Components/DataGrid/DataGridTable";
 import Search from "@/Components/Form/Search";
 import DataGridPagination from "@/Components/DataGrid/DataGridPagination";
-import CardSetSearch from "@/Components/DataGrid/CollectionEditDataGrid/CardSetSearch";
+import CardSetSearch from "@/Components/Form/CardSearch/CardSetSearch";
 
 export default {
     name: "DataGrid",

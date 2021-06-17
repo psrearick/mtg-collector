@@ -39,7 +39,7 @@ export default {
     computed: {
         classes() {
             let classes = [
-                "relative rounded-lg border px-3 py-2 shadow-sm flex items-center space-x-3 text-center",
+                "relative rounded-lg border px-3 py-2 shadow flex items-center space-x-3 text-center",
             ];
 
             let hoverClasses = [

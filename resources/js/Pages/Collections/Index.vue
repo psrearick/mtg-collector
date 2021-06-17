@@ -12,7 +12,21 @@
                         route('collections.show', { collection: collection.id })
                     "
                 >
-                    <CardListCard link>{{ collection.name }}</CardListCard>
+                    <CardListCard link>
+                        <div class="py-4">
+                            {{ collection.name }}
+                        </div>
+                        <div class="grid grid-cols-2 pb-4">
+                            <div>
+                                <p class="text-xs text-gray-500">Cards</p>
+                                <p>75</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500">Value</p>
+                                <p>$750.00</p>
+                            </div>
+                        </div>
+                    </CardListCard>
                 </inertia-link>
             </div>
         </div>
