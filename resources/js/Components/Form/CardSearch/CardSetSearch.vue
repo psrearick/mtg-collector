@@ -3,7 +3,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
             <div class="md:col-span-2 lg:col-span-3">
                 <label class="ml-3 text-xs text-gray-500" for="searchCard"
-                    >Card Name</label
+                    >Card</label
                 >
                 <div class="relative">
                     <div
@@ -43,7 +43,7 @@
                             focus:bg-gray-50
                             focus:border-gray-500
                         "
-                        placeholder="Search Card Name"
+                        placeholder="Search by Card Name"
                         type="search"
                         :value="modelValue"
                         @input="$emit('update:modelValue', $event.target.value)"
@@ -52,7 +52,7 @@
             </div>
             <div>
                 <label for="searchSet" class="ml-3 text-xs text-gray-500"
-                    >Set Name</label
+                    >Set</label
                 >
                 <div class="relative">
                     <div
@@ -92,7 +92,7 @@
                             focus:bg-gray-50
                             focus:border-gray-500
                         "
-                        placeholder="Search Set Name/Code"
+                        placeholder="Search by Set Name or Code"
                         type="search"
                         :value="setName"
                         @input="$emit('update:setName', $event.target.value)"

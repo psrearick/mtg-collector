@@ -36,8 +36,9 @@ class CollectionsController extends Controller
         $search = CardSearch::search($request);
 
         return Inertia::render('Collections/Edit', [
-            'collection' => $collection->load('cards'),
+            'collection' => Collection::with(['cards', 'cards.frameEffects'])->find($collection->id),
             'cards'      => $this->loadAttribute($search['cards'], ['image_url']),
+            'cards'      => $search,
             'sets'       => $search['sets'],
         ]);
     }

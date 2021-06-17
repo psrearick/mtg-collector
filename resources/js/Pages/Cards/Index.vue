@@ -1,5 +1,5 @@
 <template>
-    <data-grid
+    <CardIndexDataGrid
         v-model:card-term="cardSearchTerm"
         v-model:set-term="setSearchTerm"
         v-model:searching="searching"
@@ -15,12 +15,12 @@
 
 <script>
 import Layout from "@/Layouts/Authenticated";
-import DataGrid from "@/Components/DataGrid/CardIndexDataGrid/DataGrid";
+import CardIndexDataGrid from "@/Components/DataGrid/CardIndexDataGrid/CardIndexDataGrid";
 
 export default {
     name: "CardIndex",
 
-    components: { DataGrid },
+    components: { CardIndexDataGrid },
 
     layout: Layout,
 

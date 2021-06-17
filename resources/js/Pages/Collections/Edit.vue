@@ -13,7 +13,7 @@
                 Your Collection
             </h3>
             <div class="w-full">
-
+                <CollectionEditDataGrid />
             </div>
         </div>
     </div>
@@ -23,10 +23,11 @@
 import Layout from "@/Layouts/Authenticated";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import CardSearch from "@/Components/Form/CardSearch/CardSearch";
+import CollectionEditDataGrid from "@/Components/DataGrid/CollectionEditDataGrid/CollectionEditDataGrid";
 
 export default {
     name: "EditCollection",
-    components: { CardSearch },
+    components: { CollectionEditDataGrid, CardSearch },
     layout: Layout,
 
     title: "MTG Collector - Edit Collection",

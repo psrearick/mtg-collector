@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.4|^8.0",
         "ext-curl": "*",
+        "barryvdh/laravel-debugbar": "^3.6",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",

@@ -78,9 +78,7 @@ export default {
                 },
                 onSuccess: (res) => {
                     this.searching = false;
-                    let cards = this.getCardsWithQuantities(
-                        res.props.cards
-                        );
+                    let cards = this.getCardsWithQuantities(res.props.cards.cards);
                     this.$store.dispatch("addCardSearchResults", {
                         searchResults: cards,
                     });

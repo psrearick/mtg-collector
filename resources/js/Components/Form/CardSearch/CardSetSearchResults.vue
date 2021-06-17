@@ -172,7 +172,7 @@
                                 >
                                     +
                                 </button>
-                                <div class="text-2xl text-center bg-white">
+                                <div class="text-2xl text-center bg-white py-1">
                                     <input
                                         v-if="
                                             activeField === index &&
