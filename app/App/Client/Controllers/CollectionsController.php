@@ -36,7 +36,7 @@ class CollectionsController extends Controller
 
         return Inertia::render('Collections/Edit', [
             'collection' => Collection::with(['cards', 'cards.frameEffects'])->find($collection->id),
-            'cards'      => $this->loadAttribute($search['cards'], ['image_url']),
+            'cards'      => $search['cards'] ? $this->loadAttribute($search['cards'], ['image_url']) : [],
             'cards'      => $search,
             'sets'       => $search['sets'],
         ]);

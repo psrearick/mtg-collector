@@ -20,13 +20,15 @@ class CardSearch
         $cards       = app(CardsRepository::class)->select('cards.*');
         $setRequest  = $request->get('set');
         $cardRequest = $request->get('card');
+        $results     = false;
 
         if ($cardRequest) {
 //            $cards->startsWith($cardRequest); // Replace this search with scryfall fuzzy search
             $names = app(ScryfallSearch::class)->autocomplete($cardRequest);
-            if ($names) {
+            if (count($names)) {
                 $cards->in('cards.name', $names);
                 $cards->with(['frameEffects', 'prices', 'prices.priceProvider']);
+                $results = true;
             }
         }
 
@@ -36,10 +38,11 @@ class CardSearch
             $sets   = $sets->get();
             if ($sets) {
                 $cards->filterOnSets($setIds);
+                $results = true;
             }
         }
 
-        if ($cardRequest || $setRequest) {
+        if ($results) {
             $results = $cards->with(['set'])->getPaginated($perPage);
             foreach ($results as $result) {
                 $prices    = $result->prices;
