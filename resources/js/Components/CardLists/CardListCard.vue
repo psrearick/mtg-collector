@@ -39,7 +39,7 @@ export default {
     computed: {
         classes() {
             let classes = [
-                "relative rounded-lg border px-3 py-2 shadow flex items-center space-x-3 text-center",
+                "relative rounded-lg border px-3 py-2 shadow-md flex items-center space-x-3 text-center",
             ];
 
             let hoverClasses = [
@@ -64,7 +64,7 @@ export default {
             } else {
                 classes.push("border-gray-300 bg-white");
                 hoverClasses.push(
-                    "hover:border-gray-300 focus-within:ring-indigo-500 hover:bg-gray-50"
+                    "hover:border-gray-300 focus-within:ring-indigo-500 hover:bg-gray-100"
                 );
             }
             let classString = classes.join(" ");

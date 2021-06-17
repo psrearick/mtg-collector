@@ -269,14 +269,18 @@
                                 >Non-Foil</span
                             >
                             <span v-if="card.hasNonFoil">{{
-                                format(card.price_normal)
+                                card.price_normal
+                                    ? format(card.price_normal.price)
+                                    : "N/A"
                             }}</span>
                             <span v-else>N/A</span>
                         </p>
                         <p class="text-right">
                             <span class="text-sm text-gray-500 mr-2">Foil</span>
                             <span v-if="card.hasFoil">{{
-                                format(card.price_foil)
+                                card.price_foil
+                                    ? format(card.price_foil.price)
+                                    : "N/A"
                             }}</span>
                             <span v-else>N/A</span>
                         </p>

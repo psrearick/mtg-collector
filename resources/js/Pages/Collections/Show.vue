@@ -1,6 +1,6 @@
 <template>
     <div>
-        <CardList classes="md:grid-cols-4">
+        <CardList classes="md:grid-cols-4 mb-8">
             <CardListCard>
                 <dt class="text-sm font-medium text-gray-500 truncate">
                     Total Cards
@@ -31,8 +31,10 @@
             </CardListCard>
         </CardList>
 
-        <div>Search</div>
-        <div>Table</div>
+        <div class="mb-8">Search</div>
+        <div>
+            <CollectionShowDataGrid />
+        </div>
     </div>
 </template>
 
@@ -41,11 +43,12 @@ import Layout from "@/Layouts/Authenticated";
 import CardList from "@/Components/CardLists/CardList";
 import CardListCard from "@/Components/CardLists/CardListCard";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
+import CollectionShowDataGrid from "@/Components/DataGrid/CollectionDataGrid/CollectionShowDataGrid";
 
 export default {
     name: "ShowCollection",
 
-    components: { CardListCard, CardList },
+    components: { CardListCard, CardList, CollectionShowDataGrid },
 
     layout: Layout,
 

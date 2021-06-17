@@ -23,7 +23,7 @@
 import Layout from "@/Layouts/Authenticated";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import CardSearch from "@/Components/Form/CardSearch/CardSearch";
-import CollectionEditDataGrid from "@/Components/DataGrid/CollectionEditDataGrid/CollectionEditDataGrid";
+import CollectionEditDataGrid from "@/Components/DataGrid/CollectionDataGrid/CollectionEditDataGrid";
 
 export default {
     name: "EditCollection",
