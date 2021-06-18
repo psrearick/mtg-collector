@@ -1,20 +1,19 @@
 <template>
     <div>
-        <!--        <Search v-if="showSearch" v-model="passThroughSearchTerm" />-->
         <CardSetSearch
             v-model="cardSearchTerm"
             v-model:setName="setSearchTerm"
         />
         <p v-if="searching" class="text-xs text-gray-400">Searching...</p>
         <data-table
-            v-if="data.length"
+            v-if="data.length || forceShow"
             v-model:sort="sortFields"
             class="mt-4"
             :data="data"
             :fields="fields"
         />
         <data-grid-pagination
-            v-if="showPagination && data.length"
+            v-if="showPagination && (data.length || forceShow)"
             :pagination="pagination"
         />
     </div>
@@ -71,6 +70,10 @@ export default {
         pagination: {
             type: Object,
             default: () => {},
+        },
+        forceShow: {
+            type: Boolean,
+            default: false,
         },
     },
 

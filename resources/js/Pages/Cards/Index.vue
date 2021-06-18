@@ -165,8 +165,6 @@ export default {
     },
 
     created() {
-        // this.cardSearchTerm = this.cardQuery;
-        // this.setSearchTerm = this.setQuery;
         this.mount();
         this.emitter.on("card_name_click", (card) => {
             this.showCard(card.id);

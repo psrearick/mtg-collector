@@ -2,23 +2,30 @@
 
 namespace App\App\Client\Presenters;
 
+use App\App\Client\Repositories\SetsRepository;
+use Illuminate\Http\Request;
 use \Illuminate\Support\Collection as ModelCollection;
 use App\App\Base\Presenter;
 use App\Domain\Collections\Models\Collection;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class CollectionsShowPresenter extends Presenter
 {
     protected Collection $collection;
 
-    public function __construct(Collection $collection)
+    protected ?Request $request;
+
+
+    public function __construct(Collection $collection, Request $request = null)
     {
         $this->collection = $collection;
+        $this->request = $request;
     }
 
-    public function buildCards(ModelCollection $cards)
+    public function buildCards()
     {
-        return $cards->map(function ($card) {
+        return $this->search()->map(function ($card) {
             return collect([
                 'id'             => $card->id,
                 'name'           => $card->name,
@@ -35,11 +42,11 @@ class CollectionsShowPresenter extends Presenter
 
     public function present() : ModelCollection
     {
-        $cards           = $this->buildCards($this->collection->cards);
+        $cards           = $this->buildCards();
         $current         = $cards->sum('today');
         $acquired        = $cards->sum('acquired_price');
         $gainLoss        = $current - $acquired;
-        $gainLossPercent = $gainLoss / $acquired;
+        $gainLossPercent = $gainLoss != 0 ? $gainLoss / $acquired : 0;
 
         return collect([
             'id'          => $this->collection->id,
@@ -53,7 +60,28 @@ class CollectionsShowPresenter extends Presenter
                 'gainLossPercent' => $gainLossPercent,
             ],
             'cards'        => $cards->paginate(20),
-            'top_five'     => $cards->sortByDesc('today')->take(5)->values(),
+            'top_five'      => $cards->sortByDesc('today')->take(5)->values(),
+            'cardQuery'    => $this->request->get('card') ?: "",
+            'setQuery'     => $this->request->get('set') ?: "",
         ]);
+    }
+
+    protected function search()
+    {
+        $cards       = $this->collection->cards;
+        $setRequest  = $this->request->get('set');
+        $cardRequest = $this->request->get('card');
+        if ($cardRequest) {
+            $cards = $cards->filter(function($card) use ($cardRequest) {
+                return Str::startsWith(strtolower($card->name), strtolower($cardRequest));
+            });
+        }
+        if ($setRequest) {
+            $sets   = app(SetsRepository::class)->fromRequest($this->request, 'set');
+            $setIds = $sets->ids();
+            $cards = $cards->whereIn('set_id', $setIds);
+        }
+
+        return $cards;
     }
 }

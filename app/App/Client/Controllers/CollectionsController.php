@@ -53,12 +53,11 @@ class CollectionsController extends Controller
         ]);
     }
 
-    public function show(Collection $collection)
+    public function show(Collection $collection, Request $request)
     {
         $collectionShow = Collection::with('cards', 'cards.prices', 'cards.set')->find($collection->id);
-
         return Inertia::render('Collections/Show', [
-            'collection' => (new CollectionsShowPresenter($collectionShow))->present(),
+            'collection' => (new CollectionsShowPresenter($collectionShow, $request))->present(),
         ]);
     }
 
