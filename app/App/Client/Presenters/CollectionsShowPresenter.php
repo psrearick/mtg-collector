@@ -2,10 +2,10 @@
 
 namespace App\App\Client\Presenters;
 
-use Carbon\Carbon;
 use \Illuminate\Support\Collection as ModelCollection;
 use App\App\Base\Presenter;
 use App\Domain\Collections\Models\Collection;
+use Carbon\Carbon;
 
 class CollectionsShowPresenter extends Presenter
 {
@@ -24,7 +24,7 @@ class CollectionsShowPresenter extends Presenter
                 'name'           => $card->name,
                 'set'            => $card->set->code,
                 'foil'           => $card->pivot->foil,
-                'foil_formatted' => $card->pivot->foil ? "(Foil)" : "",
+                'foil_formatted' => $card->pivot->foil ? '(Foil)' : '',
                 'features'       => $card->feature,
                 'today'          => $card->pivot->foil ? $card->price_foil : $card->price_normal,
                 'acquired_date'  => (new Carbon($card->pivot->date_added ?: $card->pivot->created_at))->toFormattedDateString(),
@@ -52,7 +52,7 @@ class CollectionsShowPresenter extends Presenter
                 'gainLoss'        => $gainLoss,
                 'gainLossPercent' => $gainLossPercent,
             ],
-            'cards'       => $cards->paginate(20),
+            'cards'        => $cards->paginate(20),
             'top_five'     => $cards->sortByDesc('today')->take(5)->values(),
         ]);
     }
