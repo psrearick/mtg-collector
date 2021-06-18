@@ -1,9 +1,6 @@
 <template>
     <div>
-        <DataTable
-            :fields="table.fields"
-            :data="data"
-        />
+        <DataTable :fields="table.fields" :data="data" />
     </div>
 </template>
 
@@ -11,17 +8,35 @@
 import DataTable from "@/Components/DataGrid/DataGridTable";
 export default {
     name: "CollectionShowDataGrid",
+
     components: { DataTable },
+
+    props: {
+        data: {
+            type: Object,
+            default: () => {},
+        },
+    },
+
     data() {
         return {
             table: {
                 fields: [
                     {
                         visible: true,
-                        type: "text",
+                        type: "composite-text",
                         link: true,
                         label: "Card",
-                        key: "name",
+                        values: [
+                            {
+                                key: "name",
+                                classes: "",
+                            },
+                            {
+                                key: "foil_formatted",
+                                classes: "text-sm text-gray-500 pl-2",
+                            },
+                        ],
                         events: {
                             click: "collection_card_name_click",
                         },
@@ -31,16 +46,10 @@ export default {
                         type: "text",
                         link: true,
                         label: "Set",
-                        key: "set_name",
+                        key: "set",
                         events: {
                             click: "collection_card_set_click",
                         },
-                    },
-                    {
-                        visible: true,
-                        type: "text",
-                        label: "Foil",
-                        key: "foil",
                     },
                     {
                         visible: true,
@@ -74,10 +83,6 @@ export default {
         this.emitter.on("collection_card_name_click", () => {});
         this.emitter.on("collection_card_set_click", () => {});
     },
-    methods: {
-        data() {
-        },
-    }
 };
 </script>
 

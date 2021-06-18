@@ -2,6 +2,8 @@
 
 namespace App\App\Client\Repositories;
 
+use App\App\Base\Repository;
+
 class SetsRepository extends Repository
 {
     public string $class = "App\Domain\Sets\Models\Set";

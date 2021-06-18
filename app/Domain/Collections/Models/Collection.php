@@ -22,7 +22,7 @@ class Collection extends Model
     public function cards() : BelongsToMany
     {
         return $this->belongsToMany(Card::class, 'card_collections')
-            ->withPivot(['price_when_added', 'foil', 'description', 'condition', 'quantity']);
+            ->withPivot(['price_when_added', 'foil', 'description', 'condition', 'quantity', 'date_added', 'created_at']);
     }
 
     public function user() : BelongsTo

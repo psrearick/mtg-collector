@@ -44,12 +44,6 @@ class CardSearch
 
         if ($results) {
             $results = $cards->with(['set'])->getPaginated($perPage);
-            foreach ($results as $result) {
-                $prices    = $result->prices;
-                $tcgPrices = $prices->where('priceProvider.name', '=', 'tcgplayer');
-                optional($result->price_foil = $tcgPrices->where('foil', true)->first())->price;
-                optional($result->price_normal = $tcgPrices->where('foil', false)->first())->price;
-            }
         }
 
         return [

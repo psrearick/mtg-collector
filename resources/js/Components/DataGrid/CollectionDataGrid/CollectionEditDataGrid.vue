@@ -1,9 +1,6 @@
 <template>
     <div>
-        <DataTable
-            :fields="table.fields"
-            :data="data"
-        />
+        <DataTable :fields="table.fields" :data="data" />
     </div>
 </template>
 
@@ -75,9 +72,8 @@ export default {
         this.emitter.on("collection_card_set_click", () => {});
     },
     methods: {
-        data() {
-        },
-    }
+        data() {},
+    },
 };
 </script>
 

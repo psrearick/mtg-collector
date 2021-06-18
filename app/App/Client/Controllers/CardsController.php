@@ -3,11 +3,7 @@
 namespace App\App\Client\Controllers;
 
 use App\App\Base\Controller;
-use App\App\Client\Repositories\CardsRepository;
-use App\App\Client\Repositories\Repository;
-use App\App\Client\Repositories\SetsRepository;
 use App\Domain\Cards\Actions\CardSearch;
-use App\Domain\Cards\Actions\ScryfallSearch;
 use App\Domain\Cards\Models\Card;
 use Illuminate\Http\Request;
 use Inertia\Inertia;

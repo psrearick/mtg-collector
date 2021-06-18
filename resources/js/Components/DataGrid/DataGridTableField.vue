@@ -5,10 +5,20 @@
     <p v-if="field.type === 'currency'">
         {{ fieldValue }}
     </p>
+    <p v-if="field.type === 'composite-text'">
+        <span
+            v-for="(value, index) in field.values"
+            v-show="data[value.key]"
+            :key="index"
+            :class="value.classes"
+        >
+            {{ data[value.key] }}
+        </span>
+    </p>
 </template>
 
 <script>
-import formatCurrency from "@/Shared/api/ConvertValue";
+import { formatCurrency } from "@/Shared/api/ConvertValue";
 
 export default {
     name: "DataGridTableField",

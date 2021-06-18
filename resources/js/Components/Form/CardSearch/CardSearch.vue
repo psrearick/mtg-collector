@@ -78,7 +78,9 @@ export default {
                 },
                 onSuccess: (res) => {
                     this.searching = false;
-                    let cards = this.getCardsWithQuantities(res.props.cards.cards);
+                    let cards = this.getCardsWithQuantities(
+                        res.props.cards.cards
+                    );
                     this.$store.dispatch("addCardSearchResults", {
                         searchResults: cards,
                     });
@@ -208,7 +210,6 @@ export default {
             });
         },
         updateCardQuantity: function (change) {
-            console.log(change);
             axios
                 .post("/card-collections/card-collections", {
                     change: change,

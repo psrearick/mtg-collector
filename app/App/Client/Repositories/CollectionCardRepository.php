@@ -2,8 +2,10 @@
 
 namespace App\App\Client\Repositories;
 
+use App\App\Base\Repository;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Collections\Models\Collection;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -87,12 +89,18 @@ class CollectionCardRepository extends Repository
 
         if (!$collectionCard) {
             // Add card to collection
+
+            $date_added = Carbon::now();
+            if (array_key_exists('date_added', $change)) {
+                $date_added = $change['date_added'] ?: $date_added;
+            }
             $collection->cards()->attach($card->id, [
                 'price_when_added'  => $change['foil'] ? $card->price_foil : $card->price_normal,
                 'foil'              => $change['foil'],
                 'description'       => null,
                 'condition'         => null,
                 'quantity'          => $change['quantity'] ?: $change['change'],
+                'date_added'        => $date_added,
             ]);
             $collectionCard = $this->getCollectionCard($collection, $card, $change['foil']);
 
@@ -133,6 +141,10 @@ class CollectionCardRepository extends Repository
             $changed = [
                 'quantity' => $change['quantity'],
             ];
+        }
+
+        if (array_key_exists('date_added', $change) && $change['date_added']) {
+            $changed['data_added'] = $change['data_added'];
         }
 
         DB::table('card_collections')

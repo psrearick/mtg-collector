@@ -47,7 +47,7 @@
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             <tr
-                                v-for="(item, key) in data"
+                                v-for="(item, key) in data.data"
                                 :key="key"
                                 class="hover:bg-gray-50"
                             >

@@ -5,7 +5,6 @@ namespace App\App\Client\Controllers;
 use App\App\Base\Controller;
 use App\App\Client\Repositories\CollectionCardRepository;
 use App\Domain\Cards\Models\Card;
-use App\Domain\Collections\Models\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -74,7 +73,7 @@ class CardCollectionsController extends Controller
      */
     public function store(Request $request) : Response
     {
-        return (new CollectionCardRepository())->updateCollectionCard($request);
+        return app(CollectionCardRepository::class)->updateCollectionCard($request);
     }
 
     /**

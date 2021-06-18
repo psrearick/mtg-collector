@@ -374,7 +374,7 @@
 
 <script>
 import Layout from "@/Layouts/Authenticated";
-import formatCurrency from "@/Shared/api/ConvertValue";
+import { formatCurrency } from "@/Shared/api/ConvertValue";
 import CardList from "@/Components/CardLists/CardList";
 import CardListCard from "@/Components/CardLists/CardListCard";
 import DataGrid from "@/Components/DataGrid/DataGrid";

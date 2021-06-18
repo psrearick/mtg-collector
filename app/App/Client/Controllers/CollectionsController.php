@@ -3,8 +3,7 @@
 namespace App\App\Client\Controllers;
 
 use App\App\Base\Controller;
-use App\App\Client\Repositories\CardsRepository;
-use App\App\Client\Repositories\SetsRepository;
+use App\App\Client\Presenters\CollectionsShowPresenter;
 use App\App\Client\Traits\WithLoadAttribute;
 use App\Domain\Cards\Actions\CardSearch;
 use App\Domain\Collections\Models\Collection;
@@ -56,8 +55,10 @@ class CollectionsController extends Controller
 
     public function show(Collection $collection)
     {
+        $collectionShow = Collection::with('cards', 'cards.prices', 'cards.set')->find($collection->id);
+
         return Inertia::render('Collections/Show', [
-            'collection' => $collection,
+            'collection' => (new CollectionsShowPresenter($collectionShow))->present(),
         ]);
     }
 

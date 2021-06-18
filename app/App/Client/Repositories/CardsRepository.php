@@ -2,6 +2,8 @@
 
 namespace App\App\Client\Repositories;
 
+use App\App\Base\Repository;
+
 class CardsRepository extends Repository
 {
     public string $class = 'App\Domain\Cards\Models\Card';

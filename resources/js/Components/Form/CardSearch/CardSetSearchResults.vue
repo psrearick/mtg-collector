@@ -270,7 +270,7 @@
                             >
                             <span v-if="card.hasNonFoil">{{
                                 card.price_normal
-                                    ? format(card.price_normal.price)
+                                    ? format(card.price_normal)
                                     : "N/A"
                             }}</span>
                             <span v-else>N/A</span>
@@ -279,7 +279,7 @@
                             <span class="text-sm text-gray-500 mr-2">Foil</span>
                             <span v-if="card.hasFoil">{{
                                 card.price_foil
-                                    ? format(card.price_foil.price)
+                                    ? format(card.price_foil)
                                     : "N/A"
                             }}</span>
                             <span v-else>N/A</span>
@@ -292,7 +292,7 @@
 </template>
 
 <script>
-import formatCurrency from "@/Shared/api/ConvertValue";
+import { formatCurrency } from "@/Shared/api/ConvertValue";
 
 export default {
     name: "CardSetSearchResults",

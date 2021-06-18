@@ -184,12 +184,10 @@ export default {
                     set_id: card.set_id,
                     price:
                         card.hasNonFoil && card.price_normal
-                            ? card.price_normal.price
+                            ? card.price_normal
                             : "",
                     foil_price:
-                        card.hasFoil && card.price_foil
-                            ? card.price_foil.price
-                            : "",
+                        card.hasFoil && card.price_foil ? card.price_foil : "",
                     feature: card.feature,
                     quantity_collected: 0,
                     foil_collected: 0,

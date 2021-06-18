@@ -133,60 +133,31 @@ class Card extends CardGeneric
         return $imageUrl;
     }
 
-//
-//    /**
-//     * @return HigherOrderBuilderProxy|mixed
-//     */
-//    public function getPriceFoilAttribute()
-//    {
-//        return $this->prices
-//            ->where('provider.name', 'tcgplayer')
-//            ->where('foil', true)
-//            ->join('providers', 'providers.id', '=', 'prices.provider_id');
-    ////            ->first();
-//        return $this->getPriceOfType(true);
-//    }
-//
-//    /**
-//     * @return HigherOrderBuilderProxy|mixed
-//     */
-//    public function getPriceNormalAttribute()
-//    {
-//        return $this->prices
-//            ->where('provider.name', 'tcgplayer')
-//            ->where('foil', false)
-//            ->join('providers', 'providers.id', '=', 'prices.provider_id');
-    ////            ->first();
-//        return $this->getPriceOfType(false);
-//    }
-//
-//    /**
-//     * @param bool $foil
-//     * @return HigherOrderBuilderProxy|mixed
-//     */
-//    public function getPriceOfType(bool $foil) : float
-//    {
-//        $providerPreference = [
-//            'tcgplayer',
-//            'cardkingdom',
-//            'cardmarket',
-//        ];
-//
-//        $providers = PriceProvider::all();
-//
-//        foreach ($providerPreference as $providerName) {
-//            $price = $this->prices()
-//                ->where('provider_id', '=',
-//                    $providers->where('name', '=', $providerName)->first()->id)
-//                ->where('foil', '=', $foil)
-//                ->first();
-//            if ($price && $price->price > 0) {
-//                return $price->price;
-//            }
-//        }
-//
-//        return 0.0;
-//    }
+    /**
+     * @return float|null
+     */
+    public function getPriceFoilAttribute() : ?float
+    {
+        return optional(
+            $this->prices
+                ->where('priceProvider.name', '=', 'tcgplayer')
+                ->where('foil', true)
+                ->first()
+        )->price;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getPriceNormalAttribute() : ?float
+    {
+        return optional(
+            $this->prices
+                ->where('priceProvider.name', '=', 'tcgplayer')
+                ->where('foil', false)
+                ->first()
+        )->price;
+    }
 
     public function getScryfallCardAttribute()
     {
