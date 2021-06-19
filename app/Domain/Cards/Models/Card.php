@@ -125,7 +125,7 @@ class Card extends CardGeneric
     public function getImageUrlAttribute() : string
     {
         if ($this->imagePath) {
-            return asset($this->imagePath);
+            return asset('storage/' . $this->imagePath);
         }
         $imageUrl = app(GetCardImage::class)->execute($this->scryfallId);
         ImportCardImages::dispatchAfterResponse($this, $imageUrl);
