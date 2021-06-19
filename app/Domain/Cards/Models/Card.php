@@ -200,7 +200,7 @@ class Card extends CardGeneric
      */
     public function printings() : Collection
     {
-        return Card::where('scryfallOracleId', $this->scryfallOracleId)->with(['set', 'prices'])->get();
+        return Card::where('scryfallOracleId', $this->scryfallOracleId)->with(['set', 'prices', 'prices.priceProvider'])->get();
     }
 
     /**

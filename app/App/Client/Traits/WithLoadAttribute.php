@@ -2,8 +2,6 @@
 
 namespace App\App\Client\Traits;
 
-use App\Jobs\ImportCardImages;
-
 trait WithLoadAttribute
 {
     /**

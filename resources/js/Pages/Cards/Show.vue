@@ -4,7 +4,7 @@
             <div>
                 <div>
                     <img
-                        :src="scryfallCard['image_uris']['normal']"
+                        :src="card.image_url"
                         :alt="card.name"
                         class="max-w-xs mb-8 mx-auto"
                     />
@@ -101,9 +101,8 @@
                         </h3>
                         <CardList class="pt-4">
                             <CardListCard
-                                v-for="(
-                                    legality, index
-                                ) in scryfallCard.legalities"
+                                v-for="(legality, index) in card.scryfall_card
+                                    .legalities"
                                 :key="index"
                                 :status="status(legality)"
                             >
@@ -213,7 +212,7 @@
                                     sm:col-span-2
                                 "
                             >
-                                {{ set.name }}
+                                {{ card.set.name }}
                             </dd>
                         </div>
                         <div
@@ -349,7 +348,7 @@
                                     sm:col-span-2
                                 "
                             >
-                                {{ scryfallCard.lang }}
+                                {{ card.scryfall_card.lang }}
                             </dd>
                         </div>
                     </dl>
@@ -388,70 +387,6 @@ export default {
 
     props: {
         card: {
-            type: Object,
-            default: () => {},
-        },
-        set: {
-            type: Object,
-            default: () => {},
-        },
-        colors: {
-            type: Object,
-            default: () => {},
-        },
-        keywords: {
-            type: Object,
-            default: () => {},
-        },
-        subtypes: {
-            type: Object,
-            default: () => {},
-        },
-        supertypes: {
-            type: Object,
-            default: () => {},
-        },
-        types: {
-            type: Object,
-            default: () => {},
-        },
-        faces: {
-            type: Object,
-            default: () => {},
-        },
-        frameEffects: {
-            type: Object,
-            default: () => {},
-        },
-        leadershipSkills: {
-            type: Object,
-            default: () => {},
-        },
-        legalities: {
-            type: Object,
-            default: () => {},
-        },
-        printings: {
-            type: Object,
-            default: () => {},
-        },
-        printingSets: {
-            type: Object,
-            default: () => {},
-        },
-        rulings: {
-            type: Object,
-            default: () => {},
-        },
-        tokens: {
-            type: Object,
-            default: () => {},
-        },
-        variations: {
-            type: Object,
-            default: () => {},
-        },
-        scryfallCard: {
             type: Object,
             default: () => {},
         },
@@ -520,7 +455,7 @@ export default {
     computed: {
         keywordList() {
             return _.join(
-                _.map(this.keywords, (keyword) => {
+                _.map(this.card.keywords, (keyword) => {
                     return keyword.name;
                 }),
                 ", "
@@ -529,16 +464,16 @@ export default {
         typeLine() {
             let typeLine = "";
             let subTypeLine = "";
-            if (this.types && this.types.length) {
-                this.types.forEach((type) => {
+            if (this.card.types && this.card.types.length) {
+                this.card.types.forEach((type) => {
                     if (typeLine.length) {
                         typeLine += " ";
                     }
                     typeLine += type.name;
                 });
             }
-            if (this.subtypes && this.subtypes.length) {
-                this.subtypes.forEach((subtype) => {
+            if (this.card.subtypes && this.card.subtypes.length) {
+                this.card.subtypes.forEach((subtype) => {
                     if (subTypeLine.length) {
                         subTypeLine += " ";
                     }
@@ -555,7 +490,7 @@ export default {
     mounted() {
         this.$store.dispatch("updateHeader", { header: this.card.name });
         const allPrintings = [];
-        this.printings.forEach((printing) => {
+        this.card.printings.forEach((printing) => {
             allPrintings.push({
                 id: printing.id,
                 non_foil_price: printing.price_normal,

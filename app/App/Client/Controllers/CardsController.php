@@ -3,6 +3,7 @@
 namespace App\App\Client\Controllers;
 
 use App\App\Base\Controller;
+use App\App\Client\Presenters\CardsShowPresenter;
 use App\Domain\Cards\Actions\CardSearch;
 use App\Domain\Cards\Models\Card;
 use Illuminate\Http\Request;
@@ -63,24 +64,9 @@ class CardsController extends Controller
     public function show(Card $card) : Response
     {
         return Inertia::render('Cards/Show', [
-            'card'              => $card,
-            'set'               => $card->set,
-            'colors'            => $card->colors,
-            'keywords'          => $card->keywords,
-            'subtypes'          => $card->subtypes,
-            'supertypes'        => $card->supertypes,
-            'types'             => $card->types,
-            'faces'             => $card->faces,
-            'frameEffects'      => $card->frameEffects,
-            'leadershipSkills'  => $card->leadershipSkills,
-            'legalities'        => $card->legalities,
-            'printings'         => $card->printings(),
-            'printingSets'      => $card->printingSets(),
-            'rulings'           => $card->rulings,
-            'tokens'            => $card->tokens,
-            'variations'        => $card->variations,
-            'scryfallCard'      => $card->scryfall_card,
-        ]);
+            'card' => (new CardsShowPresenter($card))->present(),
+        ]
+        );
     }
 
     /**
