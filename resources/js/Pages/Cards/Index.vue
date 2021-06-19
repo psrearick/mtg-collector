@@ -215,9 +215,6 @@ export default {
         },
         search: _.debounce(function () {
             this.table.data = [];
-            if (!this.cardSearchTerm && !this.setSearchTerm) {
-                return;
-            }
             this.searching = true;
             this.$inertia.get(
                 "/cards/cards",
