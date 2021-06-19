@@ -3,6 +3,7 @@
 namespace App\App\Client\Controllers;
 
 use App\App\Base\Controller;
+use App\App\Client\Presenters\CardsSearchPresenter;
 use App\App\Client\Presenters\CardsShowPresenter;
 use App\Domain\Cards\Actions\CardSearch;
 use App\Domain\Cards\Models\Card;
@@ -52,7 +53,11 @@ class CardsController extends Controller
      */
     public function index(Request $request) : Response
     {
-        return Inertia::render('Cards/Index', CardSearch::search($request));
+        $cards = (new CardsSearchPresenter(CardSearch::search($request, 0, false), 15))->present();
+//        dd($cards);
+        return Inertia::render('Cards/Index',
+            $cards
+        );
     }
 
     /**

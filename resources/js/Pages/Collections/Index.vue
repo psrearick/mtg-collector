@@ -1,12 +1,12 @@
 <template>
     <div>
-        <div v-if="!collections.length">
+        <div v-if="!collections.data.length">
             <p>You do not have any collections. Please create one.</p>
         </div>
-        <div v-if="collections.length">
+        <div v-if="collections.data.length">
             <div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
                 <inertia-link
-                    v-for="(collection, index) in collections"
+                    v-for="(collection, index) in collections.data"
                     :key="index"
                     :href="
                         route('collections.show', { collection: collection.id })
@@ -19,11 +19,11 @@
                         <div class="grid grid-cols-2 pb-4">
                             <div>
                                 <p class="text-xs text-gray-500">Cards</p>
-                                <p>75</p>
+                                <p>{{ collection.count }}</p>
                             </div>
                             <div>
                                 <p class="text-xs text-gray-500">Value</p>
-                                <p>$750.00</p>
+                                <p>{{ format(collection.value) }}</p>
                             </div>
                         </div>
                     </CardListCard>
@@ -37,6 +37,8 @@
 import Layout from "@/Layouts/Authenticated";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import CardListCard from "@/Components/CardLists/CardListCard";
+import { formatCurrency } from "@/Shared/api/ConvertValue";
+
 export default {
     name: "Index",
 
@@ -65,6 +67,12 @@ export default {
                 },
             },
         });
+    },
+
+    methods: {
+        format(value) {
+            return value ? formatCurrency(value) : "N/A";
+        },
     },
 };
 </script>

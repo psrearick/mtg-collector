@@ -32,6 +32,8 @@ export default {
         CardIndexDataGrid,
     },
 
+    mixins: [CollectionsShowTable],
+
     layout: Layout,
 
     title: "MTG Collector - Collection",
@@ -49,7 +51,6 @@ export default {
             cardSearchTerm: "",
             loaded: false,
             searching: false,
-            table: CollectionsShowTable,
         };
     },
 

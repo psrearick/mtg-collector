@@ -41,6 +41,8 @@ export default {
 
     components: { CardIndexDataGrid, CardSearch },
 
+    mixins: [CollectionsEditTable],
+
     layout: Layout,
 
     title: "MTG Collector - Edit Collection",
@@ -66,7 +68,6 @@ export default {
             cardSearchTerm: "",
             loaded: false,
             searching: false,
-            table: CollectionsEditTable,
             filteredCollection: {},
         };
     },

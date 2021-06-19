@@ -22,7 +22,7 @@ class GetCardImage
         }
 
         return array_key_exists('image_uris', $card)
-            ? (array_key_exists($format, $card['image_uris']) ? $card['image_uris'][$format] : "")
+            ? (array_key_exists($format, $card['image_uris']) ? $card['image_uris'][$format] : '')
             : '';
     }
 }

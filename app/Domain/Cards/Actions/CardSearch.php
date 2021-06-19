@@ -28,7 +28,7 @@ class CardSearch
             $names = app(ScryfallSearch::class)->autocomplete($cardRequest);
             if (count($names)) {
                 $cards->in('cards.name', $names);
-                $cards->with(['frameEffects', 'prices', 'prices.priceProvider']);
+                $cards->with(['frameEffects', 'prices', 'prices.priceProvider', 'collections']);
                 $hasResults = true;
             }
         }
@@ -48,7 +48,11 @@ class CardSearch
                 $cards->loadAttribute(['image_url']);
             }
 
-            $results = $cards->getPaginated($perPage);
+            if ($perPage > 0) {
+                $results = $cards->getPaginated($perPage);
+            } else {
+                $results = $cards->get();
+            }
         }
 
         return [

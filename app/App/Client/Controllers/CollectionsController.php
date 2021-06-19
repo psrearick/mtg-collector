@@ -3,6 +3,7 @@
 namespace App\App\Client\Controllers;
 
 use App\App\Base\Controller;
+use App\App\Client\Presenters\CollectionsIndexPresenter;
 use App\App\Client\Presenters\CollectionsShowPresenter;
 use App\Domain\Cards\Actions\CardSearch;
 use App\Domain\Collections\Models\Collection;
@@ -43,9 +44,7 @@ class CollectionsController extends Controller
     public function index() : Response
     {
         return Inertia::render('Collections/Index', [
-            'collections' => Collection::where('user_id', '=', Auth::id())
-                ->whereNull('deleted_at')
-                ->get(),
+            'collections' => (new CollectionsIndexPresenter())->present(),
         ]);
     }
 
