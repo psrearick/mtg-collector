@@ -32,235 +32,34 @@
                             </p>
                         </div>
                         <div class="flex justify-center py-4">
-                            <div
+                            <VerticalIncrementer
                                 v-if="card.hasNonFoil"
-                                class="p-2 mx-4 shadow-md bg-gray-100 w-32"
-                            >
-                                <button
-                                    class="
-                                        p-2
-                                        bg-green-500
-                                        hover:bg-green-900
-                                        text-white
-                                        w-full
-                                    "
-                                    @click="
-                                        emitter.emit('updateCardQuantity', {
-                                            change: 1,
-                                            id: card.id,
-                                            foil: false,
-                                        })
-                                    "
-                                >
-                                    +
-                                </button>
-                                <div
-                                    class="
-                                        text-2xl text-center
-                                        bg-white
-                                        w-full
-                                        py-1
-                                    "
-                                >
-                                    <input
-                                        v-if="
-                                            activeField === index &&
-                                            activeFieldType === 'NonFoil'
-                                        "
-                                        :ref="'NonFoil-input-' + index"
-                                        v-model="card.collectionQuantityNonFoil"
-                                        type="number"
-                                        step="1"
-                                        min="0"
-                                        class="
-                                            no-buttons
-                                            w-full
-                                            text-center
-                                            -ml-px
-                                            inline-flex
-                                            items-center
-                                            px-4
-                                            py-1
-                                            border border-gray-300
-                                            focus:border-gray-300
-                                            focus:ring-0 focus:ring-transparent
-                                            bg-white
-                                            text-sm
-                                            font-medium
-                                            text-gray-700
-                                        "
-                                        tabindex="0"
-                                        @blur="
-                                            doneEditQuantity(
-                                                index,
-                                                'NonFoil',
-                                                card.collectionQuantityNonFoil
-                                            )
-                                        "
-                                        @keyup.enter="
-                                            doneEditQuantity(
-                                                index,
-                                                'NonFoil',
-                                                card.collectionQuantityNonFoil
-                                            )
-                                        "
-                                        @keyup.esc="
-                                            cancelEditQuantity(index, 'NonFoil')
-                                        "
-                                    />
-                                    <p
-                                        v-else
-                                        @click="
-                                            editQuantity(
-                                                index,
-                                                'NonFoil',
-                                                card.collectionQuantityNonFoil
-                                            )
-                                        "
-                                    >
-                                        {{ card.collectionQuantityNonFoil }}
-                                    </p>
-                                </div>
-                                <button
-                                    class="
-                                        p-2
-                                        bg-blue-500
-                                        hover:bg-blue-900
-                                        text-white
-                                        w-full
-                                    "
-                                    @click="
-                                        emitter.emit('updateCardQuantity', {
-                                            change: -1,
-                                            id: card.id,
-                                            foil: false,
-                                        })
-                                    "
-                                >
-                                    -
-                                </button>
-                                <p
-                                    class="
-                                        w-full
-                                        text-center
-                                        capitalize
-                                        text-gray-700
-                                    "
-                                >
-                                    Non-Foil
-                                </p>
-                            </div>
-                            <div
+                                class="mx-4"
+                                label="NonFoil"
+                                :model-value="card.collectionQuantityNonFoil"
+                                :active="
+                                    activeField === index &&
+                                    activeFieldType === 'NonFoil'
+                                "
+                                @activate="activate(index, 'NonFoil')"
+                                @update:model-value="
+                                    updateQuantity($event, card.id, false)
+                                "
+                            />
+                            <VerticalIncrementer
                                 v-if="card.hasFoil"
-                                class="p-2 mx-4 shadow-md bg-gray-100 w-32"
-                            >
-                                <button
-                                    class="
-                                        p-2
-                                        bg-green-500
-                                        hover:bg-green-900
-                                        text-white
-                                        w-full
-                                    "
-                                    @click="
-                                        emitter.emit('updateCardQuantity', {
-                                            change: 1,
-                                            id: card.id,
-                                            foil: true,
-                                        })
-                                    "
-                                >
-                                    +
-                                </button>
-                                <div class="text-2xl text-center bg-white py-1">
-                                    <input
-                                        v-if="
-                                            activeField === index &&
-                                            activeFieldType === 'Foil'
-                                        "
-                                        :ref="'Foil-input-' + index"
-                                        v-model="card.collectionQuantityFoil"
-                                        type="number"
-                                        step="1"
-                                        min="0"
-                                        class="
-                                            no-buttons
-                                            w-full
-                                            text-center
-                                            -ml-px
-                                            inline-flex
-                                            items-center
-                                            px-4
-                                            py-1
-                                            border border-gray-300
-                                            focus:border-gray-300
-                                            focus:ring-0 focus:ring-transparent
-                                            bg-white
-                                            text-sm
-                                            font-medium
-                                            text-gray-700
-                                        "
-                                        tabindex="0"
-                                        @blur="
-                                            doneEditQuantity(
-                                                index,
-                                                'Foil',
-                                                card.collectionQuantityFoil
-                                            )
-                                        "
-                                        @keyup.enter="
-                                            doneEditQuantity(
-                                                index,
-                                                'Foil',
-                                                card.collectionQuantityFoil
-                                            )
-                                        "
-                                        @keyup.esc="
-                                            cancelEditQuantity(index, 'Foil')
-                                        "
-                                    />
-                                    <p
-                                        v-else
-                                        @click="
-                                            editQuantity(
-                                                index,
-                                                'Foil',
-                                                card.collectionQuantityFoil
-                                            )
-                                        "
-                                    >
-                                        {{ card.collectionQuantityFoil }}
-                                    </p>
-                                </div>
-                                <button
-                                    class="
-                                        p-2
-                                        bg-blue-500
-                                        hover:bg-blue-900
-                                        text-white
-                                        w-full
-                                    "
-                                    @click="
-                                        emitter.emit('updateCardQuantity', {
-                                            change: -1,
-                                            id: card.id,
-                                            foil: true,
-                                        })
-                                    "
-                                >
-                                    -
-                                </button>
-                                <p
-                                    class="
-                                        w-full
-                                        text-center
-                                        capitalize
-                                        text-gray-700
-                                    "
-                                >
-                                    Foil
-                                </p>
-                            </div>
+                                class="mx-4"
+                                label="Foil"
+                                :model-value="card.collectionQuantityFoil"
+                                :active="
+                                    activeField === index &&
+                                    activeFieldType === 'Foil'
+                                "
+                                @activate="activate(index, 'Foil')"
+                                @update:model-value="
+                                    updateQuantity($event, card.id, true)
+                                "
+                            />
                         </div>
                     </div>
                     <div>
@@ -293,10 +92,11 @@
 
 <script>
 import { formatCurrency } from "@/Shared/api/ConvertValue";
+import VerticalIncrementer from "@/Components/Buttons/VerticalIncrementer";
 
 export default {
     name: "CardSetSearchResults",
-
+    components: { VerticalIncrementer },
     data() {
         return {
             activeField: null,
@@ -318,35 +118,23 @@ export default {
         format(value) {
             return value ? formatCurrency(value) : "N/A";
         },
-        editQuantity(index, type, value) {
-            this.editingCache = value;
-            this.activeField = index;
+        activate(id, type) {
+            this.activeField = id;
             this.activeFieldType = type;
-            this.$nextTick(() => {
-                this.$refs[type + "-input-" + index].focus();
-            });
         },
-        doneEditQuantity(index, type, value) {
+        updateQuantity: function (value, id, foil) {
             this.activeField = null;
             this.activeFieldType = null;
-            let parsed = this.limitNumber(value, this.editingCache, 0, 0, 0);
-            this.cards[index]["collectionQuantity" + type] = parsed;
-            this.emitter.emit("updateCardQuantity", {
-                quantity: parsed,
-                id: this.cards[index].id,
-                foil: type === "Foil",
-            });
-        },
-        cancelEditQuantity(index, type) {
-            this.cards[index]["collectionQuantity" + type] = this.editingCache;
-            this.editingCache = 0;
-        },
-        limitNumber: function (val, oldVal, decimals, min, max) {
-            if (isNaN(val)) {
-                return oldVal;
+            let key = "collectionQuantity" + (foil ? "" : "Non") + "Foil";
+            let change = value - this.cards.find((card) => card.id === id)[key];
+            if (change === 0) {
+                return;
             }
-            let maximum = max > 0 ? Math.min(val, max) : val;
-            return Math.max(maximum, min).toFixed(decimals);
+            this.emitter.emit("updateCardQuantity", {
+                change: value - this.cards.find((card) => card.id === id)[key],
+                id: id,
+                foil: foil,
+            });
         },
     },
 };

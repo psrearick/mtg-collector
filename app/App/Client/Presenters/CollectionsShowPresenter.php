@@ -35,6 +35,7 @@ class CollectionsShowPresenter extends Presenter
                 'today'          => $card->pivot->foil ? $card->price_foil : $card->price_normal,
                 'acquired_date'  => (new Carbon($card->pivot->date_added ?: $card->pivot->created_at))->toFormattedDateString(),
                 'acquired_price' => $card->pivot->price_when_added,
+                'quantity'       => $card->pivot->quantity,
             ]);
         });
     }
@@ -42,6 +43,7 @@ class CollectionsShowPresenter extends Presenter
     public function present() : ModelCollection
     {
         $cards           = $this->buildCards();
+        $cardsSorted     = collect($cards->sortBy('name')->values());
         $current         = $cards->sum('today');
         $acquired        = $cards->sum('acquired_price');
         $gainLoss        = $current - $acquired;
@@ -58,7 +60,7 @@ class CollectionsShowPresenter extends Presenter
                 'gainLoss'        => $gainLoss,
                 'gainLossPercent' => $gainLossPercent,
             ],
-            'cards'         => $cards->paginate(20),
+            'cards'         => $cardsSorted->paginate(20),
             'top_five'      => $cards->sortByDesc('today')->take(5)->values(),
             'cardQuery'     => $this->request->get('cardSearch') ?: '',
             'setQuery'      => $this->request->get('setSearch') ?: '',

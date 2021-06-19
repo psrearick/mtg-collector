@@ -38,6 +38,9 @@ export default {
 
     computed: {
         formattedValue() {
+            if (typeof this.field.key === "undefined") {
+                return this.field.value;
+            }
             let value = this.data[this.field.key];
             if (value && this.field.type === "currency") {
                 value = formatCurrency(value);

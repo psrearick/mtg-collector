@@ -11,7 +11,7 @@
                 :show-pagination="true"
                 :force-show="true"
                 :show-search="true"
-                :pagination="pagination"
+                :pagination="collection.cards"
             />
         </div>
     </div>
@@ -22,6 +22,7 @@ import Layout from "@/Layouts/Authenticated";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import CardIndexDataGrid from "@/Components/DataGrid/CardIndexDataGrid/CardIndexDataGrid";
 import CollectionsShowCardList from "@/Components/CardLists/CollectionsShowCardList";
+import CollectionsShowTable from "@/Shared/TableDefinitions/CollectionsShowTable";
 
 export default {
     name: "ShowCollection",
@@ -48,61 +49,7 @@ export default {
             cardSearchTerm: "",
             loaded: false,
             searching: false,
-            table: {
-                fields: [
-                    {
-                        visible: true,
-                        type: "composite-text",
-                        link: true,
-                        label: "Card",
-                        values: [
-                            {
-                                key: "name",
-                                classes: "",
-                            },
-                            {
-                                key: "foil_formatted",
-                                classes: "text-sm text-gray-500 pl-2",
-                            },
-                        ],
-                        events: {
-                            click: "collection_card_name_click",
-                        },
-                    },
-                    {
-                        visible: true,
-                        type: "text",
-                        link: false,
-                        label: "Set",
-                        key: "set",
-                    },
-                    {
-                        visible: true,
-                        type: "text",
-                        label: "Features",
-                        key: "features",
-                    },
-                    {
-                        visible: true,
-                        type: "currency",
-                        label: "Today",
-                        key: "today",
-                    },
-                    {
-                        visible: true,
-                        type: "text",
-                        label: "Acquired Date",
-                        key: "acquired_date",
-                    },
-                    {
-                        visible: true,
-                        type: "currency",
-                        label: "Acquired Price",
-                        key: "acquired_price",
-                    },
-                ],
-            },
-            pagination: {},
+            table: CollectionsShowTable,
         };
     },
 
@@ -135,19 +82,6 @@ export default {
                 },
             },
         });
-
-        this.pagination = {
-            current_page: this.collection.cards.current_page,
-            first_page_url: this.collection.cards.first_page_url,
-            last_page: this.collection.cards.last_page,
-            last_page_url: this.collection.cards.last_page_url,
-            next_page_url: this.collection.cards.next_page_url,
-            previous_page_url: this.collection.cards.previous_page_url,
-            links: this.collection.cards.links,
-            from: this.collection.cards.from,
-            to: this.collection.cards.to,
-            total: this.collection.cards.total,
-        };
     },
 
     created() {

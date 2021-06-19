@@ -34,6 +34,7 @@ import Layout from "@/Layouts/Authenticated";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import CardSearch from "@/Components/Form/CardSearch/CardSearch";
 import CardIndexDataGrid from "@/Components/DataGrid/CardIndexDataGrid/CardIndexDataGrid";
+import CollectionsEditTable from "@/Shared/TableDefinitions/CollectionsEditTable";
 
 export default {
     name: "EditCollection",
@@ -65,60 +66,7 @@ export default {
             cardSearchTerm: "",
             loaded: false,
             searching: false,
-            table: {
-                fields: [
-                    {
-                        visible: true,
-                        type: "composite-text",
-                        link: true,
-                        label: "Card",
-                        values: [
-                            {
-                                key: "name",
-                                classes: "",
-                            },
-                            {
-                                key: "foil_formatted",
-                                classes: "text-sm text-gray-500 pl-2",
-                            },
-                        ],
-                        events: {
-                            click: "collection_card_name_click",
-                        },
-                    },
-                    {
-                        visible: true,
-                        type: "text",
-                        link: false,
-                        label: "Set",
-                        key: "set",
-                    },
-                    {
-                        visible: true,
-                        type: "text",
-                        label: "Features",
-                        key: "features",
-                    },
-                    {
-                        visible: true,
-                        type: "currency",
-                        label: "Today",
-                        key: "today",
-                    },
-                    {
-                        visible: true,
-                        type: "text",
-                        label: "Acquired Date",
-                        key: "acquired_date",
-                    },
-                    {
-                        visible: true,
-                        type: "currency",
-                        label: "Acquired Price",
-                        key: "acquired_price",
-                    },
-                ],
-            },
+            table: CollectionsEditTable,
             filteredCollection: {},
         };
     },
@@ -187,8 +135,7 @@ export default {
                     setSearch: this.setSearchTerm,
                 },
                 only: ["collection"],
-                onSuccess: (res) => {
-                    console.log(res);
+                onSuccess: () => {
                     this.searching = false;
                     this.mount();
                 },
