@@ -131,7 +131,7 @@ export default {
             });
         }, 1200),
         addCollectionsToStore: async function () {
-            if (this.collection.cards) {
+            if (this.collection.cards.length) {
                 for (const card of this.collection.cards) {
                     await this.saveCard(card.pivot);
                 }
