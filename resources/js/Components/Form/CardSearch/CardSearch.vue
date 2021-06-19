@@ -131,8 +131,12 @@ export default {
             });
         }, 1200),
         addCollectionsToStore: async function () {
-            for (const card of this.collection.cards) {
-                await this.saveCard(card.pivot);
+            if (this.collection.cards) {
+                for (const card of this.collection.cards) {
+                    await this.saveCard(card.pivot);
+                }
+            } else {
+                await this.findCollectionInStoreOrCreate();
             }
         },
         createCard: function (card) {
