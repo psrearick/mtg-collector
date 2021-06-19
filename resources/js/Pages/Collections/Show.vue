@@ -1,49 +1,6 @@
 <template>
     <div>
-        <CardList classes="md:grid-cols-4 mb-8">
-            <CardListCard>
-                <dt class="text-sm font-medium text-gray-500 truncate">
-                    Total Cards
-                </dt>
-                <dd class="mt-1 text-3xl font-semibold text-gray-900">
-                    {{ collection.summary.totalCards }} Cards
-                </dd>
-            </CardListCard>
-            <CardListCard>
-                <dt class="text-sm font-medium text-gray-500 truncate">
-                    Current Value
-                </dt>
-                <dd class="mt-1 text-3xl font-semibold text-gray-900">
-                    {{ formattedCurrency(collection.summary.currentValue) }}
-                </dd>
-            </CardListCard>
-            <CardListCard>
-                <dt class="text-sm font-medium text-gray-500 truncate">
-                    Acquired Value
-                </dt>
-                <dd class="mt-1 text-3xl font-semibold text-gray-900">
-                    {{ formattedCurrency(collection.summary.acquiredValue) }}
-                </dd>
-            </CardListCard>
-            <CardListCard>
-                <dt class="text-sm font-medium text-gray-500 truncate">
-                    Gain/Loss
-                </dt>
-                <dd
-                    class="mt-1 text-3xl font-semibold"
-                    :class="
-                        collection.summary.gainLoss > 0
-                            ? 'text-gray-900'
-                            : 'text-red-500'
-                    "
-                >
-                    {{ formattedCurrency(collection.summary.gainLoss) }} ({{
-                        formattedPercentage(collection.summary.gainLossPercent)
-                    }})
-                </dd>
-            </CardListCard>
-        </CardList>
-
+        <CollectionsShowCardList :summary="collection.summary" />
         <div>
             <CardIndexDataGrid
                 v-model:card-term="cardSearchTerm"
@@ -62,19 +19,16 @@
 
 <script>
 import Layout from "@/Layouts/Authenticated";
-import CardList from "@/Components/CardLists/CardList";
-import CardListCard from "@/Components/CardLists/CardListCard";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
-import { formatCurrency, formatPercentage } from "@/Shared/api/ConvertValue";
 import CardIndexDataGrid from "@/Components/DataGrid/CardIndexDataGrid/CardIndexDataGrid";
+import CollectionsShowCardList from "@/Components/CardLists/CollectionsShowCardList";
 
 export default {
     name: "ShowCollection",
 
     components: {
+        CollectionsShowCardList,
         CardIndexDataGrid,
-        CardListCard,
-        CardList,
     },
 
     layout: Layout,
@@ -118,12 +72,9 @@ export default {
                     {
                         visible: true,
                         type: "text",
-                        link: true,
+                        link: false,
                         label: "Set",
                         key: "set",
-                        events: {
-                            click: "collection_card_set_click",
-                        },
                     },
                     {
                         visible: true,
@@ -209,19 +160,13 @@ export default {
             this.setSearchTerm = this.collection.setQuery;
             this.loaded = true;
         },
-        formattedCurrency(value) {
-            return formatCurrency(value);
-        },
-        formattedPercentage(value) {
-            return formatPercentage(value, 2, true);
-        },
         search: _.debounce(function () {
             this.searching = true;
             this.$inertia.get(
                 "/collections/collections/" + this.collection.id,
                 {
-                    card: this.cardSearchTerm,
-                    set: this.setSearchTerm,
+                    cardSearch: this.cardSearchTerm,
+                    setSearch: this.setSearchTerm,
                 },
                 {
                     onSuccess: () => {

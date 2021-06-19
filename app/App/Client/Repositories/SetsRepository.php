@@ -10,10 +10,19 @@ class SetsRepository extends Repository
 
     public string $table = 'sets';
 
-    public function equals(string $term) : SetsRepository
+    public function equals(string $term, string $field = 'name') : SetsRepository
     {
         $this->query = $this->query->where('sets.name', '=', $term)
             ->orWhere('sets.code', '=', $term);
+
+        return $this;
+    }
+
+    public function like(string $term, string $field = 'name') : SetsRepository
+    {
+        $searchTerm  = '%' . $term . '%';
+        $this->query = $this->query->where('sets.name', 'like', $searchTerm)
+            ->orWhere('sets.code', 'like', $searchTerm);
 
         return $this;
     }

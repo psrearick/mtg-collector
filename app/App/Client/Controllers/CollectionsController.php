@@ -4,7 +4,6 @@ namespace App\App\Client\Controllers;
 
 use App\App\Base\Controller;
 use App\App\Client\Presenters\CollectionsShowPresenter;
-use App\App\Client\Traits\WithLoadAttribute;
 use App\Domain\Cards\Actions\CardSearch;
 use App\Domain\Collections\Models\Collection;
 use Auth;
@@ -14,8 +13,6 @@ use Inertia\Response;
 
 class CollectionsController extends Controller
 {
-    use WithLoadAttribute;
-
     /**
      * @return Response
      */
@@ -31,13 +28,12 @@ class CollectionsController extends Controller
      */
     public function edit(Collection $collection, Request $request) : Response
     {
-        $search = CardSearch::search($request);
+        $collectionEdit = Collection::with('cards', 'cards.frameEffects', 'cards.prices', 'cards.prices.priceProvider', 'cards.set')->find($collection->id);
 
         return Inertia::render('Collections/Edit', [
-            'collection' => Collection::with(['cards', 'cards.frameEffects'])->find($collection->id),
-            'cards'      => $search['cards'] ? $this->loadAttribute($search['cards'], ['image_url']) : [],
-            'cards'      => $search,
-            'sets'       => $search['sets'],
+            'collectionComplete'    => $collectionEdit,
+            'collection'            => (new CollectionsShowPresenter($collectionEdit, $request))->present(),
+            'search'                => Inertia::lazy(fn () => CardSearch::search($request, 15, true)),
         ]);
     }
 
@@ -55,7 +51,8 @@ class CollectionsController extends Controller
 
     public function show(Collection $collection, Request $request)
     {
-        $collectionShow = Collection::with('cards', 'cards.prices', 'cards.set')->find($collection->id);
+        $collectionShow = Collection::with('cards', 'cards.frameEffects', 'cards.prices', 'cards.prices.priceProvider', 'cards.set')->find($collection->id);
+
         return Inertia::render('Collections/Show', [
             'collection' => (new CollectionsShowPresenter($collectionShow, $request))->present(),
         ]);

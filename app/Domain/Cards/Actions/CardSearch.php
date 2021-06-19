@@ -11,16 +11,17 @@ class CardSearch
     /**
      * @param Request $request
      * @param int $perPage
+     * @param bool $withImage
      * @return array
      */
-    public static function search(Request $request, int $perPage = 15) : array
+    public static function search(Request $request, int $perPage = 15, bool $withImage = false) : array
     {
-        $results     = [];
-        $sets        = [];
-        $cards       = app(CardsRepository::class)->select('cards.*');
-        $setRequest  = $request->get('set');
-        $cardRequest = $request->get('card');
-        $results     = false;
+        $results        = [];
+        $sets           = [];
+        $cards          = app(CardsRepository::class)->select('cards.*');
+        $setRequest     = $request->get('set');
+        $cardRequest    = $request->get('card');
+        $hasResults     = false;
 
         if ($cardRequest) {
 //            $cards->startsWith($cardRequest); // Replace this search with scryfall fuzzy search
@@ -28,22 +29,26 @@ class CardSearch
             if (count($names)) {
                 $cards->in('cards.name', $names);
                 $cards->with(['frameEffects', 'prices', 'prices.priceProvider']);
-                $results = true;
+                $hasResults = true;
             }
         }
 
         if ($setRequest) {
-            $sets   = app(SetsRepository::class)->fromRequest($request, 'set');
+            $sets   = app(SetsRepository::class)->like($setRequest);
             $setIds = $sets->ids();
-            $sets   = $sets->get();
-            if ($sets) {
+            if ($setIds) {
                 $cards->filterOnSets($setIds);
-                $results = true;
+                $hasResults = true;
             }
         }
 
-        if ($results) {
-            $results = $cards->with(['set'])->getPaginated($perPage);
+        if ($hasResults) {
+            $cards->with(['set']);
+            if ($withImage) {
+                $cards->loadAttribute(['image_url']);
+            }
+
+            $results = $cards->getPaginated($perPage);
         }
 
         return [

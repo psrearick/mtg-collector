@@ -1,7 +1,7 @@
 <template>
     <div class="w-full">
         <div
-            v-if="cards || sets.length"
+            v-if="cards.length || sets.length"
             class="rounded-md mt-4 p-4 bg-gray-200"
         >
             <div v-if="cards.length" class="p-4">
@@ -307,7 +307,7 @@ export default {
 
     computed: {
         cards() {
-            return this.$store.getters.cardSearchResults.data;
+            return this.$store.getters.cardSearchResults;
         },
         sets() {
             return this.$store.getters.setSearchResults;

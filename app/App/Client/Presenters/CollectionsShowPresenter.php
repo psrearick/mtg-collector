@@ -2,12 +2,12 @@
 
 namespace App\App\Client\Presenters;
 
-use App\App\Client\Repositories\SetsRepository;
-use Illuminate\Http\Request;
 use \Illuminate\Support\Collection as ModelCollection;
 use App\App\Base\Presenter;
+use App\App\Client\Repositories\SetsRepository;
 use App\Domain\Collections\Models\Collection;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class CollectionsShowPresenter extends Presenter
@@ -16,11 +16,10 @@ class CollectionsShowPresenter extends Presenter
 
     protected ?Request $request;
 
-
     public function __construct(Collection $collection, Request $request = null)
     {
         $this->collection = $collection;
-        $this->request = $request;
+        $this->request    = $request;
     }
 
     public function buildCards()
@@ -59,27 +58,27 @@ class CollectionsShowPresenter extends Presenter
                 'gainLoss'        => $gainLoss,
                 'gainLossPercent' => $gainLossPercent,
             ],
-            'cards'        => $cards->paginate(20),
+            'cards'         => $cards->paginate(20),
             'top_five'      => $cards->sortByDesc('today')->take(5)->values(),
-            'cardQuery'    => $this->request->get('card') ?: "",
-            'setQuery'     => $this->request->get('set') ?: "",
+            'cardQuery'     => $this->request->get('cardSearch') ?: '',
+            'setQuery'      => $this->request->get('setSearch') ?: '',
         ]);
     }
 
     protected function search()
     {
         $cards       = $this->collection->cards;
-        $setRequest  = $this->request->get('set');
-        $cardRequest = $this->request->get('card');
+        $setRequest  = $this->request->get('setSearch');
+        $cardRequest = $this->request->get('cardSearch');
         if ($cardRequest) {
-            $cards = $cards->filter(function($card) use ($cardRequest) {
-                return Str::startsWith(strtolower($card->name), strtolower($cardRequest));
+            $cards = $cards->filter(function ($card) use ($cardRequest) {
+                return Str::contains(Str::lower($card->name), Str::lower($cardRequest));
             });
         }
         if ($setRequest) {
-            $sets   = app(SetsRepository::class)->fromRequest($this->request, 'set');
+            $sets   = app(SetsRepository::class)->like($setRequest);
             $setIds = $sets->ids();
-            $cards = $cards->whereIn('set_id', $setIds);
+            $cards  = $cards->whereIn('set_id', $setIds);
         }
 
         return $cards;

@@ -24,9 +24,9 @@ class Repository
         $this->query = new $this->class();
     }
 
-    public function equals(string $term) : Repository
+    public function equals(string $term, string $field = 'name') : Repository
     {
-        $this->query = $this->query->where($this->table . '.name', '=', $term);
+        $this->query = $this->query->where($this->table . '.' . $field, '=', $term);
 
         return $this;
     }
@@ -74,6 +74,39 @@ class Repository
     public function in(string $field, array $values) : Repository
     {
         $this->query = $this->query->whereIn($field, $values);
+
+        return $this;
+    }
+
+    public function like(string $term, string $field = 'name') : Repository
+    {
+        $searchTerm  = '%' . $term . '%';
+        $this->query = $this->query
+            ->where($this->table . '.' . $field, 'like', $searchTerm)
+            ->orWhere('sets.code', 'like', $searchTerm);
+
+        return $this;
+    }
+
+    public function loadAttribute(array $attributes) : Repository
+    {
+        if (!$this->results) {
+            $this->run();
+        }
+
+        foreach ($attributes as $attribute) {
+            $key   = $attribute;
+            $value = $attribute;
+
+            if (is_array($attribute)) {
+                $key   = $attribute['key'];
+                $value = $attribute['value'];
+            }
+
+            foreach ($this->results as $item) {
+                $item->{$key} = $item->{$value};
+            }
+        }
 
         return $this;
     }

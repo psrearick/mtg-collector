@@ -24,16 +24,9 @@ trait WithLoadAttribute
 
             foreach ($collection as $item) {
                 $item->{$key} = $item->{$value};
-//                $this->watch($item, $attribute);
             }
         }
 
         return $collection;
     }
-
-//    private function watch($item, string $attribute) {
-//        if ($attribute == 'image_url') {
-//            ImportCardImages::dispatch($item);
-//        }
-//    }
 }

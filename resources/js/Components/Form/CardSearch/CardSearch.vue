@@ -17,6 +17,10 @@ export default {
             type: Object,
             default: () => {},
         },
+        search: {
+            type: Object,
+            default: () => {},
+        },
     },
 
     data() {
@@ -26,30 +30,74 @@ export default {
             cards: [],
             sets: [],
             searching: false,
-            pagination: {},
+            // pagination: {},
         };
     },
 
     watch: {
         cardSearchTerm() {
-            this.search();
+            this.query();
         },
         setSearchTerm() {
-            this.search();
+            this.query();
         },
-        cards() {
-            this.pagination = {
-                current_page: this.cards.current_page,
-                first_page_url: this.cards.first_page_url,
-                last_page: this.cards.last_page,
-                last_page_url: this.cards.last_page_url,
-                next_page_url: this.cards.next_page_url,
-                previous_page_url: this.cards.previous_page_url,
-                links: this.cards.links,
-                from: this.cards.from,
-                to: this.cards.to,
-                total: this.cards.total,
-            };
+        search(val) {
+            const cardData = [];
+
+            const results =
+                val &&
+                Object.keys(val).length &&
+                val.cards &&
+                typeof val.cards.data !== "undefined" &&
+                val.cards.data.length;
+
+            if (results) {
+                for (let card of val.cards.data) {
+                    let foil = 0;
+                    let nonFoil = 0;
+
+                    const collectionFoil = this.findCardInStore({
+                        card_id: card.id,
+                        foil: 1,
+                    });
+                    if (collectionFoil) {
+                        foil = collectionFoil.quantity;
+                    }
+
+                    const collectionNonFoil = this.findCardInStore({
+                        card_id: card.id,
+                        foil: 0,
+                    });
+                    if (collectionNonFoil) {
+                        nonFoil = collectionNonFoil.quantity;
+                    }
+
+                    card.collectionQuantityFoil = foil;
+                    card.collectionQuantityNonFoil = nonFoil;
+
+                    cardData.push(card);
+                }
+            }
+
+            let setData = [];
+
+            const setResults =
+                val &&
+                Object.keys(val).length &&
+                val.sets &&
+                typeof val.sets.results !== "undefined" &&
+                val.sets.results.length;
+
+            if (setResults) {
+                setData = val.sets.results;
+            }
+
+            this.$store.dispatch("addCardSearchResults", {
+                searchResults: cardData,
+            });
+            this.$store.dispatch("addSetSearchResults", {
+                searchResults: setData,
+            });
         },
     },
 
@@ -67,7 +115,7 @@ export default {
     },
 
     methods: {
-        search: _.debounce(function () {
+        query: _.debounce(function () {
             this.searching = true;
             this.cards = [];
             this.sets = [];
@@ -76,17 +124,9 @@ export default {
                     card: this.cardSearchTerm,
                     set: this.setSearchTerm,
                 },
-                onSuccess: (res) => {
+                only: ["search"],
+                onSuccess: () => {
                     this.searching = false;
-                    let cards = this.getCardsWithQuantities(
-                        res.props.cards.cards
-                    );
-                    this.$store.dispatch("addCardSearchResults", {
-                        searchResults: cards,
-                    });
-                    this.$store.dispatch("addSetSearchResults", {
-                        searchResults: res.props.sets,
-                    });
                 },
             });
         }, 1200),
@@ -112,42 +152,7 @@ export default {
                 });
             }
         },
-        getCardsWithQuantities: function (cards) {
-            if (!Object.keys(cards).length) {
-                return cards;
-            }
-
-            const cardData = [];
-
-            for (let card of cards.data) {
-                let foil = 0;
-                let nonFoil = 0;
-
-                const collectionFoil = this.findCardInStore({
-                    card_id: card.id,
-                    foil: 1,
-                });
-                if (collectionFoil) {
-                    foil = collectionFoil.quantity;
-                }
-
-                const collectionNonFoil = this.findCardInStore({
-                    card_id: card.id,
-                    foil: 0,
-                });
-                if (collectionNonFoil) {
-                    nonFoil = collectionNonFoil.quantity;
-                }
-
-                card.collectionQuantityFoil = foil;
-                card.collectionQuantityNonFoil = nonFoil;
-
-                cardData.push(card);
-            }
-
-            cards.data = cardData;
-            return cards;
-        },
+        getCardsWithQuantities: function () {},
         findCardInStore: function (card) {
             return this.$store.getters.collectionCard(
                 this.collection.id,
@@ -219,9 +224,13 @@ export default {
                     const data = res.data;
                     this.updateSearchResultsQuantity(data, change);
                     if (data.collectionCard) {
-                        return this.saveCard(data.collectionCard);
+                        this.saveCard(data.collectionCard);
+                    } else {
+                        this.deleteCard(change.id, change.foil);
                     }
-                    this.deleteCard(change.id, change.foil);
+                    this.$inertia.reload({
+                        only: ["collection", "collectionComplete"],
+                    });
                 });
         },
     },

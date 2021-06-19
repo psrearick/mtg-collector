@@ -5,15 +5,25 @@
                 Add Cards to Collection
             </h3>
             <div class="w-full">
-                <CardSearch :collection="collection" />
+                <CardSearch :collection="collectionComplete" :search="search" />
             </div>
         </div>
         <div>
-            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-8">
-                Your Collection
+            <h3 class="text-lg leading-6 font-medium text-gray-900 my-4">
+                Edit Collection
             </h3>
             <div class="w-full">
-                <CollectionEditDataGrid />
+                <CardIndexDataGrid
+                    v-model:card-term="cardSearchTerm"
+                    v-model:set-term="setSearchTerm"
+                    v-model:searching="searching"
+                    :data="filteredCollection.data"
+                    :fields="table.fields"
+                    :show-pagination="true"
+                    :force-show="true"
+                    :show-search="true"
+                    :pagination="filteredCollection"
+                />
             </div>
         </div>
     </div>
@@ -23,11 +33,13 @@
 import Layout from "@/Layouts/Authenticated";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import CardSearch from "@/Components/Form/CardSearch/CardSearch";
-import CollectionEditDataGrid from "@/Components/DataGrid/CollectionDataGrid/CollectionEditDataGrid";
+import CardIndexDataGrid from "@/Components/DataGrid/CardIndexDataGrid/CardIndexDataGrid";
 
 export default {
     name: "EditCollection",
-    components: { CollectionEditDataGrid, CardSearch },
+
+    components: { CardIndexDataGrid, CardSearch },
+
     layout: Layout,
 
     title: "MTG Collector - Edit Collection",
@@ -36,6 +48,97 @@ export default {
         collection: {
             type: Object,
             default: () => {},
+        },
+        collectionComplete: {
+            type: Object,
+            default: () => {},
+        },
+        search: {
+            type: Object,
+            default: () => {},
+        },
+    },
+
+    data() {
+        return {
+            setSearchTerm: "",
+            cardSearchTerm: "",
+            loaded: false,
+            searching: false,
+            table: {
+                fields: [
+                    {
+                        visible: true,
+                        type: "composite-text",
+                        link: true,
+                        label: "Card",
+                        values: [
+                            {
+                                key: "name",
+                                classes: "",
+                            },
+                            {
+                                key: "foil_formatted",
+                                classes: "text-sm text-gray-500 pl-2",
+                            },
+                        ],
+                        events: {
+                            click: "collection_card_name_click",
+                        },
+                    },
+                    {
+                        visible: true,
+                        type: "text",
+                        link: false,
+                        label: "Set",
+                        key: "set",
+                    },
+                    {
+                        visible: true,
+                        type: "text",
+                        label: "Features",
+                        key: "features",
+                    },
+                    {
+                        visible: true,
+                        type: "currency",
+                        label: "Today",
+                        key: "today",
+                    },
+                    {
+                        visible: true,
+                        type: "text",
+                        label: "Acquired Date",
+                        key: "acquired_date",
+                    },
+                    {
+                        visible: true,
+                        type: "currency",
+                        label: "Acquired Price",
+                        key: "acquired_price",
+                    },
+                ],
+            },
+            filteredCollection: {},
+        };
+    },
+
+    watch: {
+        cardSearchTerm() {
+            if (this.cardSearchTerm !== this.cardQuery && this.loaded) {
+                this.query();
+            }
+        },
+        setSearchTerm() {
+            if (this.setSearchTerm !== this.setQuery && this.loaded) {
+                this.query();
+            }
+        },
+        collection() {
+            this.$store.dispatch("addFilteredCollection", {
+                collection: this.collection.cards,
+            });
+            this.filteredCollection = this.$store.getters.filteredCollection;
         },
     },
 
@@ -57,6 +160,40 @@ export default {
                 },
             },
         });
+    },
+
+    created() {
+        this.mount();
+        this.$store.dispatch("addFilteredCollection", {
+            collection: this.collection.cards,
+        });
+    },
+
+    methods: {
+        mount() {
+            this.cardSearchTerm = this.collection.cardQuery;
+            this.setSearchTerm = this.collection.setQuery;
+            this.loaded = true;
+            this.$store.dispatch("addFilteredCollection", {
+                collection: this.collection.cards,
+            });
+            this.filteredCollection = this.$store.getters.filteredCollection;
+        },
+        query: _.debounce(function () {
+            this.searching = true;
+            this.$inertia.reload({
+                data: {
+                    cardSearch: this.cardSearchTerm,
+                    setSearch: this.setSearchTerm,
+                },
+                only: ["collection"],
+                onSuccess: (res) => {
+                    console.log(res);
+                    this.searching = false;
+                    this.mount();
+                },
+            });
+        }, 1200),
     },
 };
 </script>

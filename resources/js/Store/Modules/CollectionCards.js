@@ -25,7 +25,7 @@ const getters = {
     },
     cardSearchResults: (state) => state.cardSearchResults,
     cardSearchResultsCard: (state) => (id) => {
-        return state.cardSearchResults.data.find((card) => card.id === id);
+        return state.cardSearchResults.find((card) => card.id === id);
     },
     setSearchResults: (state) => state.setSearchResults,
 };
@@ -99,7 +99,7 @@ const mutations = {
         state.cardSearchResults = searchResults;
     },
     updateCardSearchResultsCardQuantity(state, card) {
-        const srCard = state.cardSearchResults.data.find(
+        const srCard = state.cardSearchResults.find(
             (srCard) => srCard.id === card.id
         );
         if (card.foil) {

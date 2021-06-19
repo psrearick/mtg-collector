@@ -6,16 +6,13 @@
         />
         <p v-if="searching" class="text-xs text-gray-400">Searching...</p>
         <data-table
-            v-if="data.length || forceShow"
+            v-if="showData"
             v-model:sort="sortFields"
             class="mt-4"
             :data="data"
             :fields="fields"
         />
-        <data-grid-pagination
-            v-if="showPagination && (data.length || forceShow)"
-            :pagination="pagination"
-        />
+        <data-grid-pagination v-if="showPagination" :pagination="pagination" />
     </div>
 </template>
 
@@ -59,6 +56,10 @@ export default {
             type: Array,
             default: () => {},
         },
+        hideWithoutData: {
+            type: Boolean,
+            default: false,
+        },
         sort: {
             type: Object,
             default: () => {},
@@ -86,6 +87,21 @@ export default {
             cardSearchTerm: "",
             setSearchTerm: "",
         };
+    },
+
+    computed: {
+        showData() {
+            if (!this.hideWithoutData) {
+                return true;
+            }
+            if (typeof this.data === "undefined") {
+                return false;
+            }
+            if (!this.data) {
+                return false;
+            }
+            return true;
+        },
     },
 
     watch: {
