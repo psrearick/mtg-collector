@@ -15,6 +15,12 @@
             {{ data[value.key] }}
         </span>
     </p>
+    <component
+        :is="field.component"
+        v-if="field.type === 'component'"
+        :data="data"
+        :field="field"
+    />
 </template>
 
 <script>

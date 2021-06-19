@@ -16,7 +16,7 @@ class CollectionsIndexPresenter extends Presenter
 
         return $collections->map(function ($collection) {
             $cards = $collection->cards;
-            $count = $cards->count();
+            $count = $cards->sum('pivot.quantity');
             $value = 0;
             $cards->each(function ($card) use (&$value) {
                 $value += $card->pivot->foil ? $card->price_foil : $card->price_normal;

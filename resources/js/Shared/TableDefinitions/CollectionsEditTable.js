@@ -1,3 +1,5 @@
+import HorizontalIncrementer from "@/Components/Buttons/HorizontalIncrementer";
+
 export default {
     data() {
         return {
@@ -55,7 +57,8 @@ export default {
                     },
                     {
                         visible: true,
-                        type: "text",
+                        type: "component",
+                        component: HorizontalIncrementer,
                         label: "Quantity",
                         key: "quantity",
                     },
@@ -76,5 +79,38 @@ export default {
         this.emitter.on("collection_card_name_click", (card) => {
             this.$inertia.get(`/cards/cards/${card.id}`);
         });
+
+        this.emitter.on("incrementQuantity", (card) => {
+            console.log("+");
+            this.updateQuantity({
+                change: 1,
+                id: card.id,
+                foil: card.foil,
+            });
+        });
+
+        this.emitter.on("decrementQuantity", (card) => {
+            console.log("-");
+            this.updateQuantity({
+                change: -1,
+                id: card.id,
+                foil: card.foil,
+            });
+        });
+    },
+
+    methods: {
+        updateQuantity(change) {
+            axios
+                .post("/card-collections/card-collections", {
+                    change: change,
+                    collection: this.collection.id,
+                })
+                .then(() => {
+                    this.$inertia.reload({
+                        only: ["collection", "collectionComplete"],
+                    });
+                });
+        },
     },
 };

@@ -54,7 +54,7 @@ class CollectionsShowPresenter extends Presenter
             'name'        => $this->collection->name,
             'description' => $this->collection->description,
             'summary'     => [
-                'totalCards'      => $cards->count(),
+                'totalCards'      => $cards->sum('quantity'),
                 'currentValue'    => $current,
                 'acquiredValue'   => $acquired,
                 'gainLoss'        => $gainLoss,
