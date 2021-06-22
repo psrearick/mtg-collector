@@ -1,9 +1,18 @@
 <template>
     <div>
         <div class="mb-12">
-            <h3 class="text-lg leading-6 font-medium text-gray-900 py-4">
-                Add Cards to Collection
-            </h3>
+            <div class="flex justify-between">
+                <h3 class="text-lg leading-6 font-medium text-gray-900 py-4">
+                    Add Cards to Collection
+                </h3>
+                <p class="py-4">
+                    <SuccessButton
+                        type="button"
+                        text="Add Cards from Set"
+                        :href="route('collection-set.edit', [collection.id])"
+                    />
+                </p>
+            </div>
             <div class="w-full">
                 <CardSearch :collection="collectionComplete" :search="search" />
             </div>
@@ -35,11 +44,12 @@ import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import CardSearch from "@/Components/Form/CardSearch/CardSearch";
 import CardIndexDataGrid from "@/Components/DataGrid/CardIndexDataGrid/CardIndexDataGrid";
 import CollectionsEditTable from "@/Shared/TableDefinitions/CollectionsEditTable";
+import SuccessButton from "@/Components/Buttons/SuccessButton";
 
 export default {
     name: "EditCollection",
 
-    components: { CardIndexDataGrid, CardSearch },
+    components: { SuccessButton, PrimaryButton, CardIndexDataGrid, CardSearch },
 
     mixins: [CollectionsEditTable],
 

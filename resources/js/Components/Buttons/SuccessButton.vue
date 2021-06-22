@@ -2,7 +2,7 @@
     <Button
         :type="type"
         :href="href"
-        classes="bg-blue-600 focus:shadow-outline-blue focus:border-blue-900 active:bg-blue-900 hover:bg-blue-900 border border-transparent text-white"
+        classes="bg-green-600 focus:shadow-outline-green focus:border-green-900 active:bg-green-900 hover:bg-green-900 border border-transparent text-white"
     >
         <slot />
         {{ text }}
@@ -12,7 +12,7 @@
 <script>
 import Button from "@/Components/Buttons/Button";
 export default {
-    name: "PrimaryButton",
+    name: "SuccessButton",
     components: { Button },
     props: {
         type: {
