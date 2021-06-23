@@ -36,7 +36,9 @@
                     focus:ring-0
                     text-sm
                 "
+                :value="modelValue"
                 @blur="$emit('update-active', false)"
+                @input="$emit('update:modelValue', $event.target.value)"
             />
             <span v-else class="py-2 w-full inline-flex truncate">
                 <span class="truncate h-4"> {{ selectedOption.primary }} </span>
@@ -78,13 +80,13 @@ export default {
             type: Object,
             default: () => {},
         },
-        searchTerm: {
+        modelValue: {
             type: String,
             default: "",
         },
     },
 
-    emits: ["update-active"],
+    emits: ["update-active", "update:modelValue"],
 
     watch: {
         active(val) {

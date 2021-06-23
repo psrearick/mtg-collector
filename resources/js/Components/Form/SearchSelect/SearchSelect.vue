@@ -10,9 +10,11 @@
             <SearchSelectField
                 :active="active"
                 :selected-option="selectedOption"
-                search-term=""
+                :model-value="searchTerm"
                 @update-active="updateActive"
+                @update:model-value="search"
             />
+            <p v-if="searching" class="text-xs text-gray-400">Searching...</p>
             <transition
                 leave-active-class="transition ease-in duration-100"
                 leave-from-class="opacity-100"
@@ -60,7 +62,17 @@ export default {
             type: Number,
             default: -1,
         },
+        searchTerm: {
+            type: String,
+            default: "",
+        },
+        searching: {
+            type: Boolean,
+            default: false,
+        },
     },
+
+    emits: ["update:searchTerm"],
 
     data() {
         return {
@@ -93,6 +105,9 @@ export default {
         },
         updatedSelectedOption(index) {
             this.selectedOptionIndex = index;
+        },
+        search(term) {
+            this.$emit("update:searchTerm", term);
         },
     },
 };

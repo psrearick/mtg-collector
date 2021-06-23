@@ -125,6 +125,13 @@ class Repository
         return $this;
     }
 
+    public function selectMany(array $selection) : Repository
+    {
+        $this->query = $this->query->select($selection);
+
+        return $this;
+    }
+
     public function startsWith(string $term) : Repository
     {
         $this->query = $this->query->where($this->table . '.name', 'LIKE', $term . '%');
