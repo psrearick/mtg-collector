@@ -14,7 +14,7 @@ class CardSearch
      * @param bool $withImage
      * @return array
      */
-    public static function search(Request $request, int $perPage = 15, bool $withImage = false) : array
+    public static function search(Request $request, int $perPage = 15, bool $withImage = false, bool $exact = false) : array
     {
         $results        = [];
         $sets           = [];
@@ -24,17 +24,25 @@ class CardSearch
         $hasResults     = false;
 
         if ($cardRequest) {
-//            $cards->startsWith($cardRequest); // Replace this search with scryfall fuzzy search
-            $names = app(ScryfallSearch::class)->autocomplete($cardRequest);
-            if (count($names)) {
-                $cards->in('cards.name', $names);
-                $cards->with(['frameEffects', 'prices', 'prices.priceProvider', 'collections']);
-                $hasResults = true;
+            if ($exact) {
+                $cards->equals($cardRequest);
+            } else {
+                $names = app(ScryfallSearch::class)->autocomplete($cardRequest);
+                if (count($names)) {
+                    $cards->in('cards.name', $names);
+                }
             }
+//            $cards->with(['frameEffects', 'prices', 'prices.priceProvider', 'collections']);
+            $hasResults = true;
         }
 
         if ($setRequest) {
-            $sets   = app(SetsRepository::class)->like($setRequest);
+            $sets = app(SetsRepository::class);
+            if ($exact) {
+                $sets->equals($setRequest, 'id');
+            } else {
+                $sets->like($setRequest);
+            }
             $setIds = $sets->ids();
             if ($setIds) {
                 $cards->filterOnSets($setIds);

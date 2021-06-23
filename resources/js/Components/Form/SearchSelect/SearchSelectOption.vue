@@ -5,7 +5,7 @@
         role="option"
         @mouseenter="highlight = true"
         @mouseleave="highlight = false"
-        @click="$emit('select-option')"
+        @click="$emit('selectOption')"
     >
         <div class="flex">
             <span :class="primaryTextClasses"> {{ option.primary }} </span>

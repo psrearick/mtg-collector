@@ -26,7 +26,7 @@
                         :key="index"
                         :selected="index === selectedOptionIndex"
                         :option="option"
-                        @select-option="updatedSelectedOption(index)"
+                        @selectOption="updatedSelectedOption(index)"
                     />
                 </SearchSelectOptions>
             </transition>
@@ -72,7 +72,7 @@ export default {
         },
     },
 
-    emits: ["update:searchTerm"],
+    emits: ["update:searchTerm", "update:selectedOption"],
 
     data() {
         return {
@@ -105,6 +105,8 @@ export default {
         },
         updatedSelectedOption(index) {
             this.selectedOptionIndex = index;
+            this.$emit("update:selectedOption", this.selectedOption.id);
+            this.active = false;
         },
         search(term) {
             this.$emit("update:searchTerm", term);

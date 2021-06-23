@@ -10,7 +10,8 @@
             :options="allSets"
             :search-term="searchTerm"
             :searching="searching"
-            @update:searchTerm="query"
+            @update:selectedOption="queryCards"
+            @update:searchTerm="querySets"
         />
 
         search results - card/set datagrid
@@ -34,11 +35,11 @@ export default {
             type: Object,
             default: () => {},
         },
-        sets: {
+        setSets: {
             type: Array,
             default: () => {},
         },
-        cards: {
+        setCards: {
             type: Object,
             default: () => {},
         },
@@ -79,14 +80,28 @@ export default {
     },
 
     methods: {
-        query: _.debounce(function (term) {
+        queryCards: function (set) {
+            if (set < 0) {
+                return;
+            }
+            this.$inertia.reload({
+                data: {
+                    set: set,
+                },
+                only: ["setCards"],
+                onSuccess: (res) => {
+                    console.log(res);
+                },
+            });
+        },
+        querySets: _.debounce(function (term) {
             this.searching = true;
             this.allSets = [];
             this.$inertia.reload({
                 data: {
                     query: term,
                 },
-                only: ["sets", "queryString"],
+                only: ["setSets", "queryString"],
                 onSuccess: () => {
                     this.searching = false;
                     this.mapSets();
@@ -95,7 +110,7 @@ export default {
         }, 1200),
         mapSets: function () {
             this.searchTerm = this.queryString;
-            this.allSets = this.sets.map((set) => {
+            this.allSets = this.setSets.map((set) => {
                 return {
                     primary: set.name,
                     secondary: set.code,
