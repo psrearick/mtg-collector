@@ -12,14 +12,11 @@ use App\Domain\Cards\Actions\GetCardFeatures;
 use App\Domain\Cards\Actions\GetCardImage;
 use App\Domain\Cards\Actions\GetScryfallCard;
 use App\Domain\Prices\Models\Price;
-use App\Domain\Prices\Models\PriceProvider;
 use App\Jobs\ImportCardImages;
-use Illuminate\Database\Eloquent\HigherOrderBuilderProxy;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Storage;
 use Laravel\Scout\Searchable;
 
 class Card extends CardGeneric
@@ -127,8 +124,8 @@ class Card extends CardGeneric
         if ($this->imagePath) {
             return asset('storage/' . $this->imagePath);
         }
-        $imageUrl = app(GetCardImage::class)->execute($this->scryfallId);
-        ImportCardImages::dispatchAfterResponse($this, $imageUrl);
+        $imageUrl = app(GetCardImage::class)->execute($this->scryfallId, 'image');
+        ImportCardImages::dispatchAfterResponse($this);
 
         return $imageUrl;
     }

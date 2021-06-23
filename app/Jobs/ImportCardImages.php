@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Actions\DownloadFileAction;
+use App\Domain\Cards\Actions\GetCardImage;
 use App\Domain\Cards\Models\Card;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -17,17 +18,14 @@ class ImportCardImages implements ShouldQueue
 
     private Card $card;
 
-    private string $imageUrl;
-
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Card $card, string $imageUrl)
+    public function __construct(Card $card)
     {
         $this->card     = $card;
-        $this->imageUrl = $imageUrl;
     }
 
     /**
@@ -37,7 +35,8 @@ class ImportCardImages implements ShouldQueue
      */
     public function handle()
     {
-        if (!$url = $this->card->image_url) {
+        $url = app(GetCardImage::class)->execute($this->card->scryfallId);
+        if (!$url) {
             return;
         }
 

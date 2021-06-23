@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\App\Client\Controllers;
-
 
 use App\App\Base\Controller;
 use App\Domain\Collections\Models\Collection;
