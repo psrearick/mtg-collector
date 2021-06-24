@@ -17,15 +17,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Collection;
-use Laravel\Scout\Searchable;
 
 class Card extends CardGeneric
 {
-    use Searchable;
-
-    public $appends = ['feature', 'features'];
-
     public $asYouType = true;
+
+    protected $casts = [
+        'number' => 'int',
+    ];
 
     public function collections() : BelongsToMany
     {
@@ -156,7 +155,7 @@ class Card extends CardGeneric
         )->price;
     }
 
-    public function getScryfallCardAttribute()
+    public function getScryfallCardAttribute() : array
     {
         return (new GetScryfallCard())->execute($this->scryfallId);
     }
@@ -249,14 +248,5 @@ class Card extends CardGeneric
     public function variations() : BelongsToMany
     {
         return $this->belongsToMany(Card::class, 'variations', 'card_id', 'variation_id');
-    }
-
-    /**
-     * @param $query
-     * @return mixed
-     */
-    protected function makeAllSearchableUsing($query)
-    {
-        return $query->with('set');
     }
 }

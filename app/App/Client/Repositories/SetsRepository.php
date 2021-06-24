@@ -14,6 +14,7 @@ class SetsRepository extends Repository
     {
         if ($field) {
             $this->query = $this->query->where('sets.' . $field, '=', $term);
+
             return $this;
         }
         $this->query = $this->query->where('sets.name', '=', $term)
