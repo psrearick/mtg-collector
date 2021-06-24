@@ -29,8 +29,8 @@ class SetCollectionsPresenter
                 $computed = new GetComputed($card);
                 $computedCard = $computed
                     ->add('feature')
-                    ->add('price_normal')
-                    ->add('price_foil')
+                    ->add('priceNormal')
+                    ->add('priceFoil')
                     ->get();
 
                 return collect([
@@ -38,8 +38,8 @@ class SetCollectionsPresenter
                     'number'            => $computedCard->number,
                     'name'              => $computedCard->name,
                     'features'          => $computedCard->feature,
-                    'price_normal'      => $computedCard->price_normal,
-                    'price_foil'        => $computedCard->price_foil,
+                    'price_normal'      => $computedCard->priceNormal,
+                    'price_foil'        => $computedCard->priceFoil,
                 ]);
             })->sortBy('number')->values();
     }

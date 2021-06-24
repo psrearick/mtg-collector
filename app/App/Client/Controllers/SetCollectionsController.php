@@ -15,19 +15,25 @@ class SetCollectionsController extends Controller
 {
     public function edit(Collection $collection, Request $request) : Response
     {
-        $query    = $request->input('query') ?: '';
-        $set      = $request->input('set') ?: '';
-        $setCards = [];
+        $query          = $request->input('query') ?: '';
+        $set            = $request->input('set') ?: '';
+        $setCards       = [];
+        $setSets        = SetSearch::search($query, 0, ['id', 'code', 'name']);
+        $selectedIndex  = null;
 
         if ($set) {
             $setCards = (new SetCollectionsPresenter(Set::find($set), $collection))->present();
+            $selectedIndex = $setSets->search(function($item) use ($set) {
+                return $item->id == $set;
+            });
         }
 
         return Inertia::render('Collections/AddFromSet', [
             'setCards'         => $setCards,
             'collection'       => $collection,
-            'setSets'          => SetSearch::search($query, 0, ['id', 'code', 'name']),
+            'setSets'          => $setSets,
             'queryString'      => $query,
+            'selected'         => $selectedIndex,
         ]);
     }
 

@@ -23,7 +23,7 @@
                         <thead class="bg-gray-50">
                             <tr>
                                 <th
-                                    v-for="(field, index) in filteredFields"
+                                    v-for="(field, index) in topRowFields"
                                     :key="index"
                                     scope="col"
                                     class="
@@ -45,16 +45,50 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <tr
-                                v-for="(item, key) in data"
-                                :key="key"
-                                class="hover:bg-gray-50"
-                            >
+                        <tbody
+                            v-for="(item, key) in data"
+                            :key="key"
+                            class="
+                                bg-white
+                                border-b-2 border-gray-200
+                                hover:bg-gray-50
+                            "
+                        >
+                            <tr>
                                 <td
-                                    v-for="(field, fieldKey) in filteredFields"
+                                    v-for="(field, fieldKey) in topRowFields"
                                     :key="fieldKey"
                                     class="py-2 px-6"
+                                >
+                                    <a
+                                        v-if="field.link"
+                                        class="
+                                            text-blue-700
+                                            hover:text-blue-900
+                                        "
+                                        href="#"
+                                        @click.prevent="click(item, field)"
+                                    >
+                                        <data-grid-table-field
+                                            :data="item"
+                                            :field="field"
+                                        />
+                                    </a>
+                                    <p v-else>
+                                        <data-grid-table-field
+                                            :data="item"
+                                            :field="field"
+                                        />
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr
+                                v-if="bottomRowFields.length"
+                            >
+                                <td
+                                    v-for="(field, fieldKey) in bottomRowFields"
+                                    :key="fieldKey"
+                                    class="px-6"
                                 >
                                     <a
                                         v-if="field.link"
@@ -103,6 +137,10 @@ export default {
             type: Array,
             default: () => {},
         },
+        fieldRows: {
+            type: Array,
+            default: () => {},
+        },
         sort: {
             type: Object,
             default: () => {},
@@ -118,16 +156,40 @@ export default {
     },
 
     computed: {
-        filteredFields() {
-            return this.fields.filter((field) => {
-                return field.visible;
-            });
+        topRowFields() {
+            if (this.fields) {
+                return this.filterFields(this.fields);
+            }
+            if (this.fieldRows) {
+                const topRow = this.fieldRows.filter((row) => {
+                    return row.row === 1;
+                });
+                if (topRow.length) {
+                    return this.filterFields(topRow[0].fields);
+                }
+            }
+            return [];
+        },
+        bottomRowFields() {
+            if (this.fieldRows) {
+                const bottomRow = this.fieldRows.filter((row) => {
+                    return row.row === 2;
+                });
+                if (bottomRow.length) {
+                    return this.filterFields(bottomRow[0].fields);
+                }
+            }
+            return [];
         },
     },
 
     methods: {
+        filterFields(fields) {
+            return fields.filter((field) => {
+                return field.visible;
+            });
+        },
         sortField(field) {
-            // eslint-disable-next-line no-undef
             this.sorts[field] = _.has(this.sorts, field)
                 ? !this.sorts[field]
                 : true;
