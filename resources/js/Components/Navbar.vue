@@ -42,7 +42,7 @@
                         lg:justify-end
                     "
                 >
-                    <Search dark />
+<!--                    <Search dark />-->
                 </div>
                 <div class="flex lg:hidden">
                     <!-- Mobile menu button -->
