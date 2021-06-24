@@ -38,7 +38,7 @@ export default {
         },
     },
 
-    emits: ["select-option"],
+    emits: ["selectOption"],
 
     data() {
         return {

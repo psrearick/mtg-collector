@@ -23,7 +23,7 @@ class CardsSearchPresenter extends Presenter
             return $this->cardSearch;
         }
 
-        $cards = $cards->map(function ($card) {
+        $cards = $cards->load(['frameEffects', 'prices', 'prices.priceProvider', 'collections'])->map(function ($card) {
             $foil = 0;
             $nonfoil = 0;
             $card->collections->each(function ($collection) use (&$foil, &$nonfoil) {
