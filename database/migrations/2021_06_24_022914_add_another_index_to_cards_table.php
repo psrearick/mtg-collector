@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddSetIndexToCardsTable extends Migration
+class AddAnotherIndexToCardsTable extends Migration
 {
     /**
      * Reverse the migrations.
@@ -14,7 +14,7 @@ class AddSetIndexToCardsTable extends Migration
     public function down()
     {
         Schema::table('cards', function (Blueprint $table) {
-            $table->dropIndex('set_id');
+            $table->dropIndex('scryfallOracleId');
         });
     }
 
@@ -26,7 +26,7 @@ class AddSetIndexToCardsTable extends Migration
     public function up()
     {
         Schema::table('cards', function (Blueprint $table) {
-            $table->index('set_id');
+            $table->index('scryfallOracleId');
         });
     }
 }
