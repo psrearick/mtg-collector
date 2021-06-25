@@ -25,8 +25,6 @@ class SetUserIdInSession
      */
     public function handle($event)
     {
-        if (session()->has('user_id')) {
-            session()->put('user_id', $event->user->id);
-        }
+        session()->put('user_id', $event->user->id);
     }
 }
