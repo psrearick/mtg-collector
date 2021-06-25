@@ -26,14 +26,14 @@ class CardSearch
         if ($cardRequest) {
             if ($exact) {
                 $cards->equals($cardRequest);
+                $hasResults = true;
             } else {
                 $names = app(ScryfallSearch::class)->autocomplete($cardRequest);
                 if (count($names)) {
                     $cards->in('cards.name', $names);
+                    $hasResults = true;
                 }
             }
-//            $cards->with(['frameEffects', 'prices', 'prices.priceProvider', 'collections']);
-            $hasResults = true;
         }
 
         if ($setRequest) {
