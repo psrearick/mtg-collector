@@ -12,11 +12,11 @@ use Illuminate\Support\Str;
 
 class SetCollectionsPresenter
 {
+    private string $card;
+
     private Collection $collection;
 
     private Set $set;
-
-    private string $card;
 
     public function __construct(Set $set, Collection $collection, string $card)
     {

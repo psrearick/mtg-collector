@@ -2,6 +2,7 @@
 
 namespace App\Domain\Cards\Models;
 
+use App\App\Scopes\NotOnlineOnlyScope;
 use App\Domain\CardAttributes\Models\ForeignData;
 use App\Domain\CardAttributes\Models\FrameEffect;
 use App\Domain\CardAttributes\Models\LeadershipSkill;
@@ -248,5 +249,10 @@ class Card extends CardGeneric
     public function variations() : BelongsToMany
     {
         return $this->belongsToMany(Card::class, 'variations', 'card_id', 'variation_id');
+    }
+
+    protected static function booted() : void
+    {
+        static::addGlobalScope(new NotOnlineOnlyScope);
     }
 }

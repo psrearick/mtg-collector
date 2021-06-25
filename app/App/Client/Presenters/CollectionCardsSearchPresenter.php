@@ -9,11 +9,11 @@ class CollectionCardsSearchPresenter extends Presenter
 {
     protected array $cardSearch;
 
-    protected int  $perPage;
-
     protected int $page;
 
     protected string $pageName;
+
+    protected int  $perPage;
 
     public function __construct(array $cardSearch, int $perPage, int $page, string $pageName)
     {
