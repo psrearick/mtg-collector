@@ -22,7 +22,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         Login::class => [
             SetUserIdInSession::class,
-        ]
+        ],
     ];
 
     /**
