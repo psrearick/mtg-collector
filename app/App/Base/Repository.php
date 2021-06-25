@@ -82,8 +82,7 @@ class Repository
     {
         $searchTerm  = '%' . $term . '%';
         $this->query = $this->query
-            ->where($this->table . '.' . $field, 'like', $searchTerm)
-            ->orWhere('sets.code', 'like', $searchTerm);
+            ->where($this->table . '.' . $field, 'like', $searchTerm);
 
         return $this;
     }
@@ -132,9 +131,9 @@ class Repository
         return $this;
     }
 
-    public function startsWith(string $term) : Repository
+    public function startsWith(string $term, string $field = 'name') : Repository
     {
-        $this->query = $this->query->where($this->table . '.name', 'LIKE', $term . '%');
+        $this->query = $this->query->where($this->table . '.' . $field, 'LIKE', $term . '%');
 
         return $this;
     }

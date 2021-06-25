@@ -22,7 +22,6 @@ class CardsController extends Controller
     public function index(Request $request) : Response
     {
         $cards = (new CardsSearchPresenter(CardSearch::search($request, 0, false), 15))->present();
-//        dd($cards);
         return Inertia::render('Cards/Index',
             $cards
         );
