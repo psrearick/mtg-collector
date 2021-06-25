@@ -65,48 +65,25 @@ export default {
 
     methods: {
         runSearchResults(val) {
-            const cardData = [];
+            let cardData = [];
 
-            const results =
+            const cardResults =
                 val &&
                 Object.keys(val).length &&
                 val.cards &&
                 typeof val.cards.data !== "undefined";
 
-            if (results) {
-                let data = [];
+            if (cardResults) {
                 if (typeof val.cards.data.length === "undefined") {
-                    data = Object.values(val.cards.data);
+                    cardData = Object.values(val.cards.data);
                 } else if (val.cards.data.length) {
-                    data = val.cards.data;
-                }
-
-                for (let card of data) {
-                    let foil = 0;
-                    let nonFoil = 0;
-
-                    const collectionFoil = this.findCardInStore({
-                        card_id: card.id,
-                        foil: 1,
-                    });
-                    if (collectionFoil) {
-                        foil = collectionFoil.quantity;
-                    }
-
-                    const collectionNonFoil = this.findCardInStore({
-                        card_id: card.id,
-                        foil: 0,
-                    });
-                    if (collectionNonFoil) {
-                        nonFoil = collectionNonFoil.quantity;
-                    }
-
-                    card.collectionQuantityFoil = foil;
-                    card.collectionQuantityNonFoil = nonFoil;
-
-                    cardData.push(card);
+                    cardData = val.cards.data;
                 }
             }
+
+            this.$store.dispatch("addCardSearchResults", {
+                searchResults: cardData,
+            });
 
             let setData = [];
 
@@ -114,16 +91,16 @@ export default {
                 val &&
                 Object.keys(val).length &&
                 val.sets &&
-                typeof val.sets.results !== "undefined" &&
-                val.sets.results.length;
+                typeof val.sets.results !== "undefined";
 
             if (setResults) {
-                setData = val.sets.results;
+                if (typeof val.sets.results.length === "undefined") {
+                    setData = Object.values(val.sets.results);
+                } else if (val.sets.results.length) {
+                    setData = val.sets.results;
+                }
             }
 
-            this.$store.dispatch("addCardSearchResults", {
-                searchResults: cardData,
-            });
             this.$store.dispatch("addSetSearchResults", {
                 searchResults: setData,
             });
@@ -169,21 +146,12 @@ export default {
                 });
             }
         },
-        getCardsWithQuantities: function () {},
         findCardInStore: function (card) {
             return this.$store.getters.collectionCard(
                 this.collection.id,
                 card.card_id,
                 card.foil
             );
-        },
-        findCardInStoreOrCreate: async function (card) {
-            const collectionCard = this.findCardInStore(card);
-            if (collectionCard) {
-                return collectionCard;
-            }
-            await this.createCard(card);
-            return this.findCardInStore(card);
         },
         findCollectionInStore: function () {
             return this.$store.getters.collection(this.collection.id);
@@ -221,7 +189,6 @@ export default {
                 quantity = data.collectionCard.quantity;
             }
             const card = this.$store.getters.cardSearchResultsCard(id);
-
             if (!card) {
                 return;
             }

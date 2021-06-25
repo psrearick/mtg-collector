@@ -134,13 +134,13 @@ export default {
         updateQuantity: function (value, id, foil) {
             this.activeField = null;
             this.activeFieldType = null;
-            let key = "collectionQuantity" + (foil ? "" : "Non") + "Foil";
+            let key = foil ? "foil_collected" : "nonfoil_collected";
             let change = value - this.cards.find((card) => card.id === id)[key];
             if (change === 0) {
                 return;
             }
             this.emitter.emit("updateCardQuantity", {
-                change: value - this.cards.find((card) => card.id === id)[key],
+                change: change,
                 id: id,
                 foil: foil,
             });
