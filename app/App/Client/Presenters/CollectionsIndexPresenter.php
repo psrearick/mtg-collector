@@ -3,6 +3,7 @@
 namespace App\App\Client\Presenters;
 
 use App\App\Base\Presenter;
+use App\Domain\Cards\Actions\GetComputed;
 use App\Domain\Collections\Models\Collection;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,7 +20,12 @@ class CollectionsIndexPresenter extends Presenter
             $count = $cards->sum('pivot.quantity');
             $value = 0;
             $cards->each(function ($card) use (&$value) {
-                $value += $card->pivot->foil ? $card->price_foil : $card->price_normal;
+                $computed = new GetComputed($card);
+                $computedCard = $computed
+                    ->add('priceNormal')
+                    ->add('priceFoil')
+                    ->get();
+                $value += $card->pivot->foil ? $computedCard->priceFoil : $computedCard->priceNormal;
             });
 
             return [

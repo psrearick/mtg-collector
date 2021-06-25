@@ -7,6 +7,12 @@ export default {
                 fields: [
                     {
                         visible: true,
+                        type: "text",
+                        label: "Number",
+                        key: "number",
+                    },
+                    {
+                        visible: true,
                         type: "composite-text",
                         link: true,
                         label: "Card",
@@ -16,38 +22,20 @@ export default {
                                 classes: "",
                             },
                             {
-                                key: "foil_formatted",
+                                key: "features",
                                 classes: "text-sm text-gray-500 pl-2",
                             },
                         ],
                         events: {
+                            hover: "set_card_name_hover",
                             click: "collection_card_name_click",
                         },
                     },
                     {
                         visible: true,
-                        type: "text",
-                        link: false,
-                        label: "Set",
-                        key: "set",
-                    },
-                    {
-                        visible: true,
-                        type: "text",
-                        label: "Features",
-                        key: "features",
-                    },
-                    {
-                        visible: true,
                         type: "currency",
-                        label: "Today",
-                        key: "today",
-                    },
-                    {
-                        visible: true,
-                        type: "text",
-                        label: "Acquired Date",
-                        key: "acquired_date",
+                        label: "Price",
+                        key: "price",
                     },
                     {
                         visible: true,
@@ -57,10 +45,27 @@ export default {
                     },
                     {
                         visible: true,
+                        type: "text",
+                        label: "Acquired Date",
+                        key: "acquired_date",
+                    },
+                    {
+                        visible: true,
                         type: "component",
                         component: HorizontalIncrementer,
                         label: "Quantity",
                         key: "quantity",
+                        componentType: "small",
+                    },
+                    {
+                        visible: true,
+                        type: "text",
+                        link: true,
+                        value: "Foil",
+                        condition: this.showFoil,
+                        events: {
+                            click: "set_card_foil_click",
+                        },
                     },
                     {
                         visible: true,
@@ -68,23 +73,32 @@ export default {
                         link: true,
                         value: "Edit",
                         events: {
-                            click: "collection_card_edit_click",
+                            click: "set_card_edit_click",
                         },
                     },
                 ],
             },
         };
     },
+
     created() {
         this.emitter.on("collection_card_name_click", (card) => {
             this.$inertia.get(`/cards/cards/${card.id}`);
+        });
+
+        this.emitter.on("set_card_foil_click", (card) => {
+            this.updateQuantity({
+                change: 1,
+                id: card.id,
+                foil: true,
+            });
         });
 
         this.emitter.on("incrementQuantity", (card) => {
             this.updateQuantity({
                 change: 1,
                 id: card.id,
-                foil: card.foil,
+                foil: card.is_foil,
             });
         });
 
@@ -92,7 +106,7 @@ export default {
             this.updateQuantity({
                 change: -1,
                 id: card.id,
-                foil: card.foil,
+                foil: card.is_foil,
             });
         });
     },
@@ -106,9 +120,12 @@ export default {
                 })
                 .then(() => {
                     this.$inertia.reload({
-                        only: ["collection", "collectionComplete"],
+                        only: ["collection", "setCards"],
                     });
                 });
+        },
+        showFoil(item) {
+            return !(item.own_foil || item.is_foil);
         },
     },
 };

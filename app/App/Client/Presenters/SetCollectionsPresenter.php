@@ -8,6 +8,7 @@ use App\Domain\Collections\Models\Collection;
 use App\Domain\Sets\Models\Set;
 use Carbon\Carbon;
 use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Support\Str;
 
 class SetCollectionsPresenter
 {
@@ -15,9 +16,12 @@ class SetCollectionsPresenter
 
     private Set $set;
 
-    public function __construct(Set $set, Collection $collection)
+    private string $card;
+
+    public function __construct(Set $set, Collection $collection, string $card)
     {
         $this->set        = $set;
+        $this->card       = $card;
         $this->collection = $collection;
     }
 
@@ -29,17 +33,20 @@ class SetCollectionsPresenter
                 $computed = new GetComputed($card);
                 $computedCard = $computed
                     ->add('feature')
-                    ->add('price_normal')
-                    ->add('price_foil')
+                    ->add('priceNormal')
+                    ->add('priceFoil')
                     ->get();
 
                 return collect([
-                    'id'                => $computedCard->id,
-                    'number'            => $computedCard->number,
-                    'name'              => $computedCard->name,
-                    'features'          => $computedCard->feature,
-                    'price_normal'      => $computedCard->price_normal,
-                    'price_foil'        => $computedCard->price_foil,
+                    'id'                 => $computedCard->id,
+                    'number'             => $computedCard->number,
+                    'name'               => $computedCard->name,
+                    'features'           => $computedCard->feature,
+                    'price'              => $computedCard->priceNormal,
+                    'price_normal'       => $computedCard->priceNormal,
+                    'price_foil'         => $computedCard->priceFoil,
+                    'has_foil'           => $computedCard->has_foil,
+                    'is_foil'            => false,
                 ]);
             })->sortBy('number')->values();
     }
@@ -54,9 +61,20 @@ class SetCollectionsPresenter
                 ->where('number', '=', $collectionCard->get('number'))
                 ->first();
             if ($collectionCard->get('foil')) {
-                $setCard->put('quantity_foil', $collectionCard->get('quantity'));
-                $setCard->put('acquired_price_foil', $collectionCard->get('acquired_price'));
-                $setCard->put('acquired_date_foil', $collectionCard->get('acquired_date'));
+                $foil = collect([
+                    'id'                 => $setCard->get('id'),
+                    'number'             => $setCard->get('number'),
+                    'name'               => $setCard->get('name') . ' (Foil)',
+                    'feature'            => $setCard->get('feature'),
+                    'price'              => $setCard->get('price_foil'),
+                    'has_foil'           => $setCard->get('has_foil'),
+                    'is_foil'            => true,
+                    'quantity'           => $collectionCard->get('quantity'),
+                    'acquired_price'     => $collectionCard->get('acquired_price'),
+                    'acquired_date'      => $collectionCard->get('acquired_date'),
+                ]);
+                $setCards->push($foil);
+                $setCard->put('own_foil', true);
             } else {
                 $setCard->put('quantity', $collectionCard->get('quantity'));
                 $setCard->put('acquired_price', $collectionCard->get('acquired_price'));
@@ -64,7 +82,18 @@ class SetCollectionsPresenter
             }
         }
 
-        return $setCards;
+        $result = $setCards->sortBy([
+            ['number', 'asc'],
+            ['is_foil', 'asc'],
+        ])->values();
+
+        if ($cardTerm = $this->card) {
+            $result = $result->filter(function ($card) use ($cardTerm) {
+                return Str::contains(Str::lower($card->get('name')), Str::lower($cardTerm));
+            });
+        }
+
+        return $result;
     }
 
     private function getCollectionCards() : BaseCollection

@@ -130,30 +130,30 @@ class Card extends CardGeneric
     }
 
     /**
-     * @return float|null
+//     * @return float|null
      */
-    public function getPriceFoilAttribute() : ?float
-    {
-        return optional(
-            $this->prices
-                ->where('priceProvider.name', '=', 'tcgplayer')
-                ->where('foil', true)
-                ->first()
-        )->price;
-    }
+//    public function getPriceFoilAttribute() : ?float
+//    {
+//        return optional(
+//            $this->prices
+//                ->where('priceProvider.name', '=', 'tcgplayer')
+//                ->where('foil', true)
+//                ->first()
+//        )->price;
+//    }
 
     /**
-     * @return float|null
+//     * @return float|null
      */
-    public function getPriceNormalAttribute() : ?float
-    {
-        return optional(
-            $this->prices
-                ->where('priceProvider.name', '=', 'tcgplayer')
-                ->where('foil', false)
-                ->first()
-        )->price;
-    }
+//    public function getPriceNormalAttribute() : ?float
+//    {
+//        return optional(
+//            $this->prices
+//                ->where('priceProvider.name', '=', 'tcgplayer')
+//                ->where('foil', false)
+//                ->first()
+//        )->price;
+//    }
 
     public function getScryfallCardAttribute() : array
     {

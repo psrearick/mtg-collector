@@ -3,6 +3,8 @@
         <CardSetSearch
             v-model="cardSearchTerm"
             v-model:setName="setSearchTerm"
+            :card-search="cardSearch"
+            :set-search="setSearch"
         />
         <p v-if="searching" class="text-xs text-gray-400">Searching...</p>
         <data-table
@@ -11,6 +13,7 @@
             class="mt-4"
             :data="data"
             :fields="fields"
+            :field-rows="fieldRows"
         />
         <data-grid-pagination v-if="showPagination" :pagination="pagination" />
     </div>
@@ -28,9 +31,17 @@ export default {
     components: { CardSetSearch, DataTable, Search, DataGridPagination },
 
     props: {
+        cardSearch: {
+            type: Boolean,
+            default: true,
+        },
         cardTerm: {
             type: String,
             default: "",
+        },
+        setSearch: {
+            type: Boolean,
+            default: true,
         },
         setTerm: {
             type: String,
@@ -53,6 +64,10 @@ export default {
             default: () => {},
         },
         fields: {
+            type: Array,
+            default: () => {},
+        },
+        fieldRows: {
             type: Array,
             default: () => {},
         },

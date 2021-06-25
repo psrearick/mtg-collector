@@ -3,6 +3,7 @@
 namespace App\App\Client\Repositories;
 
 use App\App\Base\Repository;
+use App\Domain\Cards\Actions\GetComputed;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Collections\Models\Collection;
 use Carbon\Carbon;
@@ -76,6 +77,8 @@ class CollectionCardRepository extends Repository
         $collection     = Collection::find($request['collection']);
         $card           = Card::find($change['id']);
         $collectionCard = $this->getCollectionCard($collection, $card, $change['foil']);
+        $computed       = new GetComputed($card);
+        $computedCard   = $computed->add('priceNormal')->add('priceFoil')->get();
 
         if (!$collectionCard && $change['change'] && $change['change'] < 1) {
             // The change must be positive
@@ -95,7 +98,7 @@ class CollectionCardRepository extends Repository
                 $date_added = $change['date_added'] ?: $date_added;
             }
             $collection->cards()->attach($card->id, [
-                'price_when_added'  => $change['foil'] ? $card->price_foil : $card->price_normal,
+                'price_when_added'  => $change['foil'] ? $computedCard->priceFoil : $computedCard->priceNormal,
                 'foil'              => $change['foil'],
                 'description'       => null,
                 'condition'         => null,
@@ -123,14 +126,16 @@ class CollectionCardRepository extends Repository
         }
 
         // update relation quantity and price
-        $quantity       = $collectionCard->pivot->quantity;
-        $price          = $collectionCard->pivot->price_when_added;
-        $cost           = $quantity * $price;
-        $increase       = $change['change'] > 0;
-        $currentPrice   = $change['foil'] ? $card->price_foil : $card->price_normal;
-        $newCost        = $increase ? $cost + $currentPrice : $cost - $currentPrice;
+//        $quantity       = $collectionCard->pivot->quantity;
+//        $price          = $collectionCard->pivot->price_when_added;
+//        $cost           = $quantity * $price;
+//        $increase       = $change['change'] > 0;
+//        $currentPrice   = $change['foil'] ? $card->price_foil : $card->price_normal;
+//        $newCost        = $increase ? $cost + $currentPrice : $cost - $currentPrice;
         $newQuantity    = $collectionCard->pivot->quantity + $change['change'];
-        $newPrice       = $newCost / $newQuantity;
+//        $newPrice       = $newCost / $newQuantity;
+
+        $newPrice = $change['foil'] ? $computedCard->priceFoil : $computedCard->priceNormal;
 
         $changed = [
             'quantity'          => $newQuantity,

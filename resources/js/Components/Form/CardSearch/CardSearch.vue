@@ -1,7 +1,7 @@
 <template>
     <CardSetSearch v-model="cardSearchTerm" v-model:setName="setSearchTerm" />
     <p v-if="searching" class="text-xs text-gray-400">Searching...</p>
-    <CardSetSearchResults />
+    <CardSetSearchResults :pagination="search.cards" />
 </template>
 
 <script>
@@ -30,7 +30,6 @@ export default {
             cards: [],
             sets: [],
             searching: false,
-            // pagination: {},
         };
     },
 
@@ -42,17 +41,47 @@ export default {
             this.query();
         },
         search(val) {
+            this.runSearchResults(val);
+        },
+    },
+
+    created() {
+        this.emitter.on("updateCardQuantity", (change) => {
+            this.updateCardQuantity(change);
+        });
+    },
+
+    mounted() {
+        this.addCollectionsToStore();
+        let clear = { searchResults: [] };
+        this.$store.dispatch("addCardSearchResults", clear);
+        this.$store.dispatch("addSetSearchResults", clear);
+        if (this.search && this.search.cards) {
+            this.cardSearchTerm = this.search.cardQuery;
+            this.setSearchTerm = this.search.setQuery;
+            this.runSearchResults(this.search);
+        }
+    },
+
+    methods: {
+        runSearchResults(val) {
             const cardData = [];
 
             const results =
                 val &&
                 Object.keys(val).length &&
                 val.cards &&
-                typeof val.cards.data !== "undefined" &&
-                val.cards.data.length;
+                typeof val.cards.data !== "undefined";
 
             if (results) {
-                for (let card of val.cards.data) {
+                let data = [];
+                if (typeof val.cards.data.length === "undefined") {
+                    data = Object.values(val.cards.data);
+                } else if (val.cards.data.length) {
+                    data = val.cards.data;
+                }
+
+                for (let card of data) {
                     let foil = 0;
                     let nonFoil = 0;
 
@@ -99,22 +128,6 @@ export default {
                 searchResults: setData,
             });
         },
-    },
-
-    created() {
-        this.emitter.on("updateCardQuantity", (change) => {
-            this.updateCardQuantity(change);
-        });
-    },
-
-    mounted() {
-        this.addCollectionsToStore();
-        let clear = { searchResults: [] };
-        this.$store.dispatch("addCardSearchResults", clear);
-        this.$store.dispatch("addSetSearchResults", clear);
-    },
-
-    methods: {
         query: _.debounce(function () {
             this.searching = true;
             this.cards = [];
