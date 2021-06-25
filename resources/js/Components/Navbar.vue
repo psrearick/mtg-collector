@@ -100,7 +100,7 @@
                                     </menu-item>
                                     <menu-item
                                         id="user-menu-item-2"
-                                        href="logout"
+                                        href="/logout"
                                         method="post"
                                     >
                                         Logout
