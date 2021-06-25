@@ -17,6 +17,6 @@ class NotOnlineOnlyScope implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-        $builder->whereNull('isOnlineOnly');
+        $builder->whereNull('cards.isOnlineOnly');
     }
 }
