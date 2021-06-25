@@ -28,11 +28,14 @@ class CardSearch
                 $cards->equals($cardRequest);
                 $hasResults = true;
             } else {
-                $names = app(ScryfallSearch::class)->autocomplete($cardRequest);
-                if (count($names)) {
-                    $cards->in('cards.name', $names);
+                $term = preg_replace('/[^A-Za-z0-9]/', '', $cardRequest);
+                $cards->startsWith($term, 'name_normalized');
+
+//                $names = app(ScryfallSearch::class)->autocomplete($cardRequest);
+//                if (count($names)) {
+//                    $cards->in('cards.name', $names);
                     $hasResults = true;
-                }
+//                }
             }
         }
 
