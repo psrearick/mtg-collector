@@ -1,11 +1,13 @@
 <template>
     <div>
         <Search v-if="showSearch" v-model="passThroughSearchTerm" />
+        <p v-if="searching" class="text-xs text-gray-400">Searching...</p>
         <data-table
             v-model:sort="sortFields"
             class="mt-4"
             :data="data"
             :fields="fields"
+            :classes="classes"
         />
         <data-grid-pagination v-if="showPagination" :pagination="pagination" />
     </div>
@@ -22,6 +24,10 @@ export default {
     components: { DataTable, Search, DataGridPagination },
 
     props: {
+        classes: {
+            type: Object,
+            default: () => {},
+        },
         searchTerm: {
             type: String,
             default: "",
@@ -41,6 +47,10 @@ export default {
         fields: {
             type: Array,
             default: () => {},
+        },
+        searching: {
+            type: Boolean,
+            default: false,
         },
         sort: {
             type: Object,

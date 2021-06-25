@@ -19,28 +19,43 @@
                         sm:rounded-lg
                     "
                 >
-                    <table class="min-w-full divide-y divide-gray-200">
+                    <table
+                        :class="
+                            classes.table
+                                ? classes.table
+                                : 'min-w-full divide-y divide-gray-200'
+                        "
+                    >
                         <thead class="bg-gray-50">
-                            <tr>
+                            <tr
+                                :class="
+                                    classes.headerRow ? classes.headerRow : ''
+                                "
+                            >
                                 <th
                                     v-for="(field, index) in topRowFields"
                                     :key="index"
                                     scope="col"
-                                    class="
-                                        px-6
-                                        py-3
-                                        text-left text-xs
-                                        font-medium
-                                        text-gray-500
-                                        uppercase
-                                        tracking-wider
+                                    :class="
+                                        classes.headerCell
+                                            ? classes.headerCell
+                                            : 'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
                                     "
                                 >
                                     <a
                                         href="#"
                                         @click.prevent="sortField(field.key)"
                                     >
-                                        {{ field.label ? field.label : "" }}
+                                        <span class="block">
+                                            {{ field.label ? field.label : "" }}
+                                        </span>
+                                        <span class="block text-gray-400">
+                                            {{
+                                                field.subLabel
+                                                    ? field.subLabel
+                                                    : ""
+                                            }}
+                                        </span>
                                     </a>
                                 </th>
                             </tr>
@@ -48,17 +63,25 @@
                         <tbody
                             v-for="(item, key) in data"
                             :key="key"
-                            class="
-                                bg-white
-                                border-b-2 border-gray-200
-                                hover:bg-gray-50
+                            :class="
+                                classes.tbody
+                                    ? classes.tbody
+                                    : 'bg-white border-b-2 border-gray-200 hover:bg-gray-50'
                             "
                         >
-                            <tr>
+                            <tr
+                                :class="
+                                    classes.tableRow ? classes.tableRow : ''
+                                "
+                            >
                                 <td
                                     v-for="(field, fieldKey) in topRowFields"
                                     :key="fieldKey"
-                                    class="py-2 px-6"
+                                    :class="
+                                        classes.tableCell
+                                            ? classes.tableCell
+                                            : 'py-2 px-6'
+                                    "
                                 >
                                     <a
                                         v-if="field.link"
@@ -84,11 +107,18 @@
                             </tr>
                             <tr
                                 v-if="bottomRowFields.length"
+                                :class="
+                                    classes.tableRow ? classes.tableRow : ''
+                                "
                             >
                                 <td
                                     v-for="(field, fieldKey) in bottomRowFields"
                                     :key="fieldKey"
-                                    class="px-6"
+                                    :class="
+                                        classes.tableCell
+                                            ? classes.tableCell
+                                            : 'py-2 px-6'
+                                    "
                                 >
                                     <a
                                         v-if="field.link"
@@ -144,6 +174,12 @@ export default {
         sort: {
             type: Object,
             default: () => {},
+        },
+        classes: {
+            type: Object,
+            default: () => {
+                return { table: null };
+            },
         },
     },
 

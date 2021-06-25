@@ -22,8 +22,8 @@ class SetCollectionsController extends Controller
         $selectedIndex  = null;
 
         if ($set) {
-            $setCards = (new SetCollectionsPresenter(Set::find($set), $collection))->present();
-            $selectedIndex = $setSets->search(function($item) use ($set) {
+            $setCards      = (new SetCollectionsPresenter(Set::find($set), $collection))->present();
+            $selectedIndex = $setSets->search(function ($item) use ($set) {
                 return $item->id == $set;
             });
         }

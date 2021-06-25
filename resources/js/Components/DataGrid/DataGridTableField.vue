@@ -1,25 +1,41 @@
 <template>
-    <p v-if="field.type === 'text' || field.type === 'array'">
+    <p
+        v-if="
+            (field.type === 'text' || field.type === 'array') && showField(data)
+        "
+        :class="data.classes"
+    >
         {{ fieldValue }}
     </p>
-    <p v-if="field.type === 'currency'">
+    <p
+        v-if="field.type === 'currency' && showField(data)"
+        :class="data.classes"
+    >
         {{ fieldValue }}
     </p>
-    <p v-if="field.type === 'composite-text'">
+    <p
+        v-if="field.type === 'composite-text' && showField(data)"
+        :class="data.classes"
+    >
         <span
             v-for="(value, index) in field.values"
             v-show="data[value.key]"
             :key="index"
             :class="value.classes"
         >
-            {{ data[value.key] }}
+            {{
+                value.type === "currency"
+                    ? formatCurrencyOrEmpty(data[value.key])
+                    : data[value.key]
+            }}
         </span>
     </p>
     <component
         :is="field.component"
-        v-if="field.type === 'component'"
+        v-if="field.type === 'component' && showField(data)"
         :data="data"
         :field="field"
+        :class="data.classes"
     />
 </template>
 
@@ -48,12 +64,8 @@ export default {
                 return this.field.value;
             }
             let value = this.data[this.field.key];
-            if (value && this.field.type === "currency") {
-                value = formatCurrency(value);
-                return value !== "0" ? value : "";
-            }
             if (this.field.type === "currency") {
-                return "";
+                return this.formatCurrencyOrEmpty(value);
             }
             return value;
         },
@@ -68,6 +80,19 @@ export default {
     methods: {
         click() {
             this.$emit("click");
+        },
+        formatCurrencyOrEmpty(value) {
+            if (!value) {
+                return "";
+            }
+            value = formatCurrency(value);
+            return value !== "0" ? value : "";
+        },
+        showField(data) {
+            if (this.field.condition) {
+                return this.field.condition(data);
+            }
+            return true;
         },
     },
 };

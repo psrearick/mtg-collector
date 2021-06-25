@@ -34,12 +34,15 @@ class SetCollectionsPresenter
                     ->get();
 
                 return collect([
-                    'id'                => $computedCard->id,
-                    'number'            => $computedCard->number,
-                    'name'              => $computedCard->name,
-                    'features'          => $computedCard->feature,
-                    'price_normal'      => $computedCard->priceNormal,
-                    'price_foil'        => $computedCard->priceFoil,
+                    'id'                 => $computedCard->id,
+                    'number'             => $computedCard->number,
+                    'name'               => $computedCard->name,
+                    'features'           => $computedCard->feature,
+                    'price'              => $computedCard->priceNormal,
+                    'price_normal'       => $computedCard->priceNormal,
+                    'price_foil'         => $computedCard->priceFoil,
+                    'has_foil'           => $computedCard->has_foil,
+                    'is_foil'            => false,
                 ]);
             })->sortBy('number')->values();
     }
@@ -54,9 +57,20 @@ class SetCollectionsPresenter
                 ->where('number', '=', $collectionCard->get('number'))
                 ->first();
             if ($collectionCard->get('foil')) {
-                $setCard->put('quantity_foil', $collectionCard->get('quantity'));
-                $setCard->put('acquired_price_foil', $collectionCard->get('acquired_price'));
-                $setCard->put('acquired_date_foil', $collectionCard->get('acquired_date'));
+                $foil = collect([
+                    'id'                 => $setCard->get('id'),
+                    'number'             => $setCard->get('number'),
+                    'name'               => $setCard->get('name') . ' (Foil)',
+                    'feature'            => $setCard->get('feature'),
+                    'price'              => $setCard->get('price_foil'),
+                    'has_foil'           => $setCard->get('has_foil'),
+                    'is_foil'            => true,
+                    'quantity'           => $collectionCard->get('quantity'),
+                    'acquired_price'     => $collectionCard->get('acquired_price'),
+                    'acquired_date'      => $collectionCard->get('acquired_date'),
+                ]);
+                $setCards->push($foil);
+                $setCard->put('own_foil', true);
             } else {
                 $setCard->put('quantity', $collectionCard->get('quantity'));
                 $setCard->put('acquired_price', $collectionCard->get('acquired_price'));
@@ -64,7 +78,10 @@ class SetCollectionsPresenter
             }
         }
 
-        return $setCards;
+        return $setCards->sortBy([
+            ['number', 'asc'],
+            ['is_foil', 'asc'],
+        ])->values();
     }
 
     private function getCollectionCards() : BaseCollection

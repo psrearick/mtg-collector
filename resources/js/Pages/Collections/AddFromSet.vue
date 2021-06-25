@@ -25,15 +25,14 @@
         />
 
         <div class="w-full">
-            <CardIndexDataGrid
-                v-model:card-term="cardSearchTerm"
-                v-model:searching="searching"
-                :data="setCards"
-                :field-rows="table.fieldRows"
-                :show-pagination="false"
-                :force-show="true"
+            <DataGrid
+                v-model:search-term="cardSearchTerm"
+                v-model:searching="dataGridSearching"
                 :show-search="true"
-                :set-search="false"
+                :show-pagination="false"
+                :data="setCards"
+                :fields="table.fields"
+                :classes="dataGridStyles"
             />
         </div>
     </div>
@@ -44,13 +43,13 @@ import Layout from "@/Layouts/Authenticated";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import SearchSelect from "@/Components/Form/SearchSelect/SearchSelect";
 import SuccessButton from "@/Components/Buttons/SuccessButton";
-import CardIndexDataGrid from "@/Components/DataGrid/CardIndexDataGrid/CardIndexDataGrid";
 import AddFromSetTable from "@/Shared/TableDefinitions/AddFromSetTable";
+import DataGrid from "@/Components/DataGrid/DataGrid";
 
 export default {
     name: "AddFromSet",
 
-    components: { SearchSelect, SuccessButton, CardIndexDataGrid },
+    components: { SearchSelect, SuccessButton, DataGrid },
 
     mixins: [AddFromSetTable],
 
@@ -86,7 +85,11 @@ export default {
             allSets: [],
             cardSearchTerm: "",
             searching: false,
+            dataGridSearching: false,
             searchTerm: "",
+            dataGridStyles: {
+                tableCell: "py-1 px-6",
+            },
             // selectedSet: -1,
             // setId: null,
         };
@@ -102,10 +105,10 @@ export default {
 
     mounted() {
         this.$store.dispatch("updateHeader", {
-            header: "Edit: " + this.collection.name,
+            header: "Add Cards to Collection by Set",
         });
         this.$store.dispatch("updateSubheader", {
-            subheader: this.collection.description,
+            subheader: "Editing " + this.collection.name,
         });
         this.$store.dispatch("updateHeaderRightComponent", {
             component: {
@@ -127,14 +130,14 @@ export default {
             this.cardSearchTerm = this.collection.cardQuery;
         },
         querySetCards: _.debounce(function () {
-            this.searching = true;
+            this.dataGridSearching = true;
             this.$inertia.reload({
                 data: {
                     card: this.cardSearchTerm,
                 },
                 only: ["setCards"],
                 onSuccess: () => {
-                    this.searching = false;
+                    this.dataGridSearching = false;
                     this.mount();
                 },
             });
