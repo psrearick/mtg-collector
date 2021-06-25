@@ -17,12 +17,13 @@ class SetCollectionsController extends Controller
     {
         $query          = $request->input('query') ?: '';
         $set            = $request->input('set') ?: '';
+        $card           = $request->input('card') ?: '';
         $setCards       = [];
         $setSets        = SetSearch::search($query, 0, ['id', 'code', 'name']);
         $selectedIndex  = null;
 
         if ($set) {
-            $setCards      = (new SetCollectionsPresenter(Set::find($set), $collection))->present();
+            $setCards      = (new SetCollectionsPresenter(Set::find($set), $collection, $card))->present();
             $selectedIndex = $setSets->search(function ($item) use ($set) {
                 return $item->id == $set;
             });
@@ -34,6 +35,7 @@ class SetCollectionsController extends Controller
             'setSets'          => $setSets,
             'queryString'      => $query,
             'selected'         => $selectedIndex,
+            'setCardQuery'     => $card,
         ]);
     }
 

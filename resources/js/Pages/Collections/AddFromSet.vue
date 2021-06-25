@@ -78,6 +78,10 @@ export default {
             type: String,
             default: "",
         },
+        setCardQuery: {
+            type: String,
+            default: "",
+        },
     },
 
     data() {
@@ -90,6 +94,7 @@ export default {
             dataGridStyles: {
                 tableCell: "py-1 px-6",
             },
+            loaded: false,
             // selectedSet: -1,
             // setId: null,
         };
@@ -97,9 +102,9 @@ export default {
 
     watch: {
         cardSearchTerm() {
-            // if (this.cardSearchTerm !== this.cardQuery && this.loaded) {
-            this.querySetCards();
-            // }
+            if (this.cardSearchTerm !== this.setCardQuery && this.loaded) {
+                this.querySetCards();
+            }
         },
     },
 
@@ -122,12 +127,13 @@ export default {
             },
         });
         this.mapSets();
-        // this.selectedSet = this.selected;
+        this.mount();
     },
 
     methods: {
         mount: function () {
-            this.cardSearchTerm = this.collection.cardQuery;
+            this.cardSearchTerm = this.setCardQuery;
+            this.loaded = true;
         },
         querySetCards: _.debounce(function () {
             this.dataGridSearching = true;
@@ -135,13 +141,13 @@ export default {
                 data: {
                     card: this.cardSearchTerm,
                 },
-                only: ["setCards"],
+                only: ["setCards", "setCardQuery"],
                 onSuccess: () => {
                     this.dataGridSearching = false;
                     this.mount();
                 },
             });
-        }),
+        }, 1200),
         queryCards: function (set) {
             if (set < 0) {
                 return;
@@ -151,9 +157,6 @@ export default {
                     set: set,
                 },
                 only: ["setCards", "selected"],
-                // onSuccess: () => {
-                //     this.setId = set;
-                // },
             });
         },
         querySets: _.debounce(function (term) {

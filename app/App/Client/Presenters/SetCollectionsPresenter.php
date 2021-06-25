@@ -8,6 +8,7 @@ use App\Domain\Collections\Models\Collection;
 use App\Domain\Sets\Models\Set;
 use Carbon\Carbon;
 use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Support\Str;
 
 class SetCollectionsPresenter
 {
@@ -15,9 +16,12 @@ class SetCollectionsPresenter
 
     private Set $set;
 
-    public function __construct(Set $set, Collection $collection)
+    private string $card;
+
+    public function __construct(Set $set, Collection $collection, string $card)
     {
         $this->set        = $set;
+        $this->card       = $card;
         $this->collection = $collection;
     }
 
@@ -78,10 +82,18 @@ class SetCollectionsPresenter
             }
         }
 
-        return $setCards->sortBy([
+        $result = $setCards->sortBy([
             ['number', 'asc'],
             ['is_foil', 'asc'],
         ])->values();
+
+        if ($cardTerm = $this->card) {
+            $result = $result->filter(function ($card) use ($cardTerm) {
+                return Str::contains(Str::lower($card->get('name')), Str::lower($cardTerm));
+            });
+        }
+
+        return $result;
     }
 
     private function getCollectionCards() : BaseCollection
