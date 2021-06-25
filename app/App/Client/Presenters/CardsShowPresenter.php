@@ -47,16 +47,13 @@ class CardsShowPresenter extends Presenter
                 ->add('price_normal')
                 ->add('price_foil')
                 ->get();
+
             return $computedCard;
         });
 
-
-
         $card->printingSets = $card->printingSets();
 
-
-
-        $computed = new GetComputed($card);
+        $computed     = new GetComputed($card);
         $computedCard = $computed
             ->add('feature')
             ->add('priceNormal')

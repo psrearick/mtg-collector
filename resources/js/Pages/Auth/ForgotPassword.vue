@@ -33,7 +33,13 @@
                 Email Password Reset Link
             </Button>
         </div>
-        <div class="flex items-center justify-end mt-2">
+        <div class="flex items-center justify-between mt-2">
+            <inertia-link
+                href="register"
+                class="underline text-sm text-gray-600 hover:text-gray-900"
+            >
+                Register
+            </inertia-link>
             <inertia-link
                 href="login"
                 class="underline text-sm text-gray-600 hover:text-gray-900"
