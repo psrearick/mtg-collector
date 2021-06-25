@@ -95,8 +95,6 @@ export default {
                 tableCell: "py-1 px-6",
             },
             loaded: false,
-            // selectedSet: -1,
-            // setId: null,
         };
     },
 

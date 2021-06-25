@@ -3,6 +3,7 @@
 namespace App\App\Client\Presenters;
 
 use App\App\Base\Presenter;
+use App\Domain\Cards\Actions\GetComputed;
 
 class CardsSearchPresenter extends Presenter
 {
@@ -31,15 +32,22 @@ class CardsSearchPresenter extends Presenter
                 $nonfoil += !$collection->pivot->foil ? $collection->pivot->quantity : 0;
             });
 
+            $computed = new GetComputed($card);
+            $computedCard = $computed
+                ->add('feature')
+                ->add('priceNormal')
+                ->add('priceFoil')
+                ->get();
+
             return [
                 'id'                 => $card->id,
                 'card_name'          => $card->name,
                 'card_id'            => $card->id,
                 'set_name'           => $card->set->name,
                 'set_id'             => $card->set->id,
-                'feature'            => $card->feature,
-                'price'              => $card->price_normal,
-                'price_foil'         => $card->price_foil,
+                'feature'            => $computedCard->feature,
+                'price'              => $computedCard->priceNormal,
+                'price_foil'         => $computedCard->priceFoil,
                 'quantity_collected' => $foil + $nonfoil,
                 'nonfoil_collected'  => $nonfoil,
                 'foil_collected'     => $foil,
