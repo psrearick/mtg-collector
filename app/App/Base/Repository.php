@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 
 class Repository
 {
-    public string $class = 'App\Domain\Base\Models\Model';
+    public string $class = 'App\Domain\Base\Model';
 
     public object $query;
 

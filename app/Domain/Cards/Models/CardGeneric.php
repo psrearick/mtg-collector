@@ -2,7 +2,7 @@
 
 namespace App\Domain\Cards\Models;
 
-use App\Domain\Base\Models\Model;
+use App\Domain\Base\Model;
 use App\Domain\CardAttributes\Models\Color;
 use App\Domain\CardAttributes\Models\Keyword;
 use App\Domain\CardAttributes\Models\Subtype;

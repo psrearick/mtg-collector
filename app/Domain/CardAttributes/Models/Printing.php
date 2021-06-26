@@ -2,7 +2,7 @@
 
 namespace App\Domain\CardAttributes\Models;
 
-use App\Domain\Base\Models\Model;
+use App\Domain\Base\Model;
 use App\Domain\Sets\Models\Set;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;

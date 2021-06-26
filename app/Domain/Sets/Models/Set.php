@@ -2,7 +2,7 @@
 
 namespace App\Domain\Sets\Models;
 
-use App\Domain\Base\Models\Model;
+use App\Domain\Base\Model;
 use App\Domain\CardAttributes\Models\Printing;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Cards\Models\Token;

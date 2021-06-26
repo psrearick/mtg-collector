@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Base\Models;
+namespace App\Domain\Base;
 
 class Model extends \Illuminate\Database\Eloquent\Model
 {
