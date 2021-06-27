@@ -113,9 +113,20 @@ export default {
 
     methods: {
         updateQuantity(change) {
+
+            // TESTING
+            // change = {
+            //     quantity: null,
+            //     change: 1,
+            //     id: change.id,
+            //     foil: change.foil,
+            // };
+            // change.quantity = 0;
+            // change.change = null;
+
             axios
                 .post("/card-collections/card-collections", {
-                    change: change,
+                    ...change,
                     collection: this.collection.id,
                 })
                 .then(() => {

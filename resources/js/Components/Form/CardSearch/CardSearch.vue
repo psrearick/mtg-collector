@@ -201,7 +201,7 @@ export default {
         updateCardQuantity: function (change) {
             axios
                 .post("/card-collections/card-collections", {
-                    change: change,
+                    ...change,
                     collection: this.collection.id,
                 })
                 .then((res) => {
