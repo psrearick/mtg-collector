@@ -34,7 +34,7 @@ class CardSearch
 //                $names = app(ScryfallSearch::class)->autocomplete($cardRequest);
 //                if (count($names)) {
 //                    $cards->in('cards.name', $names);
-                    $hasResults = true;
+                $hasResults = true;
 //                }
             }
         }

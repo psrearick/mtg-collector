@@ -54,7 +54,7 @@ class ImportCardImages implements ShouldQueue
         app(DownloadFileAction::class)->saveFile($storagePath, $url);
 
         $card                     = Card::find($this->card->id);
-        $card->imagePath          = $cardPath; // images/cards/FILENAME
+        $card->imagePath          = 'storage/' . $cardPath; // images/cards/FILENAME
         $card->scryfall_image_url = $url;
         $card->save();
     }

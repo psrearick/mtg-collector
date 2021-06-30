@@ -4,6 +4,7 @@ namespace App\Domain\CardAttributes\Models;
 
 use App\Domain\Base\Model;
 use App\Domain\Cards\Models\Card;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class FrameEffect extends Model
@@ -13,8 +14,8 @@ class FrameEffect extends Model
      *
      * @return MorphToMany
      */
-    public function cards() : MorphToMany
+    public function cards() : BelongsToMany
     {
-        return $this->morphedByMany(Card::class, 'frame_effectable');
+        return $this->belongsToMany(Card::class, 'card_frame_effect');
     }
 }

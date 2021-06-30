@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Domain\Collections\DataActions;
-
 
 use App\Domain\Base\DataAction;
 use App\Domain\Cards\Models\Card;
@@ -59,6 +57,43 @@ class CollectionCardDataAction extends DataAction
     }
 
     /**
+     * update the quantity
+     * The new quantity is $request->input('quantity')
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function setQuantity(Request $request) : Response
+    {
+        return response('set '
+            . $request->input('id') . ': '
+            . $request->input('quantity'));
+    }
+
+    public function updateCollectionCard(Request $request) : Response
+    {
+//        "change" => 1 or "quantity" => 5
+//        "id" => 4288
+//        "foil" => false
+//        "collection" => 3
+//        "date" = 2021-06-25
+
+//        if (!$request->input('id')) {
+//            return response('no record found');
+//        }
+
+        if ($request->input('change')) {
+            return $this->recordQuantityChange($request);
+        }
+
+        if ($request->input('quantity') || $request->input('quantity') === 0) {
+            return $this->setQuantity($request);
+        }
+
+        return response('No change');
+    }
+
+    /**
      * Update the quantity
      * The quantity has changed by $request->input('change')
      *
@@ -77,55 +112,8 @@ class CollectionCardDataAction extends DataAction
             'date_added' => $date,
         ]);
 
-
-
-
-
-
         return response('changed '
-            . $request->input('id') .': '
+            . $request->input('id') . ': '
             . $request->input('change'));
-    }
-
-    /**
-     * update the quantity
-     * The new quantity is $request->input('quantity')
-     *
-     * @param Request $request
-     * @return Response
-     */
-    public function setQuantity(Request $request) : Response
-    {
-        return response('set '
-            . $request->input('id') .': '
-            . $request->input('quantity'));
-    }
-
-
-    public function updateCollectionCard(Request $request) : Response
-    {
-//        "change" => 1 or "quantity" => 5
-//        "id" => 4288
-//        "foil" => false
-//        "collection" => 3
-//        "date" = 2021-06-25
-
-
-
-//        if (!$request->input('id')) {
-//            return response('no record found');
-//        }
-
-
-
-        if ($request->input('change')) {
-            return $this->recordQuantityChange($request);
-        }
-
-        if ($request->input('quantity') || $request->input('quantity') === 0) {
-            return $this->setQuantity($request);
-        }
-
-        return response('No change');
     }
 }

@@ -7,18 +7,6 @@ use Illuminate\Support\Facades\Schema;
 class AddNormalizedNameFieldToCardsTable extends Migration
 {
     /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::table('cards', function (Blueprint $table) {
-            $table->string('name_normalized')->virtualAs("regexp_replace(name, '[^A-Za-z0-9]', '')")->index();
-        });
-    }
-
-    /**
      * Reverse the migrations.
      *
      * @return void
@@ -30,6 +18,17 @@ class AddNormalizedNameFieldToCardsTable extends Migration
             $table->dropIndex('name_normalized');
             $table->dropColumn('name_normalized');
         });
+    }
 
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('cards', function (Blueprint $table) {
+            $table->string('name_normalized')->virtualAs("regexp_replace(name, '[^A-Za-z0-9]', '')")->index();
+        });
     }
 }

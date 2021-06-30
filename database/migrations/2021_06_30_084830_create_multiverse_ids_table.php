@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddIndexToKeywordablesTable extends Migration
+class CreateMultiverseIdsTable extends Migration
 {
     /**
      * Reverse the migrations.
@@ -13,9 +13,7 @@ class AddIndexToKeywordablesTable extends Migration
      */
     public function down()
     {
-        Schema::table('keywordables', function (Blueprint $table) {
-            $table->dropIndex('keywordable_id');
-        });
+        Schema::dropIfExists('multiverse_ids');
     }
 
     /**
@@ -25,8 +23,11 @@ class AddIndexToKeywordablesTable extends Migration
      */
     public function up()
     {
-        Schema::table('keywordables', function (Blueprint $table) {
-            $table->index('keywordable_id');
+        Schema::create('multiverse_ids', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('multiverse_id')->index();
+            $table->unsignedBigInteger('card_id')->index();
+            $table->timestamps();
         });
     }
 }

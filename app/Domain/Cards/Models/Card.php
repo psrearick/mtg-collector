@@ -3,8 +3,10 @@
 namespace App\Domain\Cards\Models;
 
 use App\App\Scopes\NotOnlineOnlyScope;
+use App\Domain\CardAttributes\Models\Color;
 use App\Domain\CardAttributes\Models\ForeignData;
 use App\Domain\CardAttributes\Models\FrameEffect;
+use App\Domain\CardAttributes\Models\Keyword;
 use App\Domain\CardAttributes\Models\LeadershipSkill;
 use App\Domain\CardAttributes\Models\Legality;
 use App\Domain\CardAttributes\Models\Printing;
@@ -13,7 +15,10 @@ use App\Domain\Cards\Actions\GetCardFeatures;
 use App\Domain\Cards\Actions\GetCardImage;
 use App\Domain\Cards\Actions\GetScryfallCard;
 use App\Domain\Prices\Models\Price;
+use App\Domain\Sets\Models\Set;
 use App\Jobs\ImportCardImages;
+use App\MultiverseId;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -31,6 +36,16 @@ class Card extends CardGeneric
     {
         return $this->belongsToMany(\App\Domain\Collections\Models\Collection::class, 'card_collections')
             ->withPivot(['price_when_added', 'foil', 'description', 'condition', 'quantity']);
+    }
+
+    /**
+     * get all colors this card is assigned to
+     *
+     * @return BelongsToMany
+     */
+    public function colors() : BelongsToMany
+    {
+        return $this->belongsToMany(Color::class)->withPivot('type');
     }
 
     /**
@@ -56,11 +71,11 @@ class Card extends CardGeneric
     /**
      * Get all frame effects for this card
      *
-     * @return MorphToMany
+     * @return BelongsToMany
      */
-    public function frameEffects() : MorphToMany
+    public function frameEffects() : BelongsToMany
     {
-        return $this->morphToMany(FrameEffect::class, 'frame_effectable');
+        return $this->belongsToMany(FrameEffect::class, 'card_frame_effect');
     }
 
     /**
@@ -162,6 +177,16 @@ class Card extends CardGeneric
     }
 
     /**
+     * get all keywords for this card
+     *
+     * @return BelongsToMany
+     */
+    public function keywords() : BelongsToMany
+    {
+        return $this->belongsToMany(Keyword::class);
+    }
+
+    /**
      * Get all leadership  skill for this cards
      * @return BelongsToMany
      */
@@ -178,6 +203,14 @@ class Card extends CardGeneric
     public function legalities() : HasMany
     {
         return $this->hasMany(Legality::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function multiverseIds() : HasMany
+    {
+        return $this->hasMany(MultiverseId::class);
     }
 
     /**
@@ -216,6 +249,16 @@ class Card extends CardGeneric
     public function rulings() : HasMany
     {
         return $this->hasMany(Ruling::class);
+    }
+
+    /**
+     * get the set this card is assigned to
+     *
+     * @return BelongsTo
+     */
+    public function set() : BelongsTo
+    {
+        return $this->belongsTo(Set::class);
     }
 
     /**

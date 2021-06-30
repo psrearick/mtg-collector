@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateKeywordablesTable extends Migration
+class CreateCardFrameEffectTable extends Migration
 {
     /**
      * Reverse the migrations.
@@ -13,7 +13,7 @@ class CreateKeywordablesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('keywordables');
+        Schema::dropIfExists('card_frame_effect');
     }
 
     /**
@@ -23,11 +23,10 @@ class CreateKeywordablesTable extends Migration
      */
     public function up()
     {
-        Schema::create('keywordables', function (Blueprint $table) {
+        Schema::create('card_frame_effect', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('keyword_id');
-            $table->unsignedBigInteger('keywordable_id');
-            $table->string('keywordable_type');
+            $table->unsignedBigInteger('frame_effect_id');
+            $table->unsignedBigInteger('card_id');
             $table->timestamps();
         });
     }

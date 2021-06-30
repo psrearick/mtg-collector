@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddIndexToFrameEffectablesTable extends Migration
+class CreateCardKeywordTable extends Migration
 {
     /**
      * Reverse the migrations.
@@ -13,9 +13,7 @@ class AddIndexToFrameEffectablesTable extends Migration
      */
     public function down()
     {
-        Schema::table('frame_effectables', function (Blueprint $table) {
-            $table->dropIndex('frame_effectable_id');
-        });
+        Schema::dropIfExists('card_keyword');
     }
 
     /**
@@ -25,8 +23,11 @@ class AddIndexToFrameEffectablesTable extends Migration
      */
     public function up()
     {
-        Schema::table('frame_effectables', function (Blueprint $table) {
-            $table->index('frame_effectable_id');
+        Schema::create('card_keyword', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('keyword_id');
+            $table->unsignedBigInteger('card_id');
+            $table->timestamps();
         });
     }
 }

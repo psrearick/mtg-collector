@@ -11,6 +11,7 @@
         "php": "^7.4|^8.0",
         "ext-curl": "*",
         "barryvdh/laravel-debugbar": "^3.6",
+        "bensampo/laravel-enum": "^3.4",
         "doctrine/dbal": "^3.1",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",

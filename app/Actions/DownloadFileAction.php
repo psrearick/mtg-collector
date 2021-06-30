@@ -13,7 +13,7 @@ class DownloadFileAction
     public function execute(array $file, string $date_format = '', int $clean = 0) : string
     {
         // get file name
-        $file_name = array_key_exists('name', $file) ? $file['name'] : $this->getFileName($file, $date_format);
+        $file_name = $this->getFileName($file, $date_format);
 
         // get download directory
         $dir = $this->getFileDirectory($file['storage_path']);
@@ -105,6 +105,10 @@ class DownloadFileAction
         $date = '';
         if ($date_format) {
             $date = '_' . Carbon::now()->format($date_format);
+        }
+
+        if (array_key_exists('name', $file)) {
+            return $file['name'] . $date . '.' . $file['format'];
         }
 
         // return the base name of file
