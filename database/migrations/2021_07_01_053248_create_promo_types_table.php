@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCardColorTable extends Migration
+class CreatePromoTypesTable extends Migration
 {
     /**
      * Reverse the migrations.
@@ -13,7 +13,7 @@ class CreateCardColorTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('card_color');
+        Schema::dropIfExists('promo_types');
     }
 
     /**
@@ -23,11 +23,9 @@ class CreateCardColorTable extends Migration
      */
     public function up()
     {
-        Schema::create('card_color', function (Blueprint $table) {
+        Schema::create('promo_types', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('card_id')->index();
-            $table->unsignedBigInteger('color_id')->index();
-            $table->string('type')->default('color');
+            $table->string('name')->index();
             $table->timestamps();
         });
     }

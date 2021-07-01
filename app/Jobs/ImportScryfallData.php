@@ -5,9 +5,12 @@ namespace App\Jobs;
 use App\Actions\DownloadFileAction;
 use App\Domain\CardAttributes\Models\Color;
 use App\Domain\CardAttributes\Models\FrameEffect;
+use App\Domain\CardAttributes\Models\Game;
 use App\Domain\CardAttributes\Models\Keyword;
+use App\Domain\CardAttributes\Models\PromoType;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Sets\Models\Set;
+use App\Domain\Symbols\Models\Symbol;
 use Http;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -19,6 +22,8 @@ use pcrov\JsonReader\Exception;
 use pcrov\JsonReader\InputStream\IOException;
 use pcrov\JsonReader\InvalidArgumentException;
 use pcrov\JsonReader\JsonReader;
+use RecursiveArrayIterator;
+use RecursiveIteratorIterator;
 
 class ImportScryfallData implements ShouldQueue
 {
@@ -64,13 +69,17 @@ class ImportScryfallData implements ShouldQueue
         echo 'Updating Sets' . PHP_EOL;
         $this->updateSets();
 
-//        echo 'Fetching Card Data' . PHP_EOL;
-//        $save_file_loc = $this->getFile();
-//        echo 'Processing Card Data' . PHP_EOL;
-//        $this->processCardData($save_file_loc);
+        echo 'Fetching Card Data' . PHP_EOL;
+        $save_file_loc = $this->getFile();
+        echo 'Processing Card Data' . PHP_EOL;
 
-        // Download symbols
-        // Download card images
+        try {
+            $this->processCardData($save_file_loc);
+        } catch (InvalidArgumentException | Exception $e) {
+        }
+
+        echo 'Saving Symbols' . PHP_EOL;
+        $this->updateSymbols();
 
         echo 'Completed' . PHP_EOL;
     }
@@ -94,7 +103,11 @@ class ImportScryfallData implements ShouldQueue
 
         while ($reader->type() === JsonReader::OBJECT) {
             $cardData = $reader->value();
-            $this->updateCard($cardData);
+
+            if ($cardData['object'] == 'card') {
+                $this->updateCard($cardData);
+            }
+
             $reader->next();
         }
 
@@ -158,6 +171,36 @@ class ImportScryfallData implements ShouldQueue
     }
 
     /**
+     * Add the faces relationships for cards
+     *
+     * @param array $cardData
+     * @param Card $card
+     */
+    public function setFaces(array $cardData, Card $card) : void
+    {
+        if (array_key_exists('card_faces', $cardData)) {
+            foreach ($cardData['card_faces'] as $card_face) {
+                $card->faces()->create([
+                    'name'               => $card_face['name'],
+                    'artist'             => $card_face['artist'],
+                    'flavorText'         => $card_face['flavor_text'],
+                    'illustrationId'     => $card_face['illustration_id'],
+                    'loyalty'            => $card_face['loyalty'],
+                    'manaCost'           => $card_face['mana_cost'],
+                    'oracleText'         => $card_face['oracle_text'],
+                    'power'              => $card_face['power'],
+                    'printedName'        => $card_face['printed_name'],
+                    'printedText'        => $card_face['printed_text'],
+                    'printedTypeLine'    => $card_face['printed_type_line'],
+                    'toughness'          => $card_face['toughness'],
+                    'typeLine'           => $card_face['type_line'],
+                    'watermark'          => $card_face['watermark'],
+                ]);
+            }
+        }
+    }
+
+    /**
      * Add the relationship for the cards frame effects
      *
      * @param array $cardData
@@ -178,6 +221,24 @@ class ImportScryfallData implements ShouldQueue
     }
 
     /**
+     * @param array $cardData
+     * @param Card $card
+     */
+    public function setGames(array $cardData, Card $card) : void
+    {
+        if (array_key_exists('games', $cardData)) {
+            foreach ($cardData['games'] as $gameName) {
+                $game = Game::firstOrCreate(
+                    [
+                        'name' => $gameName,
+                    ]
+                );
+                $card->games()->attach($game->id);
+            }
+        }
+    }
+
+    /**
      * Add the relationships for the cards keywords
      *
      * @param array $cardData
@@ -186,31 +247,13 @@ class ImportScryfallData implements ShouldQueue
     public function setKeywords(array $cardData, Card $card) : void
     {
         if (array_key_exists('keywords', $cardData)) {
-            foreach ($cardData['keywords'] as $keyword) {
+            foreach ($cardData['keywords'] as $keywordName) {
                 $keyword = Keyword::firstOrCreate(
                     [
-                        'name' => $keyword,
+                        'name' => $keywordName,
                     ]
                 );
                 $card->keywords()->attach($keyword->id);
-            }
-        }
-    }
-
-    /**
-     * Attach an array of legalities to a card
-     *
-     * @param array $cardData
-     * @param Card $card
-     */
-    private function setLegalities(array $cardData, Card $card) : void
-    {
-        if ($legalities = $this->ifKey($cardData, 'legalities')) {
-            foreach ($legalities as $legalityName => $legalityValue) {
-                $card->legalities()->updateOrCreate(
-                    ['format' => $legalityName],
-                    ['status' => $legalityValue]
-                );
             }
         }
     }
@@ -228,6 +271,24 @@ class ImportScryfallData implements ShouldQueue
                 $card->MultiverseIds()->create([
                     'multiverse_id' => $id,
                 ]);
+            }
+        }
+    }
+
+    /**
+     * @param array $cardData
+     * @param Card $card
+     */
+    public function setPromoTypes(array $cardData, Card $card) : void
+    {
+        if (array_key_exists('promo_types', $cardData)) {
+            foreach ($cardData['promo_types'] as $typeName) {
+                $type = PromoType::firstOrCreate(
+                    [
+                        'name'  => $typeName,
+                    ]
+                );
+                $card->promoTypes()->attach($type->id);
             }
         }
     }
@@ -321,55 +382,6 @@ class ImportScryfallData implements ShouldQueue
                 ->ifKey($cardData, 'image_uris')
                 ? $this->ifKey($cardData['image_urls'], 'small')
                 : null,
-
-
-
-
-            ///// SYMBOLOGY
-
-
-            //////////////////////
-            // ENUMS            //
-            //////////////////////
-            // rarity           //
-            // image_status     //
-            // border_color     //
-            //////////////////////
-
-
-            //////////////////////
-            // ARRAYS           //
-            //////////////////////
-            // frame_effects    //
-            // multiverse_ids   //
-            // all_parts
-            // card_faces
-            // keywords         //
-            // games
-            // promo_types
-            //////////////////////
-
-
-            //////////////////////
-            // OBJECTS          //
-            //////////////////////
-            // legalities       //
-            // image_uris       //
-            // prices       ----//
-            // purchase_uris----//
-            // related_uris ----//
-            //////////////////////
-
-
-            //////////////////////
-            // COLORS           //
-            //////////////////////
-            // color_identity   //
-            // color_indicator  //
-            // colors           //
-            // produced_mana    //
-            //////////////////////
-
         ]);
 
         $this->saveImage($card);
@@ -377,8 +389,57 @@ class ImportScryfallData implements ShouldQueue
         $this->setColorFields($cardData, $card);
         $this->setFrameEffects($cardData, $card);
         $this->setKeywords($cardData, $card);
+        $this->setGames($cardData, $card);
         $this->setLegalities($cardData, $card);
         $this->setMultiverseIds($cardData, $card);
+        $this->setRelatedObjects($cardData, $card);
+        $this->setFaces($cardData, $card);
+        $this->setPromoTypes($cardData, $card);
+
+        /// SYMBOLOGY
+        /// OTHER PRINTINGS... Find In Model
+        /// VARIATIONS... Find In Model
+        /// RULINGS...
+        /// TOKENS...
+
+        //////////////////////
+        // ENUMS            //
+        //////////////////////
+        // rarity           //
+        // image_status     //
+        // border_color     //
+        //////////////////////
+
+        //////////////////////
+        // ARRAYS           //
+        //////////////////////
+        // frame_effects    //
+        // multiverse_ids   //
+        // all_parts        //
+        // card_faces       //
+        // keywords         //
+        // games            //
+        // promo_types      //
+        //////////////////////
+
+        //////////////////////
+        // OBJECTS          //
+        //////////////////////
+        // legalities       //
+        // image_uris       //
+        // prices       ----//
+        // purchase_uris----//
+        // related_uris ----//
+        //////////////////////
+
+        //////////////////////
+        // COLORS           //
+        //////////////////////
+        // color_identity   //
+        // color_indicator  //
+        // colors           //
+        // produced_mana    //
+        //////////////////////
     }
 
     /**
@@ -439,6 +500,48 @@ class ImportScryfallData implements ShouldQueue
         }
     }
 
+    public function updateSymbol(array $symbolData) : void
+    {
+        $symbol = Symbol::firstOrCreate([
+            'symbol'        => $symbolData['symbol'],
+        ], [
+            'svgUri'                    => $this->ifKey($symbolData, 'svg_uri'),
+            'looseVariant'              => $this->ifKey($symbolData, 'loose_variant'),
+            'english'                   => $this->ifKey($symbolData, 'english'),
+            'transpose'                 => $this->ifKey($symbolData, 'transpose'),
+            'representsMana'            => $this->ifKey($symbolData, 'represents_mana'),
+            'appearsInManaCosts'        => $this->ifKey($symbolData, 'appears_in_mana_costs'),
+            'cmc'                       => $this->ifKey($symbolData, 'cmc'),
+            'funny'                     => $this->ifKey($symbolData, 'funny'),
+        ]);
+
+        if (!$symbol->svgPath) {
+            $filename       = strtolower($symbol->id . '_symbol.svg');
+            $publicDir      = 'images/symbols';
+            $symbolPath     = $publicDir . '/' . $filename;
+            $storageDir     = 'public/' . $publicDir;
+            Storage::makeDirectory($storageDir);
+            $appDir      = 'app/public';
+            $appPath     = $appDir . '/' . $symbolPath;
+            $storagePath = storage_path($appPath);
+            app(DownloadFileAction::class)
+                ->saveFile($storagePath, $symbol->svgUri);
+            $symbol->svgPath = $storagePath;
+            $symbol->save();
+        }
+    }
+
+    /**
+     * Fetch all symbols
+     */
+    public function updateSymbols() : void
+    {
+        $symbols = Http::get('https://api.scryfall.com/symbology')->json()['data'];
+        foreach ($symbols as $symbol) {
+            $this->updateSymbol($symbol);
+        }
+    }
+
     /**
      * if key exists in array, return its value, otherwise return null
      *
@@ -477,5 +580,46 @@ class ImportScryfallData implements ShouldQueue
         }
 
         return null;
+    }
+
+    /**
+     * Attach an array of legalities to a card
+     *
+     * @param array $cardData
+     * @param Card $card
+     */
+    private function setLegalities(array $cardData, Card $card) : void
+    {
+        if ($legalities = $this->ifKey($cardData, 'legalities')) {
+            foreach ($legalities as $legalityName => $legalityValue) {
+                $card->legalities()->updateOrCreate(
+                    ['format' => $legalityName],
+                    ['status' => $legalityValue]
+                );
+            }
+        }
+    }
+
+    /**
+     * @param array $cardData
+     * @param Card $card
+     */
+    private function setRelatedObjects(array $cardData, Card $card) : void
+    {
+        if (array_key_exists('all_parts', $cardData)) {
+            foreach ($cardData['all_parts'] as $partData) {
+                $part = RelatedObjects::firstOrCreate(
+                    [
+                        'object_id' => $partData['id'],
+                    ], [
+                        'component' => $partData['component'],
+                        'name'      => $partData['name'],
+                        'type'      => $partData['type_line'],
+                        'uri'       => $partData['uri'],
+                    ]
+                );
+                $card->relatedObjects()->attach($part->id);
+            }
+        }
     }
 }

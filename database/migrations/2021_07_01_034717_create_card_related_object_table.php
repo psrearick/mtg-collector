@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCardFacesTable extends Migration
+class CreateCardRelatedObjectTable extends Migration
 {
     /**
      * Reverse the migrations.
@@ -13,7 +13,7 @@ class CreateCardFacesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('card_faces');
+        Schema::dropIfExists('card_related_object');
     }
 
     /**
@@ -23,10 +23,10 @@ class CreateCardFacesTable extends Migration
      */
     public function up()
     {
-        Schema::create('card_faces', function (Blueprint $table) {
+        Schema::create('card_related_object', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('card_id');
-            $table->unsignedBigInteger('related_card_id');
+            $table->unsignedBigInteger('card_id')->index();
+            $table->unsignedBigInteger('related_object_id')->index();
             $table->timestamps();
         });
     }
