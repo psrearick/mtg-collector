@@ -26,7 +26,7 @@ class CreateSupertypeablesTable extends Migration
         Schema::create('supertypeables', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('supertype_id');
-            $table->unsignedBigInteger('supertypeable_id');
+            $table->unsignedBigInteger('supertypeable_id')->index();
             $table->string('supertypeable_type');
             $table->timestamps();
         });

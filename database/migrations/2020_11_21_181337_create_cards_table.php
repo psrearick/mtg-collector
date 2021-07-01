@@ -26,6 +26,7 @@ class CreateCardsTable extends Migration
         Schema::create('cards', function (Blueprint $table) {
             $table->id();
             $table->string('name')->index();
+            $table->string('name_normalized')->virtualAs("regexp_replace(name, '[^A-Za-z0-9]', '')")->index();
             $table->string('cardId')->index();
             $table->string('arenaId')->nullable();
             $table->string('languageCode');
@@ -51,7 +52,7 @@ class CreateCardsTable extends Migration
             $table->string('illustrationId')->nullable();
             $table->string('imageStatus');
             $table->string('printedName')->nullable();
-            $table->string('printedText')->nullable();
+            $table->text('printedText')->nullable();
             $table->string('printedTypeLine')->nullable();
             $table->integer('isPromo');
             $table->string('rarity');
@@ -74,7 +75,7 @@ class CreateCardsTable extends Migration
             $table->string('lifeModifier')->nullable();
             $table->string('loyalty')->nullable();
             $table->string('manaCost')->nullable();
-            $table->string('oracleText')->nullable();
+            $table->text('oracleText')->nullable();
             $table->integer('isOversized')->nullable();
             $table->string('power')->nullable();
             $table->integer('isReserved')->nullable();

@@ -13,7 +13,7 @@ class CreateCardRelatedObjectTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('card_related_object');
+        Schema::dropIfExists('card_related_objects');
     }
 
     /**
@@ -23,10 +23,10 @@ class CreateCardRelatedObjectTable extends Migration
      */
     public function up()
     {
-        Schema::create('card_related_object', function (Blueprint $table) {
+        Schema::create('card_related_objects', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('card_id')->index();
-            $table->unsignedBigInteger('related_object_id')->index();
+            $table->unsignedBigInteger('related_objects_id')->index();
             $table->timestamps();
         });
     }

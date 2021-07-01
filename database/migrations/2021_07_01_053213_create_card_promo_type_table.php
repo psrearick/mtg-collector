@@ -26,7 +26,7 @@ class CreateCardPromoTypeTable extends Migration
         Schema::create('card_promo_type', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('card_id')->index();
-            $table->unsignedBigInteger('game_id')->index();
+            $table->unsignedBigInteger('promo_type_id')->index();
             $table->timestamps();
         });
     }

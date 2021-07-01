@@ -8,6 +8,7 @@ use App\Domain\CardAttributes\Models\FrameEffect;
 use App\Domain\CardAttributes\Models\Game;
 use App\Domain\CardAttributes\Models\Keyword;
 use App\Domain\CardAttributes\Models\PromoType;
+use App\Domain\CardAttributes\Models\RelatedObjects;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Sets\Models\Set;
 use App\Domain\Symbols\Models\Symbol;
@@ -22,8 +23,6 @@ use pcrov\JsonReader\Exception;
 use pcrov\JsonReader\InputStream\IOException;
 use pcrov\JsonReader\InvalidArgumentException;
 use pcrov\JsonReader\JsonReader;
-use RecursiveArrayIterator;
-use RecursiveIteratorIterator;
 
 class ImportScryfallData implements ShouldQueue
 {
@@ -181,20 +180,20 @@ class ImportScryfallData implements ShouldQueue
         if (array_key_exists('card_faces', $cardData)) {
             foreach ($cardData['card_faces'] as $card_face) {
                 $card->faces()->create([
-                    'name'               => $card_face['name'],
-                    'artist'             => $card_face['artist'],
-                    'flavorText'         => $card_face['flavor_text'],
-                    'illustrationId'     => $card_face['illustration_id'],
-                    'loyalty'            => $card_face['loyalty'],
-                    'manaCost'           => $card_face['mana_cost'],
-                    'oracleText'         => $card_face['oracle_text'],
-                    'power'              => $card_face['power'],
-                    'printedName'        => $card_face['printed_name'],
-                    'printedText'        => $card_face['printed_text'],
-                    'printedTypeLine'    => $card_face['printed_type_line'],
-                    'toughness'          => $card_face['toughness'],
-                    'typeLine'           => $card_face['type_line'],
-                    'watermark'          => $card_face['watermark'],
+                    'name'               => $this->ifKey($card_face, 'name'),
+                    'artist'             => $this->ifKey($card_face, 'artist'),
+                    'flavorText'         => $this->ifKey($card_face, 'flavor_text'),
+                    'illustrationId'     => $this->ifKey($card_face, 'illustration_id'),
+                    'loyalty'            => $this->ifKey($card_face, 'loyalty'),
+                    'manaCost'           => $this->ifKey($card_face, 'mana_cost'),
+                    'oracleText'         => $this->ifKey($card_face, 'oracle_text'),
+                    'power'              => $this->ifKey($card_face, 'power'),
+                    'printedName'        => $this->ifKey($card_face, 'printed_name'),
+                    'printedText'        => $this->ifKey($card_face, 'printed_text'),
+                    'printedTypeLine'    => $this->ifKey($card_face, 'printed_type_line'),
+                    'toughness'          => $this->ifKey($card_face, 'toughness'),
+                    'typeLine'           => $this->ifKey($card_face, 'type_line'),
+                    'watermark'          => $this->ifKey($card_face, 'watermark'),
                 ]);
             }
         }
@@ -300,7 +299,10 @@ class ImportScryfallData implements ShouldQueue
      */
     public function updateCard(array $cardData) : void
     {
-        $card = Card::firstOrCreate([
+        $set = Set::where('setId', '=', $cardData['set_id'])->first();
+
+        echo '    Updating Card: ' . $set->name . ': ' . $this->ifKey($cardData, 'name') . PHP_EOL;
+        $card = $set->cards()->firstOrCreate([
             'cardId'            => $this->ifKey($cardData, 'id'),
         ], [
             'arenaId'             => $this->ifKey($cardData, 'arena_id'),
@@ -372,15 +374,15 @@ class ImportScryfallData implements ShouldQueue
                 : null,
             'imageLargeUri'        => $this
                 ->ifKey($cardData, 'image_uris')
-                ? $this->ifKey($cardData['image_urls'], 'large')
+                ? $this->ifKey($cardData['image_uris'], 'large')
                 : null,
             'imageNormalUri'        => $this
                 ->ifKey($cardData, 'image_uris')
-                ? $this->ifKey($cardData['image_urls'], 'normal')
+                ? $this->ifKey($cardData['image_uris'], 'normal')
                 : null,
             'imageSmallUri'         => $this
                 ->ifKey($cardData, 'image_uris')
-                ? $this->ifKey($cardData['image_urls'], 'small')
+                ? $this->ifKey($cardData['image_uris'], 'small')
                 : null,
         ]);
 
@@ -447,7 +449,7 @@ class ImportScryfallData implements ShouldQueue
      *
      * @param array $set
      */
-    public function updateSet(array $set)
+    public function updateSet(array $set) : void
     {
         echo '    Updating Set: ' . $this->ifKey($set, 'name') . PHP_EOL;
         $currentSet = Set::firstOrCreate([
@@ -492,7 +494,7 @@ class ImportScryfallData implements ShouldQueue
     /**
      * Fetch all sets and add new ones
      */
-    public function updateSets()
+    public function updateSets() : void
     {
         $sets = Http::get('https://api.scryfall.com/sets')->json()['data'];
         foreach ($sets as $set) {
@@ -502,6 +504,7 @@ class ImportScryfallData implements ShouldQueue
 
     public function updateSymbol(array $symbolData) : void
     {
+        echo '    Updating Symbol: ' . $this->ifKey($symbolData, 'symbol') . PHP_EOL;
         $symbol = Symbol::firstOrCreate([
             'symbol'        => $symbolData['symbol'],
         ], [
@@ -556,30 +559,6 @@ class ImportScryfallData implements ShouldQueue
         }
 
         return $haystack[$needle];
-    }
-
-    /**
-     * if key exists in array, recursively, return its value, otherwise return null
-     *
-     * @param array $haystack
-     * @param string $needle
-     * @return mixed|null
-     */
-    private function recursiveFind(array $haystack, string $needle)
-    {
-        $iterator  = new RecursiveArrayIterator($haystack);
-        $recursive = new RecursiveIteratorIterator(
-            $iterator,
-            RecursiveIteratorIterator::SELF_FIRST
-        );
-
-        foreach ($recursive as $key => $value) {
-            if ($key === $needle) {
-                return $value;
-            }
-        }
-
-        return null;
     }
 
     /**

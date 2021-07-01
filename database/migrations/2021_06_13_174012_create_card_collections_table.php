@@ -33,7 +33,9 @@ class CreateCardCollectionsTable extends Migration
             $table->string('condition')->nullable();
             $table->integer('quantity')->default(1);
             $table->timestamp('deleted_at')->nullable();
-            $table->timestamps();
+            $table->timestamp('date_added')->nullable();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrentOnUpdate();
         });
     }
 }

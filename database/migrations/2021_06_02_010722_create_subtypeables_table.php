@@ -26,7 +26,7 @@ class CreateSubtypeablesTable extends Migration
         Schema::create('subtypeables', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('subtype_id');
-            $table->unsignedBigInteger('subtypeable_id');
+            $table->unsignedBigInteger('subtypeable_id')->index();
             $table->string('subtypeable_type');
             $table->timestamps();
         });

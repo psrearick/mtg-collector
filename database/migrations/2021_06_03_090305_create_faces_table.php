@@ -32,10 +32,10 @@ class CreateFacesTable extends Migration
             $table->string('illustrationId')->nullable();
             $table->string('loyalty')->nullable();
             $table->string('manaCost')->nullable();
-            $table->string('oracleText')->nullable();
+            $table->text('oracleText')->nullable();
             $table->string('power')->nullable();
             $table->string('printedName')->nullable();
-            $table->string('printedText')->nullable();
+            $table->text('printedText')->nullable();
             $table->string('printedTypeLine')->nullable();
             $table->string('toughness')->nullable();
             $table->string('typeLine')->nullable();

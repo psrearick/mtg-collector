@@ -26,7 +26,7 @@ class CreateTypeablesTable extends Migration
         Schema::create('typeables', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('type_id');
-            $table->unsignedBigInteger('typeable_id');
+            $table->unsignedBigInteger('typeable_id')->index();
             $table->string('typeable_type');
             $table->timestamps();
         });

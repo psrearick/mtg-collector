@@ -25,7 +25,7 @@ class CreatePrintingsTable extends Migration
     {
         Schema::create('printings', function (Blueprint $table) {
             $table->id();
-            $table->string('scryfallOracleId');
+            $table->string('scryfallOracleId')->index();
             $table->unsignedBigInteger('set_id');
             $table->timestamps();
         });

@@ -1,9 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Domain\Cards\Models;
 
 use App\Domain\Base\Model;
-use App\Domain\Cards\Models\Card;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MultiverseId extends Model
