@@ -10,6 +10,7 @@ use App\Domain\CardAttributes\Models\Keyword;
 use App\Domain\CardAttributes\Models\PromoType;
 use App\Domain\CardAttributes\Models\RelatedObjects;
 use App\Domain\Cards\Models\Card;
+use App\Domain\Prices\Models\PriceProvider;
 use App\Domain\Sets\Models\Set;
 use App\Domain\Symbols\Models\Symbol;
 use Http;
@@ -104,7 +105,8 @@ class ImportScryfallData implements ShouldQueue
             $cardData = $reader->value();
 
             if ($cardData['object'] == 'card') {
-                $this->updateCard($cardData);
+                $card = $this->updateCard($cardData);
+                $this->updatePricing($cardData, $card);
             }
 
             $reader->next();
@@ -118,7 +120,7 @@ class ImportScryfallData implements ShouldQueue
      */
     public function saveImage(Card $card) : void
     {
-        ImportCardImages::dispatchAfterResponse($card);
+        ImportCardImages::dispatch($card, $card->imageNormalUri);
     }
 
     /**
@@ -296,8 +298,9 @@ class ImportScryfallData implements ShouldQueue
      * Add/Update the card and its field values
      *
      * @param array $cardData
+     * @return Card
      */
-    public function updateCard(array $cardData) : void
+    public function updateCard(array $cardData) : Card
     {
         $set = Set::where('setId', '=', $cardData['set_id'])->first();
 
@@ -398,7 +401,10 @@ class ImportScryfallData implements ShouldQueue
         $this->setFaces($cardData, $card);
         $this->setPromoTypes($cardData, $card);
 
-        /// SYMBOLOGY
+
+
+
+        /// SYMBOLOGY       //
         /// OTHER PRINTINGS... Find In Model
         /// VARIATIONS... Find In Model
         /// RULINGS...
@@ -442,6 +448,47 @@ class ImportScryfallData implements ShouldQueue
         // colors           //
         // produced_mana    //
         //////////////////////
+
+        return $card;
+    }
+
+    /**
+     * @param array $cardData
+     * @param Card $card
+     */
+    public function updatePricing(array $cardData, Card $card) : void
+    {
+        if (!$prices = $cardData['prices']) {
+            return;
+        }
+
+        $provider = PriceProvider::firstOrCreate(['name' => 'scryfall'])->id;
+
+        if ($price = $prices['usd']) {
+            $card->prices()->updateOrCreate(
+                [
+                    'card_id'       => $card->id,
+                    'provider_id'   => $provider,
+                    'foil'          => false,
+                ],
+                [
+                    'price'     => $price,
+                ]
+            );
+        }
+
+        if ($foilPrice = $prices['usd_foil']) {
+            $card->prices()->updateOrCreate(
+                [
+                    'card_id'       => $card->id,
+                    'provider_id'   => $provider,
+                    'foil'          => true,
+                ],
+                [
+                    'price'     => $foilPrice,
+                ]
+            );
+        }
     }
 
     /**

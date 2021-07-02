@@ -3,6 +3,7 @@
 namespace App\Domain\Cards\Models;
 
 use App\App\Scopes\NotOnlineOnlyScope;
+use App\Domain\Base\Model;
 use App\Domain\CardAttributes\Models\Color;
 use App\Domain\CardAttributes\Models\Face;
 use App\Domain\CardAttributes\Models\ForeignData;
@@ -19,6 +20,7 @@ use App\Domain\Cards\Actions\GetCardFeatures;
 use App\Domain\Cards\Actions\GetCardImage;
 use App\Domain\Cards\Actions\GetScryfallCard;
 use App\Domain\Collections\Models\Collection as CollectionsCollection;
+use App\Domain\Mappings\Models\ApiMappings;
 use App\Domain\Prices\Models\Price;
 use App\Domain\Sets\Models\Set;
 use App\Jobs\ImportCardImages;
@@ -27,14 +29,23 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
-class Card extends CardGeneric
+class Card extends Model
 {
-    public $asYouType = true;
-
     protected $casts = [
         'number' => 'int',
     ];
 
+    /**
+     * @return HasMany
+     */
+    public function apiMappings() : HasMany
+    {
+        return $this->hasMany(ApiMappings::class);
+    }
+
+    /**
+     * @return BelongsToMany
+     */
     public function collections() : BelongsToMany
     {
         return $this->belongsToMany(CollectionsCollection::class, 'card_collections')
@@ -312,8 +323,8 @@ class Card extends CardGeneric
     /**
      * booted
      */
-    protected static function booted() : void
-    {
-        static::addGlobalScope(new NotOnlineOnlyScope);
-    }
+//    protected static function booted() : void
+//    {
+//        static::addGlobalScope(new NotOnlineOnlyScope);
+//    }
 }

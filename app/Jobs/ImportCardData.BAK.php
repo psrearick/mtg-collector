@@ -52,7 +52,7 @@ class ImportCardData implements ShouldQueue
      */
     public function handle() : void
     {
-        // Pricing data URL
+        // Printing data URL
         $file = [
             'url'           => 'https://mtgjson.com/api/v5/AllPrintings.json',
             'format'        => 'json',
