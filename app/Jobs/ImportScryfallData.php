@@ -401,9 +401,6 @@ class ImportScryfallData implements ShouldQueue
         $this->setFaces($cardData, $card);
         $this->setPromoTypes($cardData, $card);
 
-
-
-
         /// SYMBOLOGY       //
         /// OTHER PRINTINGS... Find In Model
         /// VARIATIONS... Find In Model

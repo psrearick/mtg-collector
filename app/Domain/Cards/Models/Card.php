@@ -310,7 +310,7 @@ class Card extends Model
         return $this->belongsTo(Set::class);
     }
 
-    /**
+    /*
      * Get all tokens associated with this card
      *
      * @return BelongsToMany
@@ -320,7 +320,7 @@ class Card extends Model
 //        return $this->belongsToMany(Token::class);
 //    }
 
-    /**
+    /*
      * booted
      */
 //    protected static function booted() : void

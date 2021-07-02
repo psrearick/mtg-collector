@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Domain\Mappings\Models;
-
 
 use App\Domain\Base\Model;
 use App\Domain\Cards\Models\Card;

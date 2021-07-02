@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\App\Console\Commands;
-
 
 use App\Jobs\GenerateApiMap;
 use Illuminate\Console\Command;

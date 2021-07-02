@@ -74,12 +74,14 @@ class ImportCardDataPrices implements ShouldQueue
             $mapping = ApiMappings::where('identifier', '=', $uuid)->where('source', 'mtgjson')->first();
             if (!$mapping) {
                 $reader->next();
+
                 continue;
             }
 
             $card = Card::find($mapping->card_id);
             if (!$card) {
                 $reader->next();
+
                 continue;
             }
             echo 'Saving Pricing For: ' . $uuid . PHP_EOL;

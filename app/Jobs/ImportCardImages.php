@@ -25,10 +25,10 @@ class ImportCardImages implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Card $card, ?string $url = "")
+    public function __construct(Card $card, ?string $url = '')
     {
         $this->card     = $card;
-        $this->url = $url;
+        $this->url      = $url;
     }
 
     /**
@@ -38,7 +38,7 @@ class ImportCardImages implements ShouldQueue
      */
     public function handle()
     {
-        $url = $this->url;
+        $url  = $this->url;
         $card = $this->card;
         if (!$url) {
             return;

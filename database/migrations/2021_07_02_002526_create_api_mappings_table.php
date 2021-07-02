@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Schema;
 class CreateApiMappingsTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('api_mappings');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -20,15 +30,5 @@ class CreateApiMappingsTable extends Migration
             $table->string('source');
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('api_mappings');
     }
 }

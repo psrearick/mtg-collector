@@ -52,6 +52,7 @@ class GenerateApiMap implements ShouldQueue
 
         // open json file and get data
         $reader = new JsonReader();
+
         try {
             $reader->open($save_file_loc);
         } catch (IOException | InvalidArgumentException $e) {
@@ -70,11 +71,13 @@ class GenerateApiMap implements ShouldQueue
                 // card -> cardId == cardData -> identifiers -> scryfallId
                 if (!$cardData['identifiers'] || !$scryfallId = $cardData['identifiers']['scryfallId']) {
                     $reader->next();
+
                     continue;
                 }
                 $card = Card::where('cardId', '=', $scryfallId)->first();
                 if (!$card) {
                     $reader->next();
+
                     continue;
                 }
                 echo '........set: ' . $setData['name'] . ' -- card: ' . $card->name . PHP_EOL;
@@ -104,6 +107,5 @@ class GenerateApiMap implements ShouldQueue
         $reader->close();
 
         echo 'Completed' . PHP_EOL;
-
     }
 }
