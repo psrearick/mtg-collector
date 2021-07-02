@@ -81,40 +81,6 @@ export default {
     methods: {
         mount() {
             this.table.data = this.cards.cards;
-            // this.table.data = _.map(this.cards.data, (card) => {
-            //     return {
-            //         id: card.id,
-            //         card_name: card.name,
-            //         card_id: card.id,
-            //         set_name: card.set.name,
-            //         set_id: card.set_id,
-            //         price:
-            //             card.hasNonFoil && card.price_normal
-            //                 ? card.price_normal
-            //                 : "",
-            //         foil_price:
-            //             card.hasFoil && card.price_foil ? card.price_foil : "",
-            //         feature: card.feature,
-            //         quantity_collected: 0,
-            //         foil_collected: 0,
-            //         nonfoil_collected: 0,
-            //         edit_collection: "Edit",
-            //     };
-            // });
-
-            // this.table.pagination = {
-            //     current_page: this.cards.current_page,
-            //     first_page_url: this.cards.first_page_url,
-            //     last_page: this.cards.last_page,
-            //     last_page_url: this.cards.last_page_url,
-            //     next_page_url: this.cards.next_page_url,
-            //     previous_page_url: this.cards.previous_page_url,
-            //     links: this.cards.links,
-            //     from: this.cards.from,
-            //     to: this.cards.to,
-            //     total: this.cards.total,
-            // };
-
             this.cardSearchTerm = this.cardQuery;
             this.setSearchTerm = this.setQuery;
         },

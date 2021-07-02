@@ -42,7 +42,7 @@
                         lg:justify-end
                     "
                 >
-                    <Search dark />
+<!--                    <Search dark />-->
                 </div>
                 <div class="flex lg:hidden">
                     <!-- Mobile menu button -->
@@ -100,7 +100,7 @@
                                     </menu-item>
                                     <menu-item
                                         id="user-menu-item-2"
-                                        href="logout"
+                                        href="/logout"
                                         method="post"
                                     >
                                         Logout

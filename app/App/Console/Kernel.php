@@ -2,8 +2,9 @@
 
 namespace App\App\Console;
 
-use App\Jobs\ImportCardData;
-use App\Jobs\ImportCardPrices;
+use App\Jobs\GenerateApiMap;
+use App\Jobs\ImportCardDataPrices;
+use App\Jobs\ImportScryfallData;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -39,9 +40,11 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule
-            ->job(new ImportCardData())
+            ->job(new GenerateApiMap())
             ->weeklyOn(6, '1:00');
-        $schedule->job(new ImportCardPrices())
+        $schedule->job(new ImportCardDataPrices())
             ->dailyAt('3:30');
+        $schedule->job(new ImportScryfallData())
+            ->dailyAt('4:30');
     }
 }

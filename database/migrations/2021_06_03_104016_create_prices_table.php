@@ -25,7 +25,7 @@ class CreatePricesTable extends Migration
     {
         Schema::create('prices', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('card_id');
+            $table->unsignedBigInteger('card_id')->index();
             $table->unsignedBigInteger('provider_id');
             $table->float('price');
             $table->boolean('foil');

@@ -5,6 +5,7 @@ namespace App\App\Client\Presenters;
 use \Illuminate\Support\Collection as ModelCollection;
 use App\App\Base\Presenter;
 use App\App\Client\Repositories\SetsRepository;
+use App\Domain\Cards\Actions\GetComputed;
 use App\Domain\Collections\Models\Collection;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -25,14 +26,21 @@ class CollectionsShowPresenter extends Presenter
     public function buildCards()
     {
         return $this->search()->map(function ($card) {
+            $computed = new GetComputed($card);
+            $computedCard = $computed
+                ->add('feature')
+                ->add('priceNormal')
+                ->add('priceFoil')
+                ->get();
+
             return collect([
                 'id'             => $card->id,
                 'name'           => $card->name,
                 'set'            => $card->set->code,
                 'foil'           => $card->pivot->foil,
                 'foil_formatted' => $card->pivot->foil ? '(Foil)' : '',
-                'features'       => $card->feature,
-                'today'          => $card->pivot->foil ? $card->price_foil : $card->price_normal,
+                'features'       => $computedCard->feature,
+                'today'          => $card->pivot->foil ? $computedCard->priceFoil : $computedCard->priceNormal,
                 'acquired_date'  => (new Carbon($card->pivot->date_added ?: $card->pivot->created_at))->toFormattedDateString(),
                 'acquired_price' => $card->pivot->price_when_added,
                 'quantity'       => $card->pivot->quantity,

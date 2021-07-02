@@ -81,7 +81,6 @@ export default {
         });
 
         this.emitter.on("incrementQuantity", (card) => {
-            console.log("+");
             this.updateQuantity({
                 change: 1,
                 id: card.id,
@@ -90,7 +89,6 @@ export default {
         });
 
         this.emitter.on("decrementQuantity", (card) => {
-            console.log("-");
             this.updateQuantity({
                 change: -1,
                 id: card.id,
@@ -103,7 +101,7 @@ export default {
         updateQuantity(change) {
             axios
                 .post("/card-collections/card-collections", {
-                    change: change,
+                    ...change,
                     collection: this.collection.id,
                 })
                 .then(() => {

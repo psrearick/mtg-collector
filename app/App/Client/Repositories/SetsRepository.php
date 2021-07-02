@@ -14,6 +14,7 @@ class SetsRepository extends Repository
     {
         if ($field) {
             $this->query = $this->query->where('sets.' . $field, '=', $term);
+
             return $this;
         }
         $this->query = $this->query->where('sets.name', '=', $term)
@@ -31,7 +32,7 @@ class SetsRepository extends Repository
         return $this;
     }
 
-    public function startsWith(string $term) : SetsRepository
+    public function startsWith(string $term, string $field = 'name') : SetsRepository
     {
         $this->query = $this->query->where('sets.name', 'LIKE', $term . '%')
             ->orWhere('sets.code', 'LIKE', $term . '%');

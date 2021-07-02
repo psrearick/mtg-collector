@@ -26,7 +26,7 @@
                     />
                     <div class="flex flex-col justify-between">
                         <div class="text-center">
-                            <p>{{ card.name }} - {{ card.set.name }}</p>
+                            <p>{{ card.name }} - {{ card.set_name }}</p>
                             <p class="text-sm text-gray-500">
                                 {{ card.feature }}
                             </p>
@@ -36,7 +36,7 @@
                                 v-if="card.hasNonFoil"
                                 class="mx-4"
                                 label="NonFoil"
-                                :model-value="card.collectionQuantityNonFoil"
+                                :model-value="card.nonfoil_collected"
                                 :active="
                                     activeField === index &&
                                     activeFieldType === 'NonFoil'
@@ -50,7 +50,7 @@
                                 v-if="card.hasFoil"
                                 class="mx-4"
                                 label="Foil"
-                                :model-value="card.collectionQuantityFoil"
+                                :model-value="card.foil_collected"
                                 :active="
                                     activeField === index &&
                                     activeFieldType === 'Foil'
@@ -68,9 +68,7 @@
                                 >Non-Foil</span
                             >
                             <span v-if="card.hasNonFoil">{{
-                                card.price_normal
-                                    ? format(card.price_normal)
-                                    : "N/A"
+                                card.price ? format(card.price) : "N/A"
                             }}</span>
                             <span v-else>N/A</span>
                         </p>
@@ -86,6 +84,7 @@
                     </div>
                 </div>
             </div>
+            <DataGridPagination :pagination="pagination" />
         </div>
     </div>
 </template>
@@ -93,10 +92,20 @@
 <script>
 import { formatCurrency } from "@/Shared/api/ConvertValue";
 import VerticalIncrementer from "@/Components/Buttons/VerticalIncrementer";
+import DataGridPagination from "@/Components/DataGrid/DataGridPagination";
 
 export default {
     name: "CardSetSearchResults",
-    components: { VerticalIncrementer },
+
+    components: { DataGridPagination, VerticalIncrementer },
+
+    props: {
+        pagination: {
+            type: Object,
+            default: () => {},
+        },
+    },
+
     data() {
         return {
             activeField: null,
@@ -125,13 +134,13 @@ export default {
         updateQuantity: function (value, id, foil) {
             this.activeField = null;
             this.activeFieldType = null;
-            let key = "collectionQuantity" + (foil ? "" : "Non") + "Foil";
+            let key = foil ? "foil_collected" : "nonfoil_collected";
             let change = value - this.cards.find((card) => card.id === id)[key];
             if (change === 0) {
                 return;
             }
             this.emitter.emit("updateCardQuantity", {
-                change: value - this.cards.find((card) => card.id === id)[key],
+                change: change,
                 id: id,
                 foil: foil,
             });

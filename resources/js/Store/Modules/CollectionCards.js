@@ -103,9 +103,9 @@ const mutations = {
             (srCard) => srCard.id === card.id
         );
         if (card.foil) {
-            srCard.collectionQuantityFoil = card.quantity;
+            srCard.foil_collected = card.quantity;
         } else {
-            srCard.collectionQuantityNonFoil = card.quantity;
+            srCard.nonfoil_collected = card.quantity;
         }
     },
     setSetSearchResults(state, { searchResults }) {

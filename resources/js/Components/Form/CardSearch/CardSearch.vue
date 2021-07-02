@@ -1,7 +1,7 @@
 <template>
     <CardSetSearch v-model="cardSearchTerm" v-model:setName="setSearchTerm" />
     <p v-if="searching" class="text-xs text-gray-400">Searching...</p>
-    <CardSetSearchResults />
+    <CardSetSearchResults :pagination="search.cards" />
 </template>
 
 <script>
@@ -30,7 +30,6 @@ export default {
             cards: [],
             sets: [],
             searching: false,
-            // pagination: {},
         };
     },
 
@@ -42,62 +41,7 @@ export default {
             this.query();
         },
         search(val) {
-            const cardData = [];
-
-            const results =
-                val &&
-                Object.keys(val).length &&
-                val.cards &&
-                typeof val.cards.data !== "undefined" &&
-                val.cards.data.length;
-
-            if (results) {
-                for (let card of val.cards.data) {
-                    let foil = 0;
-                    let nonFoil = 0;
-
-                    const collectionFoil = this.findCardInStore({
-                        card_id: card.id,
-                        foil: 1,
-                    });
-                    if (collectionFoil) {
-                        foil = collectionFoil.quantity;
-                    }
-
-                    const collectionNonFoil = this.findCardInStore({
-                        card_id: card.id,
-                        foil: 0,
-                    });
-                    if (collectionNonFoil) {
-                        nonFoil = collectionNonFoil.quantity;
-                    }
-
-                    card.collectionQuantityFoil = foil;
-                    card.collectionQuantityNonFoil = nonFoil;
-
-                    cardData.push(card);
-                }
-            }
-
-            let setData = [];
-
-            const setResults =
-                val &&
-                Object.keys(val).length &&
-                val.sets &&
-                typeof val.sets.results !== "undefined" &&
-                val.sets.results.length;
-
-            if (setResults) {
-                setData = val.sets.results;
-            }
-
-            this.$store.dispatch("addCardSearchResults", {
-                searchResults: cardData,
-            });
-            this.$store.dispatch("addSetSearchResults", {
-                searchResults: setData,
-            });
+            this.runSearchResults(val);
         },
     },
 
@@ -112,9 +56,55 @@ export default {
         let clear = { searchResults: [] };
         this.$store.dispatch("addCardSearchResults", clear);
         this.$store.dispatch("addSetSearchResults", clear);
+        if (this.search && this.search.cards) {
+            this.cardSearchTerm = this.search.cardQuery;
+            this.setSearchTerm = this.search.setQuery;
+            this.runSearchResults(this.search);
+        }
     },
 
     methods: {
+        runSearchResults(val) {
+            let cardData = [];
+
+            const cardResults =
+                val &&
+                Object.keys(val).length &&
+                val.cards &&
+                typeof val.cards.data !== "undefined";
+
+            if (cardResults) {
+                if (typeof val.cards.data.length === "undefined") {
+                    cardData = Object.values(val.cards.data);
+                } else if (val.cards.data.length) {
+                    cardData = val.cards.data;
+                }
+            }
+
+            this.$store.dispatch("addCardSearchResults", {
+                searchResults: cardData,
+            });
+
+            let setData = [];
+
+            const setResults =
+                val &&
+                Object.keys(val).length &&
+                val.sets &&
+                typeof val.sets.results !== "undefined";
+
+            if (setResults) {
+                if (typeof val.sets.results.length === "undefined") {
+                    setData = Object.values(val.sets.results);
+                } else if (val.sets.results.length) {
+                    setData = val.sets.results;
+                }
+            }
+
+            this.$store.dispatch("addSetSearchResults", {
+                searchResults: setData,
+            });
+        },
         query: _.debounce(function () {
             this.searching = true;
             this.cards = [];
@@ -156,21 +146,12 @@ export default {
                 });
             }
         },
-        getCardsWithQuantities: function () {},
         findCardInStore: function (card) {
             return this.$store.getters.collectionCard(
                 this.collection.id,
                 card.card_id,
                 card.foil
             );
-        },
-        findCardInStoreOrCreate: async function (card) {
-            const collectionCard = this.findCardInStore(card);
-            if (collectionCard) {
-                return collectionCard;
-            }
-            await this.createCard(card);
-            return this.findCardInStore(card);
         },
         findCollectionInStore: function () {
             return this.$store.getters.collection(this.collection.id);
@@ -208,7 +189,6 @@ export default {
                 quantity = data.collectionCard.quantity;
             }
             const card = this.$store.getters.cardSearchResultsCard(id);
-
             if (!card) {
                 return;
             }
@@ -221,7 +201,7 @@ export default {
         updateCardQuantity: function (change) {
             axios
                 .post("/card-collections/card-collections", {
-                    change: change,
+                    ...change,
                     collection: this.collection.id,
                 })
                 .then((res) => {

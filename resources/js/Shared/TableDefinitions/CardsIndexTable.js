@@ -53,7 +53,7 @@ export default {
                         type: "currency",
                         link: false,
                         label: "Foil Price",
-                        key: "foil_price",
+                        key: "price_foil",
                         sortable: true,
                         filterable: true,
                     },

@@ -3,6 +3,7 @@
 namespace App\App\Client\Controllers;
 
 use App\App\Base\Controller;
+use App\App\Client\Presenters\CollectionCardsSearchPresenter;
 use App\App\Client\Presenters\CollectionsIndexPresenter;
 use App\App\Client\Presenters\CollectionsShowPresenter;
 use App\Domain\Cards\Actions\CardSearch;
@@ -34,7 +35,7 @@ class CollectionsController extends Controller
         return Inertia::render('Collections/Edit', [
             'collectionComplete'    => $collectionEdit,
             'collection'            => (new CollectionsShowPresenter($collectionEdit, $request))->present(),
-            'search'                => Inertia::lazy(fn () => CardSearch::search($request, 15, true)),
+            'search'                => fn () => (new CollectionCardsSearchPresenter(CardSearch::search($request, 0, true), 25, 1, 'cardsPage'))->present(),
         ]);
     }
 

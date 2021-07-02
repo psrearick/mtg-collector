@@ -2,7 +2,7 @@
 
 namespace App\Domain\CardAttributes\Models;
 
-use App\Domain\Base\Models\Model;
+use App\Domain\Base\Model;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Cards\Models\Token;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;

@@ -25,25 +25,26 @@ class CreateSetsTable extends Migration
     {
         Schema::create('sets', function (Blueprint $table) {
             $table->id();
-            $table->integer('baseSetSize')->nullable();
-            $table->string('block')->nullable();
-            $table->string('code', 8)->unique();
-            $table->boolean('isFoilOnly')->nullable();
-            $table->boolean('isForeignOnly')->nullable();
-            $table->boolean('isNonFoilOnly')->nullable();
-            $table->boolean('isOnlineOnly')->nullable();
-            $table->boolean('isPartialPreview')->nullable();
-            $table->string('keyruneCode')->nullable();
-            $table->integer('mcmid')->nullable();
-            $table->integer('mcmIdExtras')->nullable();
-            $table->string('mcmName')->nullable();
+            $table->string('setId')->index();
+            $table->string('name')->index();
+            $table->string('code', 6)->index();
             $table->string('mtgoCode')->nullable();
-            $table->string('name')->nullable();
-            $table->string('parentCode')->nullable();
+            $table->integer('tcgPlayerGroupId')->nullable();
+            $table->string('type');
             $table->date('releaseDate')->nullable();
-            $table->integer('tcgplayerGroupId')->nullable();
-            $table->integer('totalSetSize')->nullable();
-            $table->string('type')->nullable();
+            $table->string('block')->nullable();
+            $table->string('blockCode')->nullable();
+            $table->string('parentCode')->nullable();
+            $table->integer('setSize');
+            $table->integer('printedSetSize')->nullable();
+            $table->boolean('isOnlineOnly');
+            $table->boolean('isFoilOnly');
+            $table->boolean('isNonFoilOnly');
+            $table->string('scryfallUri');
+            $table->string('scryfallApiUri');
+            $table->string('scryfallSvgUri');
+            $table->string('scryfallApiSearch');
+            $table->string('svgPath')->nullable();
             $table->timestamps();
         });
     }

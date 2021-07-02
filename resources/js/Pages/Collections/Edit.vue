@@ -5,13 +5,13 @@
                 <h3 class="text-lg leading-6 font-medium text-gray-900 py-4">
                     Add Cards to Collection
                 </h3>
-                <p class="py-4">
+                <div class="py-4">
                     <SuccessButton
                         type="button"
                         text="Add Cards from Set"
                         :href="route('collection-set.edit', [collection.id])"
                     />
-                </p>
+                </div>
             </div>
             <div class="w-full">
                 <CardSearch :collection="collectionComplete" :search="search" />

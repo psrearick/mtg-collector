@@ -83,7 +83,10 @@ export default {
 
     computed: {
         selectedOption() {
-            if (this.selectedOptionIndex) {
+            if (
+                this.selectedOptionIndex !== null &&
+                typeof this.selectedOptionIndex !== "undefined"
+            ) {
                 return this.selectOptions[this.selectedOptionIndex];
             }
             return {};
@@ -97,6 +100,12 @@ export default {
             });
             return options;
         },
+    },
+
+    mounted() {
+        if (this.selected !== null && typeof this.selected !== "undefined") {
+            this.selectedOptionIndex = this.selected + 1;
+        }
     },
 
     methods: {

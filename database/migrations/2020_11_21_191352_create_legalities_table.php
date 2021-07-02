@@ -27,7 +27,7 @@ class CreateLegalitiesTable extends Migration
             $table->id();
             $table->string('format')->nullable();
             $table->string('status')->nullable();
-            $table->unsignedBigInteger('card_id');
+            $table->unsignedBigInteger('card_id')->index();
             $table->timestamps();
         });
     }
