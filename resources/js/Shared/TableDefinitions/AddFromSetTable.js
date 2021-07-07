@@ -113,7 +113,6 @@ export default {
 
     methods: {
         updateQuantity(change) {
-
             // TESTING
             // change = {
             //     quantity: null,

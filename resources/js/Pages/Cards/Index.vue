@@ -30,7 +30,7 @@ export default {
     props: {
         cards: {
             type: Object,
-            default: () => {},
+            default: () => ({ cards: [] }),
         },
         perPage: {
             type: Number,
@@ -91,7 +91,7 @@ export default {
             this.table.data = [];
             this.searching = true;
             this.$inertia.get(
-                "/cards/cards",
+                "/cards/search",
                 {
                     card: this.cardSearchTerm,
                     set: this.setSearchTerm,

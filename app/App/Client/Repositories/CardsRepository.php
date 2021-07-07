@@ -19,4 +19,11 @@ class CardsRepository extends Repository
 
         return $this;
     }
+
+    public function withoutOnline() : CardsRepository
+    {
+        $this->query = $this->query->where('cards.isOnlineOnly', '=', false);
+
+        return $this;
+    }
 }

@@ -2,8 +2,10 @@
 
 use App\App\Client\Controllers\CardCollectionsController;
 use App\App\Client\Controllers\CardsController;
+use App\App\Client\Controllers\CardSearchController;
 use App\App\Client\Controllers\CollectionsController;
 use App\App\Client\Controllers\SetCollectionsController;
+use App\App\Client\Controllers\SymbolsController;
 use App\App\Client\Middleware\RedirectIfAuthenticated;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -51,11 +53,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('cards')->group(function () {
+        Route::get('search', [CardSearchController::class, 'index'])->name('cards.search');
         Route::resource('cards', CardsController::class);
     });
 
     Route::prefix('card-collections')->group(function () {
         Route::resource('card-collections', CardCollectionsController::class);
+    });
+
+    Route::prefix('api')->group(function () {
+        Route::post('brace-content', [SymbolsController::class, 'index'])->name('braces.content');
     });
 });
 

@@ -24,6 +24,7 @@ use App\Domain\Mappings\Models\ApiMappings;
 use App\Domain\Prices\Models\Price;
 use App\Domain\Sets\Models\Set;
 use App\Jobs\ImportCardImages;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -299,6 +300,19 @@ class Card extends Model
 //    {
 //        return $this->hasMany(Ruling::class);
 //    }
+
+    /**
+     * Scope a query to only cards that are not online only.
+     *
+     * @param  Builder  $query
+     * @return Builder
+     */
+    public function scopeNotOnlineOnly($query)
+    {
+        return $query->where('cards.isOnlineOnly', '=', false);
+    }
+
+
 
     /**
      * get the set this card is assigned to

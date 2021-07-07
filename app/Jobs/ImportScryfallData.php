@@ -165,7 +165,7 @@ class ImportScryfallData implements ShouldQueue
                             'name' => $colorValue,
                         ]
                     );
-                    $card->colors()->attach($color->id, ['type' => $type]);
+                    $card->colors()->syncWithoutDetaching($color->id, ['type' => $type]);
                 }
             }
         }
@@ -216,7 +216,7 @@ class ImportScryfallData implements ShouldQueue
                         'name' => $frame_effect,
                     ]
                 );
-                $card->frameEffects()->attach($frameEffect->id);
+                $card->frameEffects()->syncWithoutDetaching($frameEffect->id);
             }
         }
     }
@@ -234,7 +234,7 @@ class ImportScryfallData implements ShouldQueue
                         'name' => $gameName,
                     ]
                 );
-                $card->games()->attach($game->id);
+                $card->games()->syncWithoutDetaching($game->id);
             }
         }
     }
@@ -254,7 +254,7 @@ class ImportScryfallData implements ShouldQueue
                         'name' => $keywordName,
                     ]
                 );
-                $card->keywords()->attach($keyword->id);
+                $card->keywords()->syncWithoutDetaching($keyword->id);
             }
         }
     }
@@ -289,7 +289,7 @@ class ImportScryfallData implements ShouldQueue
                         'name'  => $typeName,
                     ]
                 );
-                $card->promoTypes()->attach($type->id);
+                $card->promoTypes()->syncWithoutDetaching($type->id);
             }
         }
     }
@@ -573,7 +573,7 @@ class ImportScryfallData implements ShouldQueue
             $storagePath = storage_path($appPath);
             app(DownloadFileAction::class)
                 ->saveFile($storagePath, $symbol->svgUri);
-            $symbol->svgPath = $storagePath;
+            $symbol->svgPath = 'storage/' . $symbolPath;
             $symbol->save();
         }
     }
@@ -641,7 +641,7 @@ class ImportScryfallData implements ShouldQueue
                         'uri'       => $partData['uri'],
                     ]
                 );
-                $card->relatedObjects()->attach($part->id);
+                $card->relatedObjects()->syncWithoutDetaching($part->id);
             }
         }
     }
