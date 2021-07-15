@@ -4,16 +4,16 @@ namespace App\App\Client\Repositories;
 
 use App\App\Base\Repository;
 
-class SetsRepository extends Repository
+class SetRepository extends Repository
 {
     public string $class = "App\Domain\Sets\Models\Set";
 
     public string $table = 'sets';
 
-    public function equals(string $term, string $field = '') : SetsRepository
+    public function equals(string $field, string $value) : SetRepository
     {
         if ($field) {
-            $this->query = $this->query->where('sets.' . $field, '=', $term);
+            $this->query = $this->query->where('sets.' . $field, '=', $value);
 
             return $this;
         }
@@ -23,7 +23,7 @@ class SetsRepository extends Repository
         return $this;
     }
 
-    public function like(string $term, string $field = 'name') : SetsRepository
+    public function like(string $term, string $field = 'name') : SetRepository
     {
         $searchTerm  = '%' . $term . '%';
         $this->query = $this->query->where('sets.name', 'like', $searchTerm)
@@ -32,7 +32,7 @@ class SetsRepository extends Repository
         return $this;
     }
 
-    public function startsWith(string $term, string $field = 'name') : SetsRepository
+    public function startsWith(string $term, string $field = 'name') : SetRepository
     {
         $this->query = $this->query->where('sets.name', 'LIKE', $term . '%')
             ->orWhere('sets.code', 'LIKE', $term . '%');

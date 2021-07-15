@@ -4,7 +4,7 @@ namespace App\App\Client\Presenters;
 
 use \Illuminate\Support\Collection as ModelCollection;
 use App\App\Base\Presenter;
-use App\App\Client\Repositories\SetsRepository;
+use App\App\Client\Repositories\SetRepository;
 use App\Domain\Cards\Actions\GetComputed;
 use App\Domain\Collections\Models\Collection;
 use Carbon\Carbon;

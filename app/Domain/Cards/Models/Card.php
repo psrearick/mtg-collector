@@ -312,8 +312,6 @@ class Card extends Model
         return $query->where('cards.isOnlineOnly', '=', false);
     }
 
-
-
     /**
      * get the set this card is assigned to
      *

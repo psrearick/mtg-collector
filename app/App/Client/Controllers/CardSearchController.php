@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\App\Client\Controllers;
-
 
 use App\App\Base\Controller;
 use App\App\Client\Presenters\CardsSearchPresenter;
@@ -13,9 +11,9 @@ use Inertia\Response;
 
 class CardSearchController extends Controller
 {
-    public function index(Request $request) : Response
+    public function index(Request $request, CardSearch $cardSearch) : Response
     {
-        $cards = (new CardsSearchPresenter(CardSearch::search($request, 0, false), 15))->present();
+        $cards = (new CardsSearchPresenter($cardSearch->search($request, ['perPage' => 0, 'withImage' => false]), 15))->present();
 
         return Inertia::render('Cards/Index',
             $cards

@@ -43,11 +43,11 @@ class GetComputed
             $features['frameEffectsString'],
             $features['borderColorString'],
             $features['fullArtString'],
-//            $features['alternateArtString'],
+            //            $features['alternateArtString'],
             $features['foilOnlyString'],
             $features['promoString'],
             $features['textlessString'],
-//            $features['timeshiftedString'],
+            //            $features['timeshiftedString'],
             $features['layoutString'],
         ];
         $featureStrings = [];
@@ -68,6 +68,7 @@ class GetComputed
     public function getFeatures() : array
     {
         $featureCollector = new GetCardFeatures($this->card);
+
         return [
             'frameEffects'        => $featureCollector->getFrameEffects(),
             'frameEffectsString'  => $featureCollector->getFrameEffectsString(),
@@ -75,16 +76,16 @@ class GetComputed
             'borderColorString'   => $featureCollector->getBorderColorString(),
             'fullArt'             => $featureCollector->getFullArt(),
             'fullArtString'       => $featureCollector->getFullArtString(),
-//            'alternateArt'        => $featureCollector->getAlternateArt(),
-//            'alternateArtString'  => $featureCollector->getAlternateArtString(),
+            //            'alternateArt'        => $featureCollector->getAlternateArt(),
+            //            'alternateArtString'  => $featureCollector->getAlternateArtString(),
             'foilOnly'            => $featureCollector->getFoilOnly(),
             'foilOnlyString'      => $featureCollector->getFoilOnlyString(),
             'promo'               => $featureCollector->getPromo(),
             'promoString'         => $featureCollector->getPromoString(),
             'textless'            => $featureCollector->getTextless(),
             'textlessString'      => $featureCollector->getTextlessString(),
-//            'timeshifted'         => $featureCollector->getTimeshifted(),
-//            'timeshiftedString'   => $featureCollector->getTimeshiftedString(),
+            //            'timeshifted'         => $featureCollector->getTimeshifted(),
+            //            'timeshiftedString'   => $featureCollector->getTimeshiftedString(),
             'layout'              => $featureCollector->getLayout(),
             'layoutString'        => $featureCollector->getLayoutString(),
         ];
@@ -98,7 +99,7 @@ class GetComputed
      */
     public function getImageUrl(bool $dispatch = true) : string
     {
-            return asset($this->card->imagePath);
+        return asset($this->card->imagePath);
     }
 
     /**

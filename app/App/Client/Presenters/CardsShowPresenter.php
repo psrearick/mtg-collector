@@ -6,6 +6,7 @@ use App\App\Base\Presenter;
 use App\App\Client\Traits\WithLoadAttribute;
 use App\Domain\Cards\Actions\GetComputed;
 use App\Domain\Cards\Actions\GetPrintings;
+use App\Domain\Cards\DataActions\CardDataAction;
 use App\Domain\Cards\Models\Card;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,9 +16,12 @@ class CardsShowPresenter extends Presenter
 
     protected Card $card;
 
-    public function __construct(Card $card)
+    protected CardDataAction $cardDataAction;
+
+    public function __construct(Card $card, CardDataAction $cardDataAction)
     {
-        $this->card = $card;
+        $this->card           = $card;
+        $this->cardDataAction = $cardDataAction;
     }
 
     public function present() : Model
@@ -37,20 +41,18 @@ class CardsShowPresenter extends Presenter
             'collections',
         ])->find($this->card->id);
 
-        $card->printings = GetPrintings::getOtherPrintings($card)
+        $card->printings = $this->cardDataAction->getOtherPrintings($card)
             ->load('frameEffects', 'set')
             ->map(function ($printing) {
-            $computed = new GetComputed($printing);
-            $computedCard = $computed
+                $computed = new GetComputed($printing);
+                $computedCard = $computed
                 ->add('feature')
                 ->add('price_normal')
                 ->add('price_foil')
                 ->get();
 
-            return $computedCard;
-        });
-
-//        $card->printingSets = $card->printingSets();
+                return $computedCard;
+            });
 
         $computed     = new GetComputed($card);
         $computedCard = $computed

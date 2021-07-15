@@ -186,10 +186,7 @@
                                     sm:col-span-2
                                 "
                             >
-                                <span
-                                    v-if="card.manaCost"
-                                    v-html="manaCost"
-                                />
+                                <span v-if="card.manaCost" v-html="manaCost" />
                                 (CMC: {{ card.convertedManaCost }})
                             </dd>
                         </div>
