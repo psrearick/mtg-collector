@@ -18,7 +18,7 @@ use App\Domain\CardAttributes\Models\RelatedObjects;
 use App\Domain\CardAttributes\Models\Ruling;
 use App\Domain\Cards\Actions\GetCardFeatures;
 use App\Domain\Cards\Actions\GetCardImage;
-use App\Domain\Cards\Actions\GetScryfallCard;
+//use App\Domain\Cards\Actions\GetScryfallCard;
 use App\Domain\Collections\Models\Collection as CollectionsCollection;
 use App\Domain\Mappings\Models\ApiMappings;
 use App\Domain\Prices\Models\Price;
@@ -157,16 +157,16 @@ class Card extends Model
     /**
      * @return string
      */
-//    public function getImageUrlAttribute() : string
-//    {
-//        if ($this->imagePath) {
-//            return asset('storage/' . $this->imagePath);
-//        }
-//        $imageUrl = app(GetCardImage::class)->execute($this->scryfallId, 'image');
-//        ImportCardImages::dispatchAfterResponse($this);
-//
-//        return $imageUrl;
-//    }
+    public function getImageUrlAttribute() : string
+    {
+        if ($this->imagePath) {
+            return asset($this->imagePath);
+        }
+        $imageUrl = app(GetCardImage::class)->execute($this->scryfallId, 'image');
+        ImportCardImages::dispatchAfterResponse($this);
+
+        return $imageUrl;
+    }
 
     /**
 //     * @return float|null

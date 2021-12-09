@@ -52,7 +52,7 @@ class CollectionCardDataAction extends DataAction
         return $query['collection']->cards()
             ->where('cards.id', '=', $query['card_id'])
             ->where('foil', '=', $query['foil'])
-            ->where('date_added', '=', $query['date'])
+            ->where('date_added', '=', $query['date_added'])
             ->first();
     }
 

@@ -21,11 +21,11 @@ class CardSearch
      * @param array $searchParameters
      * @return array
      */
-    public function search(Request $request, array $searchParameters) : array
+    public function execute(Request $request, array $searchParameters) : array
     {
         $perPage        = $searchParameters['perPage'] ?: 15;
         $withImage      = $searchParameters['withImage'];
-        $exact          = $searchParameters['exact'];
+        $exact          = $searchParameters['exact'] ?? false;
         $results        = [];
         $sets           = [];
         $setRequest     = $request->get('set');
@@ -37,16 +37,16 @@ class CardSearch
                 $this->cards->equals('name', $cardRequest);
             } else {
                 $term = preg_replace('/[^A-Za-z0-9]/', '', $cardRequest);
-                $this->cards->startsWith('name_normalized', $term);
+                $this->cards->like($term, 'name_normalized');
             }
-            $this->cards->withoutOnline();
+            // $this->cards->withoutOnline();
             $hasResults = true;
         }
 
         if ($setRequest) {
             $sets = app(SetRepository::class);
             if ($exact) {
-                $sets->equals($setRequest, 'id');
+                $sets->equals('id', $setRequest);
             } else {
                 $sets->like($setRequest);
             }
@@ -60,13 +60,14 @@ class CardSearch
         if ($hasResults) {
             $this->cards->with(['set']);
 
-            if ($withImage) {
-                $this->cards->loadAttribute(['image_url']);
-            }
             $results = $this->cards->get();
-            if ($perPage > 0) {
-                $results = $results->paginate($perPage)->withQueryString();
+
+            if ($withImage) {
+                $this->cards->loadAttribute($results, ['image_url']);
             }
+            // if ($perPage > 0) {
+                // $results = $results->paginate($perPage)->withQueryString();
+            // }
         }
 
         return [

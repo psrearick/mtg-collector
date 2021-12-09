@@ -17,10 +17,13 @@ class CollectionsShowPresenter extends Presenter
 
     protected ?Request $request;
 
+    protected $setRepository;
+
     public function __construct(Collection $collection, Request $request = null)
     {
-        $this->collection = $collection;
-        $this->request    = $request;
+        $this->collection       = $collection;
+        $this->request          = $request;
+        $this->setRepository    = app(SetRepository::class);
     }
 
     public function buildCards()
@@ -86,8 +89,7 @@ class CollectionsShowPresenter extends Presenter
             });
         }
         if ($setRequest) {
-            $sets   = app(SetsRepository::class)->like($setRequest);
-            $setIds = $sets->ids();
+            $setIds   = $this->setRepository->like($setRequest)->ids();
             $cards  = $cards->whereIn('set_id', $setIds);
         }
 

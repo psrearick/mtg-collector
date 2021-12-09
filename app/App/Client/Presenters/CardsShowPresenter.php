@@ -18,10 +18,10 @@ class CardsShowPresenter extends Presenter
 
     protected CardDataAction $cardDataAction;
 
-    public function __construct(Card $card, CardDataAction $cardDataAction)
+    public function __construct(Card $card)
     {
         $this->card           = $card;
-        $this->cardDataAction = $cardDataAction;
+        $this->cardDataAction = app(CardDataAction::class);
     }
 
     public function present() : Model
