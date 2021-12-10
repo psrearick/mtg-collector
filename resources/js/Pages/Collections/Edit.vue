@@ -14,7 +14,11 @@
                 </div>
             </div>
             <div class="w-full">
-                <CardSearch :collection="collectionComplete" :search="search" />
+                <CardSearch
+                    :collection="collection"
+                    :collection-complete="collectionComplete"
+                    :search="search"
+                />
             </div>
         </div>
         <div>
@@ -44,6 +48,7 @@ import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import CardSearch from "@/Components/Form/CardSearch/CardSearch";
 import CardIndexDataGrid from "@/Components/DataGrid/CardIndexDataGrid/CardIndexDataGrid";
 import CollectionsEditTable from "@/Shared/TableDefinitions/CollectionsEditTable";
+import UpdateCardQuantityMixin from "@/Shared/Mixins/UpdateCardQuantityMixin";
 import SuccessButton from "@/Components/Buttons/SuccessButton";
 
 export default {
@@ -51,7 +56,7 @@ export default {
 
     components: { SuccessButton, PrimaryButton, CardIndexDataGrid, CardSearch },
 
-    mixins: [CollectionsEditTable],
+    mixins: [CollectionsEditTable, UpdateCardQuantityMixin],
 
     layout: Layout,
 
