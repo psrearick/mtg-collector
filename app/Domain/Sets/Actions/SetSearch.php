@@ -2,31 +2,34 @@
 
 namespace App\Domain\Sets\Actions;
 
-use App\App\Client\Repositories\SetsRepository;
-use Illuminate\Database\Eloquent\Collection;
+use App\App\Client\Repositories\SetRepository;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class SetSearch
 {
-    public static function search(string $searchTerm = '', int $perPage = 15, $fields = '') : Collection
-    {
-        $sets   = app(SetsRepository::class);
+    public SetRepository $sets;
 
+    public function __construct(SetRepository $setRepository)
+    {
+        $this->sets = $setRepository;
+    }
+
+    public function paginate(int $perPage = 15) : LengthAwarePaginator
+    {
+        return $this->sets->getPaginated(['perPage' => $perPage]);
+    }
+
+    public function search(string $searchTerm = '', array $fields = []) : Collection
+    {
         if ($fields) {
-            if (is_array($fields)) {
-                $sets->selectMany($fields);
-            } else {
-                $sets->select($fields);
-            }
+            $this->sets->selectMany($fields);
         }
 
         if ($searchTerm) {
-            $sets->like($searchTerm);
+            $this->sets->like($searchTerm);
         }
 
-        if ($perPage > 0) {
-            return $sets->getPaginated($perPage);
-        }
-
-        return $sets->get();
+        return $this->sets->get();
     }
 }

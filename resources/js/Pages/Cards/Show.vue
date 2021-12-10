@@ -101,19 +101,19 @@
                         </h3>
                         <CardList class="pt-4">
                             <CardListCard
-                                v-for="(legality, index) in card.scryfall_card
-                                    .legalities"
+                                v-for="(legality, index) in card.legalities"
                                 :key="index"
-                                :status="status(legality)"
+                                :status="status(legality.status)"
                             >
                                 <p class="text-sm font-medium text-gray-900">
                                     {{
-                                        index.charAt(0).toUpperCase() +
-                                        index.slice(1)
+                                        legality.status
+                                            .replace(/_/g, " ")
+                                            .toUpperCase()
                                     }}
                                 </p>
                                 <p class="text-sm text-gray-500 truncate">
-                                    {{ legality.replace(/_/g, " ") }}
+                                    {{ legality.format.toLowerCase() }}
                                 </p>
                             </CardListCard>
                         </CardList>
@@ -163,7 +163,7 @@
                                     sm:col-span-2
                                 "
                             >
-                                {{ card.rarity }}
+                                {{ capitalize(card.rarity.toLowerCase()) }}
                             </dd>
                         </div>
                         <div
@@ -176,7 +176,7 @@
                             "
                         >
                             <dt class="text-sm font-medium text-gray-500">
-                                CMC
+                                Mana Cost
                             </dt>
                             <dd
                                 class="
@@ -186,10 +186,8 @@
                                     sm:col-span-2
                                 "
                             >
-                                {{ card.convertedManaCost }}
-                                <span v-if="card.manaCost">
-                                    {{ " - " + card.manaCost }}</span
-                                >
+                                <span v-if="card.manaCost" v-html="manaCost" />
+                                (CMC: {{ card.convertedManaCost }})
                             </dd>
                         </div>
                         <div
@@ -235,7 +233,7 @@
                                     sm:col-span-2
                                 "
                             >
-                                {{ typeLine }}
+                                {{ card.typeLine }}
                             </dd>
                         </div>
                         <div
@@ -280,10 +278,11 @@
                                     sm:mt-0
                                     sm:col-span-2
                                 "
-                                v-html="card.text"
+                                v-html="text"
                             />
                         </div>
                         <div
+                            v-if="card.flavorText"
                             class="
                                 py-4
                                 sm:py-5
@@ -348,7 +347,7 @@
                                     sm:col-span-2
                                 "
                             >
-                                {{ card.scryfall_card.lang }}
+                                {{ card.languageCode.toUpperCase() }}
                             </dd>
                         </div>
                     </dl>
@@ -359,7 +358,7 @@
             <h3
                 class="text-lg leading-6 font-medium text-gray-900 mt-8 lg:mt-0"
             >
-                All Printings
+                Other Printings
             </h3>
             <DataGrid
                 :data="printingsTable.data"
@@ -373,7 +372,11 @@
 
 <script>
 import Layout from "@/Layouts/Authenticated";
-import { formatCurrency } from "@/Shared/api/ConvertValue";
+import {
+    formatCurrency,
+    capitalizeFirstLetter,
+    replaceSymbol,
+} from "@/Shared/api/ConvertValue";
 import CardList from "@/Components/CardLists/CardList";
 import CardListCard from "@/Components/CardLists/CardListCard";
 import DataGrid from "@/Components/DataGrid/DataGrid";
@@ -449,6 +452,8 @@ export default {
                     },
                 ],
             },
+            text: "",
+            manaCost: "",
         };
     },
 
@@ -461,36 +466,13 @@ export default {
                 ", "
             );
         },
-        typeLine() {
-            let typeLine = "";
-            let subTypeLine = "";
-            if (this.card.types && this.card.types.length) {
-                this.card.types.forEach((type) => {
-                    if (typeLine.length) {
-                        typeLine += " ";
-                    }
-                    typeLine += type.name;
-                });
-            }
-            if (this.card.subtypes && this.card.subtypes.length) {
-                this.card.subtypes.forEach((subtype) => {
-                    if (subTypeLine.length) {
-                        subTypeLine += " ";
-                    }
-                    subTypeLine += subtype.name;
-                });
-                if (typeLine.length) {
-                    subTypeLine = " - " + subTypeLine;
-                }
-            }
-            return typeLine + subTypeLine;
-        },
     },
 
     mounted() {
         this.$store.dispatch("updateHeader", { header: this.card.name });
         const allPrintings = [];
-        this.card.printings.forEach((printing) => {
+        Object.keys(this.card.printings).forEach((key) => {
+            let printing = this.card.printings[key];
             allPrintings.push({
                 id: printing.id,
                 non_foil_price: printing.price_normal,
@@ -502,7 +484,7 @@ export default {
             });
         });
         this.printingsTable.data = allPrintings.sort((first, second) => {
-            if (new Date(first.release_date) < new Date(second.release_date)) {
+            if (new Date(first.releaseDate) < new Date(second.releaseDate)) {
                 return -1;
             }
             return 1;
@@ -513,11 +495,26 @@ export default {
         this.emitter.on("printings_table_set_name_click", (card) => {
             this.$inertia.get(`/cards/cards/${card.id}`);
         });
+        this.getTextWithSymbols(this.card.oracleText).then(
+            (res) => (this.text = res)
+        );
+        this.getTextWithSymbols(this.card.manaCost).then(
+            (res) => (this.manaCost = res)
+        );
     },
 
     methods: {
         format(value) {
             return value ? formatCurrency(value) : "N/A";
+        },
+        capitalize(value) {
+            return capitalizeFirstLetter(value);
+        },
+        async getTextWithSymbols(value) {
+            if (!value) {
+                return "";
+            }
+            return await replaceSymbol(value);
         },
         status(value) {
             if (value === "banned") {

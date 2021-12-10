@@ -201,11 +201,16 @@ export default {
         updateCardQuantity: function (change) {
             axios
                 .post("/card-collections/card-collections", {
-                    change: change,
+                    ...change,
                     collection: this.collection.id,
                 })
                 .then((res) => {
                     const data = res.data;
+                    console.log(data);
+                    if (data.error) {
+                        return;
+                    }
+
                     this.updateSearchResultsQuantity(data, change);
                     if (data.collectionCard) {
                         this.saveCard(data.collectionCard);

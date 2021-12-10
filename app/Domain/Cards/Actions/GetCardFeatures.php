@@ -13,15 +13,15 @@ class GetCardFeatures
         $this->card = $card;
     }
 
-    public function getAlternateArt() : bool
-    {
-        return !!$this->card->isAlternate;
-    }
+//    public function getAlternateArt() : bool
+//    {
+//        return !!$this->card->isAlternate;
+//    }
 
-    public function getAlternateArtString() : string
-    {
-        return $this->getAlternateArt() ? 'alternate art' : '';
-    }
+//    public function getAlternateArtString() : string
+//    {
+//        return $this->getAlternateArt() ? 'alternate art' : '';
+//    }
 
     public function getBorderColor() : string
     {
@@ -113,16 +113,6 @@ class GetCardFeatures
     public function getTextlessString() : string
     {
         return $this->getTextless() ? 'textless' : '';
-    }
-
-    public function getTimeshifted() : bool
-    {
-        return !!$this->card->isTimeshifted;
-    }
-
-    public function getTimeshiftedString() : string
-    {
-        return $this->getTimeshifted() ? 'timeshifted' : '';
     }
 
     private function getAllFrameEffects() : array

@@ -4,7 +4,8 @@ namespace App\App\Client\Presenters;
 
 use \Illuminate\Support\Collection as ModelCollection;
 use App\App\Base\Presenter;
-use App\App\Client\Repositories\SetsRepository;
+use App\App\Client\DataObjects\CardSearchResult;
+use App\App\Client\Repositories\SetRepository;
 use App\Domain\Cards\Actions\GetComputed;
 use App\Domain\Collections\Models\Collection;
 use Carbon\Carbon;
@@ -17,10 +18,13 @@ class CollectionsShowPresenter extends Presenter
 
     protected ?Request $request;
 
+    protected $setRepository;
+
     public function __construct(Collection $collection, Request $request = null)
     {
-        $this->collection = $collection;
-        $this->request    = $request;
+        $this->collection       = $collection;
+        $this->request          = $request;
+        $this->setRepository    = app(SetRepository::class);
     }
 
     public function buildCards()
@@ -33,7 +37,7 @@ class CollectionsShowPresenter extends Presenter
                 ->add('priceFoil')
                 ->get();
 
-            return collect([
+            return new CardSearchResult([
                 'id'             => $card->id,
                 'name'           => $card->name,
                 'set'            => $card->set->code,
@@ -45,17 +49,21 @@ class CollectionsShowPresenter extends Presenter
                 'acquired_price' => $card->pivot->price_when_added,
                 'quantity'       => $card->pivot->quantity,
             ]);
+        })
+        ->filter(function ($card) {
+            return $card->quantity > 0;
         });
     }
 
     public function present() : ModelCollection
     {
         $cards           = $this->buildCards();
-        $cardsSorted     = collect($cards->sortBy('name')->values());
+        $cardsSorted     = $cards->sortBy('name');
         $current         = $cards->sum('today');
         $acquired        = $cards->sum('acquired_price');
         $gainLoss        = $current - $acquired;
-        $gainLossPercent = $gainLoss != 0 ? $gainLoss / $acquired : 0;
+        $gainLossPercent = $gainLoss == 0 ? 0 : 1;
+        $gainLossPercent = $acquired != 0 ? $gainLoss / $acquired : $gainLossPercent;
 
         return collect([
             'id'          => $this->collection->id,
@@ -86,9 +94,8 @@ class CollectionsShowPresenter extends Presenter
             });
         }
         if ($setRequest) {
-            $sets   = app(SetsRepository::class)->like($setRequest);
-            $setIds = $sets->ids();
-            $cards  = $cards->whereIn('set_id', $setIds);
+            $setIds   = $this->setRepository->like($setRequest)->ids();
+            $cards    = $cards->whereIn('set_id', $setIds);
         }
 
         return $cards;

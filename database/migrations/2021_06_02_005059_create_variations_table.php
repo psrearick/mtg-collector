@@ -25,8 +25,8 @@ class CreateVariationsTable extends Migration
     {
         Schema::create('variations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('card_id');
-            $table->unsignedBigInteger('variation_id');
+            $table->unsignedBigInteger('card_id')->index();
+            $table->unsignedBigInteger('variation_id')->index();
             $table->timestamps();
         });
     }
