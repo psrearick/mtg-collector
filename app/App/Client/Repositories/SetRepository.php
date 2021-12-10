@@ -4,20 +4,19 @@ namespace App\App\Client\Repositories;
 
 use App\App\Base\Repository;
 use App\Domain\Sets\Models\Set;
-use Illuminate\Support\Collection;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class SetRepository
 //class SetRepository extends Repository
 {
+    public Builder $query;
+
+    public Collection $results;
 //    public string $class = "App\Domain\Sets\Models\Set";
 
     public string $table = 'sets';
-
-    public Collection $results;
-
-    public Builder $query;
 
     public function __construct()
     {

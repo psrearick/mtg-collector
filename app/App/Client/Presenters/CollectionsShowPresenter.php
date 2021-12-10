@@ -36,7 +36,7 @@ class CollectionsShowPresenter extends Presenter
                 ->add('priceNormal')
                 ->add('priceFoil')
                 ->get();
-                
+
             return new CardSearchResult([
                 'id'             => $card->id,
                 'name'           => $card->name,
@@ -95,7 +95,7 @@ class CollectionsShowPresenter extends Presenter
         }
         if ($setRequest) {
             $setIds   = $this->setRepository->like($setRequest)->ids();
-            $cards  = $cards->whereIn('set_id', $setIds);
+            $cards    = $cards->whereIn('set_id', $setIds);
         }
 
         return $cards;

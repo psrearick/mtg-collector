@@ -102,6 +102,48 @@ class Card extends Model
     }
 
     /**
+//     * @return float|null
+     */
+//    public function getPriceFoilAttribute() : ?float
+//    {
+//        return optional(
+//            $this->prices
+//                ->where('priceProvider.name', '=', 'tcgplayer')
+//                ->where('foil', true)
+//                ->first()
+//        )->price;
+//    }
+
+    /**
+//     * @return float|null
+     */
+//    public function getPriceNormalAttribute() : ?float
+//    {
+//        return optional(
+//            $this->prices
+//                ->where('priceProvider.name', '=', 'tcgplayer')
+//                ->where('foil', false)
+//                ->first()
+//        )->price;
+//    }
+
+    /**
+     * @return array
+     */
+//    public function getScryfallCardAttribute() : array
+//    {
+//        return (new GetScryfallCard())->execute($this->scryfallId);
+//    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function games() : BelongsToMany
+    {
+        return $this->belongsToMany(Game::class);
+    }
+
+    /**
      * @return string
      */
 //    public function getFeatureAttribute() : string
@@ -166,48 +208,6 @@ class Card extends Model
         ImportCardImages::dispatchAfterResponse($this);
 
         return $imageUrl;
-    }
-
-    /**
-//     * @return float|null
-     */
-//    public function getPriceFoilAttribute() : ?float
-//    {
-//        return optional(
-//            $this->prices
-//                ->where('priceProvider.name', '=', 'tcgplayer')
-//                ->where('foil', true)
-//                ->first()
-//        )->price;
-//    }
-
-    /**
-//     * @return float|null
-     */
-//    public function getPriceNormalAttribute() : ?float
-//    {
-//        return optional(
-//            $this->prices
-//                ->where('priceProvider.name', '=', 'tcgplayer')
-//                ->where('foil', false)
-//                ->first()
-//        )->price;
-//    }
-
-    /**
-     * @return array
-     */
-//    public function getScryfallCardAttribute() : array
-//    {
-//        return (new GetScryfallCard())->execute($this->scryfallId);
-//    }
-
-    /**
-     * @return BelongsToMany
-     */
-    public function games() : BelongsToMany
-    {
-        return $this->belongsToMany(Game::class);
     }
 
     /**

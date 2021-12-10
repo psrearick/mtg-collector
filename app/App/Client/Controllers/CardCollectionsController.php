@@ -4,9 +4,9 @@ namespace App\App\Client\Controllers;
 
 use App\App\Base\Controller;
 use App\Domain\Collections\DataActions\CollectionCardDataAction;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Http\JsonResponse;
 
 class CardCollectionsController extends Controller
 {

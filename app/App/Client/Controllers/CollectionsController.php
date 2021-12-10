@@ -9,9 +9,9 @@ use App\App\Client\Presenters\CollectionsShowPresenter;
 use App\Domain\Cards\Actions\CardSearch;
 use App\Domain\Collections\Models\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Support\Facades\Auth;
 
 class CollectionsController extends Controller
 {

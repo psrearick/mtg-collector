@@ -6,7 +6,7 @@ use Exception;
 
 class UpdateCollectionCardException extends Exception
 {
-    public function __construct(string $message = "Failed to update collection card")
+    public function __construct(string $message = 'Failed to update collection card')
     {
         parent::__construct($message);
     }

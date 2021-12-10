@@ -4,12 +4,12 @@ namespace App\Domain\Collections\DataActions;
 
 use App\Domain\Base\DataAction;
 use App\Domain\Cards\Models\Card;
+use App\Domain\Collections\DataActions\UpdateCollectionCardQuantity;
 use App\Domain\Collections\Models\Collection;
 use App\Exceptions\UpdateCollectionCardException;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Domain\Collections\DataActions\UpdateCollectionCardQuantity;
 
 class CollectionCardDataAction extends DataAction
 {
@@ -25,7 +25,7 @@ class CollectionCardDataAction extends DataAction
         if (!$this->isValidRequest($request)) {
             throw new UpdateCollectionCardException('Invalid request');
         }
-            
+
         return $this->updateCollectionCardQuantity->execute($request);
     }
 

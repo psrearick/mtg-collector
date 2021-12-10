@@ -8,9 +8,9 @@ use Carbon\Carbon;
 
 class UpdateCollectionCardQuantity
 {
-    private GetCollectionCard $getCollectionCard;
-
     private CreateCollectionCard $createCollectionCard;
+
+    private GetCollectionCard $getCollectionCard;
 
     public function __construct(GetCollectionCard $getCollectionCard, CreateCollectionCard $createCollectionCard)
     {
@@ -33,7 +33,7 @@ class UpdateCollectionCardQuantity
         $card = $this->updateCardQuantity($collectionCard, $collection, $changeRequest);
 
         return [
-            'message' => 'Card quantity was updated',
+            'message'        => 'Card quantity was updated',
             'collectionCard' => $this->getCard($changeRequest)->pivot->toArray(),
         ];
     }
@@ -56,7 +56,7 @@ class UpdateCollectionCardQuantity
 
     private function updateCardQuantity(Card $card, Collection $collection, array $request) : Card
     {
-        $quantity = $card->pivot->quantity;
+        $quantity    = $card->pivot->quantity;
         $newQuantity = $quantity + $request['quantity'];
         if ($newQuantity < 0) {
             $newQuantity = 0;

@@ -19,17 +19,17 @@ class CardRepository extends Repository
     }
 
     /**
-    * Limit results to those within the specified sets
-    *
-    * @param array $sets
-    * @return Repository
-    */
+     * Limit results to those within the specified sets
+     *
+     * @param array $sets
+     * @return Repository
+     */
     public function filterOnSets(array $sets) : Repository
     {
         $this->query = $this->query->whereIn($this->getField('set_id'), $sets);
 
         // $this->query =  $this->query->whereIn('sets.id', $sets)
-            // ->leftJoin('sets', 'sets.id', '=', $this->getField('set_id'));
+        // ->leftJoin('sets', 'sets.id', '=', $this->getField('set_id'));
 
         return $this;
     }
