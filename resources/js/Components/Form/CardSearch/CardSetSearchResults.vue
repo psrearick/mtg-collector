@@ -139,6 +139,7 @@ export default {
             if (change === 0) {
                 return;
             }
+
             this.emitter.emit("updateCardQuantity", {
                 change: change,
                 id: id,

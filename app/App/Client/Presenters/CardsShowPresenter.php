@@ -5,6 +5,8 @@ namespace App\App\Client\Presenters;
 use App\App\Base\Presenter;
 use App\App\Client\Traits\WithLoadAttribute;
 use App\Domain\Cards\Actions\GetComputed;
+use App\Domain\Cards\Actions\GetPrintings;
+use App\Domain\Cards\DataActions\CardDataAction;
 use App\Domain\Cards\Models\Card;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,9 +16,12 @@ class CardsShowPresenter extends Presenter
 
     protected Card $card;
 
+    protected CardDataAction $cardDataAction;
+
     public function __construct(Card $card)
     {
-        $this->card = $card;
+        $this->card           = $card;
+        $this->cardDataAction = app(CardDataAction::class);
     }
 
     public function present() : Model
@@ -25,33 +30,29 @@ class CardsShowPresenter extends Presenter
             'set',
             'colors',
             'keywords',
-            'subtypes',
-            'supertypes',
-            'types',
             'faces',
+            'games',
             'frameEffects',
-            'leadershipSkills',
-            //            'legalities',
-            //            'rulings',
-            'tokens',
-            'variations',
+            'legalities',
             'prices',
             'prices.priceProvider',
+            'promoTypes',
+            'relatedObjects',
             'collections',
         ])->find($this->card->id);
 
-        $card->printings = $card->printings()->load('frameEffects')->map(function ($printing) {
-            $computed = new GetComputed($printing);
-            $computedCard = $computed
+        $card->printings = $this->cardDataAction->getOtherPrintings($card)
+            ->load('frameEffects', 'set')
+            ->map(function ($printing) {
+                $computed = new GetComputed($printing);
+                $computedCard = $computed
                 ->add('feature')
                 ->add('price_normal')
                 ->add('price_foil')
                 ->get();
 
-            return $computedCard;
-        });
-
-        $card->printingSets = $card->printingSets();
+                return $computedCard;
+            });
 
         $computed     = new GetComputed($card);
         $computedCard = $computed
@@ -59,7 +60,6 @@ class CardsShowPresenter extends Presenter
             ->add('priceNormal')
             ->add('priceFoil')
             ->add('image_url')
-            ->add('scryfall_card')
             ->get();
 
         $attributes = [

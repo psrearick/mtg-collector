@@ -19,12 +19,9 @@ class CardsController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function index(Request $request) : Response
+    public function index() : Response
     {
-        $cards = (new CardsSearchPresenter(CardSearch::search($request, 0, false), 15))->present();
-        return Inertia::render('Cards/Index',
-            $cards
-        );
+        return Inertia::render('Cards/Index');
     }
 
     /**

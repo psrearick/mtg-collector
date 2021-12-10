@@ -13,13 +13,20 @@ use Inertia\Response;
 
 class SetCollectionsController extends Controller
 {
+    public SetSearch $setSearch;
+
+    public function __construct(SetSearch $search)
+    {
+        $this->setSearch = $search;
+    }
+
     public function edit(Collection $collection, Request $request) : Response
     {
         $query          = $request->input('query') ?: '';
         $set            = $request->input('set') ?: '';
         $card           = $request->input('card') ?: '';
         $setCards       = [];
-        $setSets        = SetSearch::search($query, 0, ['id', 'code', 'name']);
+        $setSets        = $this->setSearch->search($query, ['id', 'code', 'name']);
         $selectedIndex  = null;
 
         if ($set) {

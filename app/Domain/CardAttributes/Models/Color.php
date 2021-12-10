@@ -5,6 +5,8 @@ namespace App\Domain\CardAttributes\Models;
 use App\Domain\Base\Model;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Cards\Models\Token;
+use App\Domain\Symbols\Models\Symbol;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Color extends Model
@@ -12,20 +14,26 @@ class Color extends Model
     /**
      * get all cards assigned to this color
      *
-     * @return MorphToMany
+     * @return BelongsToMany
      */
-    public function cards() : MorphToMany
+    public function cards() : BelongsToMany
     {
-        return $this->morphedByMany(Card::class, 'colorable');
+        return $this->belongsToMany(Card::class)->withPivot('type');
     }
 
-    /**
-     * get all tokens assigned to this color
-     *
-     * @return MorphToMany
-     */
-    public function tokens() : MorphToMany
+    public function symbols() : BelongsToMany
     {
-        return $this->morphedByMany(Token::class, 'colorable');
+        return $this->belongsToMany(Symbol::class);
     }
+
+//
+//    /**
+//     * get all tokens assigned to this color
+//     *
+//     * @return MorphToMany
+//     */
+//    public function tokens() : MorphToMany
+//    {
+//        return $this->morphedByMany(Token::class, 'colorable');
+//    }
 }

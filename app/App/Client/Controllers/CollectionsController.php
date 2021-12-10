@@ -8,8 +8,8 @@ use App\App\Client\Presenters\CollectionsIndexPresenter;
 use App\App\Client\Presenters\CollectionsShowPresenter;
 use App\Domain\Cards\Actions\CardSearch;
 use App\Domain\Collections\Models\Collection;
-use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -28,14 +28,14 @@ class CollectionsController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function edit(Collection $collection, Request $request) : Response
+    public function edit(Collection $collection, Request $request, CardSearch $cardSearch) : Response
     {
         $collectionEdit = Collection::with('cards', 'cards.frameEffects', 'cards.prices', 'cards.prices.priceProvider', 'cards.set')->find($collection->id);
 
         return Inertia::render('Collections/Edit', [
             'collectionComplete'    => $collectionEdit,
             'collection'            => (new CollectionsShowPresenter($collectionEdit, $request))->present(),
-            'search'                => fn () => (new CollectionCardsSearchPresenter(CardSearch::search($request, 0, true), 25, 1, 'cardsPage'))->present(),
+            'search'                => (new CollectionCardsSearchPresenter($cardSearch->execute($request, ['perPage' => 0, 'withImage' => true]), 25, 1, 'cardsPage'))->present(),
         ]);
     }
 

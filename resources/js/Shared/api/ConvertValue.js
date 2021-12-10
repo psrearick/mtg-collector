@@ -33,3 +33,39 @@ export function formatPercentage(value, precision, string = false) {
 
     return value;
 }
+
+export function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+export async function replaceSymbol(string) {
+    let symbols = getBraceContent(string);
+    let res = await axios.post("/api/brace-content", { data: symbols });
+    res.data.forEach((result) => {
+        if (!result.svg) {
+            return;
+        }
+
+        string = string.replace(
+            result.symbolText,
+            `
+                <svg width="16" height="16" class="inline">
+                    <image xlink:href="${result.svg}" width="16" height="16"/>
+                </svg>
+            `
+        );
+    });
+    return string;
+}
+
+export function getBraceContent(string) {
+    let found = [];
+    let rxp = /{([^}]+)}/g;
+    let curMatch;
+
+    while ((curMatch = rxp.exec(string))) {
+        found.push(curMatch[1]);
+    }
+
+    return found;
+}

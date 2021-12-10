@@ -43,11 +43,11 @@ class GetComputed
             $features['frameEffectsString'],
             $features['borderColorString'],
             $features['fullArtString'],
-            $features['alternateArtString'],
+            //            $features['alternateArtString'],
             $features['foilOnlyString'],
             $features['promoString'],
             $features['textlessString'],
-            $features['timeshiftedString'],
+            //            $features['timeshiftedString'],
             $features['layoutString'],
         ];
         $featureStrings = [];
@@ -76,16 +76,16 @@ class GetComputed
             'borderColorString'   => $featureCollector->getBorderColorString(),
             'fullArt'             => $featureCollector->getFullArt(),
             'fullArtString'       => $featureCollector->getFullArtString(),
-            'alternateArt'        => $featureCollector->getAlternateArt(),
-            'alternateArtString'  => $featureCollector->getAlternateArtString(),
+            //            'alternateArt'        => $featureCollector->getAlternateArt(),
+            //            'alternateArtString'  => $featureCollector->getAlternateArtString(),
             'foilOnly'            => $featureCollector->getFoilOnly(),
             'foilOnlyString'      => $featureCollector->getFoilOnlyString(),
             'promo'               => $featureCollector->getPromo(),
             'promoString'         => $featureCollector->getPromoString(),
             'textless'            => $featureCollector->getTextless(),
             'textlessString'      => $featureCollector->getTextlessString(),
-            'timeshifted'         => $featureCollector->getTimeshifted(),
-            'timeshiftedString'   => $featureCollector->getTimeshiftedString(),
+            //            'timeshifted'         => $featureCollector->getTimeshifted(),
+            //            'timeshiftedString'   => $featureCollector->getTimeshiftedString(),
             'layout'              => $featureCollector->getLayout(),
             'layoutString'        => $featureCollector->getLayoutString(),
         ];
@@ -99,16 +99,7 @@ class GetComputed
      */
     public function getImageUrl(bool $dispatch = true) : string
     {
-        if ($this->card->imagePath) {
-            return asset('storage/' . $this->card->imagePath);
-        }
-        $imageUrl = app(GetCardImage::class)->execute($this->card->scryfallId, 'image');
-
-        if ($dispatch) {
-            ImportCardImages::dispatchAfterResponse($this->card);
-        }
-
-        return $imageUrl;
+        return asset($this->card->imagePath);
     }
 
     /**
@@ -132,16 +123,6 @@ class GetComputed
     }
 
     /**
-     * Get card object from scryfall api
-     *
-     * @return array
-     */
-    public function getScryfallCard() : array
-    {
-        return (new GetScryfallCard())->execute($this->card->scryfallId);
-    }
-
-    /**
      * Get card price, default to non foil
      *
      * @param bool $foil
@@ -152,6 +133,11 @@ class GetComputed
         return optional(
             $this->card->prices
                 ->where('priceProvider.name', '=', 'tcgplayer')
+                ->where('foil', $foil)
+                ->first()
+        )->price ?: optional(
+            $this->card->prices
+                ->where('priceProvider.name', '=', 'scryfall')
                 ->where('foil', $foil)
                 ->first()
         )->price;

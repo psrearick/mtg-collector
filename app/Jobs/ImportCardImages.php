@@ -18,14 +18,17 @@ class ImportCardImages implements ShouldQueue
 
     private Card $card;
 
+    private ?string $url;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Card $card)
+    public function __construct(Card $card, ?string $url = '')
     {
         $this->card     = $card;
+        $this->url      = $url;
     }
 
     /**
@@ -35,7 +38,8 @@ class ImportCardImages implements ShouldQueue
      */
     public function handle()
     {
-        $url = app(GetCardImage::class)->execute($this->card->scryfallId);
+        $url  = $this->url;
+        $card = $this->card;
         if (!$url) {
             return;
         }
@@ -53,9 +57,7 @@ class ImportCardImages implements ShouldQueue
 
         app(DownloadFileAction::class)->saveFile($storagePath, $url);
 
-        $card                     = Card::find($this->card->id);
-        $card->imagePath          = $cardPath; // images/cards/FILENAME
-        $card->scryfall_image_url = $url;
+        $card->imagePath          = 'storage/' . $cardPath; // images/cards/FILENAME
         $card->save();
     }
 }
