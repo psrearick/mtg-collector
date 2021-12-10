@@ -31,11 +31,11 @@ class CreateCardCollectionsTable extends Migration
             $table->boolean('foil')->default(false);
             $table->text('description')->nullable();
             $table->string('condition')->nullable();
-            $table->integer('quantity')->default(1);
+            $table->integer('quantity')->default(0);
             $table->timestamp('deleted_at')->nullable();
             $table->timestamp('date_added')->nullable();
             $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrentOnUpdate();
+            $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
         });
     }
 }

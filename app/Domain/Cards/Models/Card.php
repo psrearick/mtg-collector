@@ -335,8 +335,8 @@ class Card extends Model
     /*
      * booted
      */
-//    protected static function booted() : void
-//    {
-//        static::addGlobalScope(new NotOnlineOnlyScope);
-//    }
+    protected static function booted() : void
+    {
+        static::addGlobalScope(new NotOnlineOnlyScope);
+    }
 }

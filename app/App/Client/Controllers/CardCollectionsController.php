@@ -6,6 +6,7 @@ use App\App\Base\Controller;
 use App\Domain\Collections\DataActions\CollectionCardDataAction;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 
 class CardCollectionsController extends Controller
 {
@@ -16,8 +17,12 @@ class CardCollectionsController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function store(Request $request) : Response
+    public function store(Request $request) : JsonResponse
     {
-        return app(CollectionCardDataAction::class)->updateCollectionCard($request);
+        try {
+            return response()->json(app(CollectionCardDataAction::class)->execute($request->all()));
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()]);
+        }
     }
 }
