@@ -38,8 +38,10 @@ class ImportApiMap extends Command
      */
     public function handle()
     {
-        $job = new GenerateApiMap;
-        $job->handle();
+        // $job = new GenerateApiMap;
+        // $job->handle();
+
+        GenerateApiMap::dispatch();
 
         return true;
     }

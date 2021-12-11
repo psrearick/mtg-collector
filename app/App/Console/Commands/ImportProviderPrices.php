@@ -38,7 +38,9 @@ class ImportProviderPrices extends Command
      */
     public function handle()
     {
-        $job = new ImportCardDataPrices;
-        $job->handle();
+        // $job = new ImportCardDataPrices;
+        // $job->handle();
+
+        ImportCardDataPrices::dispatch();
     }
 }

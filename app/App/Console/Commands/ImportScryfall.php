@@ -38,8 +38,10 @@ class ImportScryfall extends Command
      */
     public function handle()
     {
-        $job = new ImportScryfallData;
-        $job->handle();
+        // $job = new ImportScryfallData;
+        // $job->handle();
+
+        ImportScryfallData::dispatch();
 
         return true;
     }
