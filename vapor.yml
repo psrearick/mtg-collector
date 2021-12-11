@@ -11,7 +11,7 @@ environments:
             - 'npm ci && npm run prod && rm -rf node_modules'
     staging:
         storage: mtg-collector-staging
-        database: mtg-collector-staging
+        database: mtg-collector-staging-db
         memory: 1024
         cli-memory: 512
         runtime: 'php-8.1:al2'
