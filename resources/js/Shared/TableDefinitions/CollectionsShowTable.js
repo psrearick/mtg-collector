@@ -38,17 +38,17 @@ export default {
                     {
                         visible: true,
                         type: "currency",
-                        label: "Today",
+                        label: "Value",
                         key: "today",
                     },
                     {
-                        visible: true,
+                        visible: false,
                         type: "text",
                         label: "Acquired Date",
                         key: "acquired_date",
                     },
                     {
-                        visible: true,
+                        visible: false,
                         type: "currency",
                         label: "Acquired Price",
                         key: "acquired_price",

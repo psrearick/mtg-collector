@@ -40,17 +40,17 @@ export default {
                     {
                         visible: true,
                         type: "currency",
-                        label: "Today",
+                        label: "Value",
                         key: "today",
                     },
                     {
-                        visible: true,
+                        visible: false,
                         type: "text",
                         label: "Acquired Date",
                         key: "acquired_date",
                     },
                     {
-                        visible: true,
+                        visible: false,
                         type: "currency",
                         label: "Acquired Price",
                         key: "acquired_price",
@@ -81,7 +81,7 @@ export default {
         });
 
         this.emitter.on("incrementQuantity", (card) => {
-            this.updateQuantity({
+            this.emitter.emit("updateCardQuantity", {
                 change: 1,
                 id: card.id,
                 foil: card.foil,
@@ -89,26 +89,11 @@ export default {
         });
 
         this.emitter.on("decrementQuantity", (card) => {
-            this.updateQuantity({
+            this.emitter.emit("updateCardQuantity", {
                 change: -1,
                 id: card.id,
                 foil: card.foil,
             });
         });
-    },
-
-    methods: {
-        updateQuantity(change) {
-            axios
-                .post("/card-collections/card-collections", {
-                    ...change,
-                    collection: this.collection.id,
-                })
-                .then(() => {
-                    this.$inertia.reload({
-                        only: ["collection", "collectionComplete"],
-                    });
-                });
-        },
     },
 };
