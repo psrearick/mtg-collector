@@ -19,10 +19,12 @@ use App\Domain\CardAttributes\Models\Ruling;
 use App\Domain\Cards\Actions\GetCardFeatures;
 use App\Domain\Cards\Actions\GetCardImage;
 //use App\Domain\Cards\Actions\GetScryfallCard;
+use App\Domain\Collections\Models\CardCollection;
 use App\Domain\Collections\Models\Collection as CollectionsCollection;
 use App\Domain\Mappings\Models\ApiMappings;
 use App\Domain\Prices\Models\Price;
 use App\Domain\Sets\Models\Set;
+use App\Domain\Transactions\Models\Transaction;
 use App\Jobs\ImportCardImages;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -50,7 +52,8 @@ class Card extends Model
     public function collections() : BelongsToMany
     {
         return $this->belongsToMany(CollectionsCollection::class, 'card_collections')
-            ->withPivot(['price_when_added', 'foil', 'description', 'condition', 'quantity']);
+            ->withPivot(['price_when_added', 'foil', 'description', 'condition', 'quantity'])
+            ->using(CardCollection::class);
     }
 
     /**
@@ -320,6 +323,11 @@ class Card extends Model
     public function set() : BelongsTo
     {
         return $this->belongsTo(Set::class);
+    }
+
+    public function transactions() : HasMany
+    {
+        return $this->hasMany(Transaction::class);
     }
 
     /*

@@ -2,6 +2,7 @@
 
 namespace App\Domain\Collections\DataActions;
 
+use App\Domain\Cards\Actions\GetComputed;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Collections\Models\Collection;
 use Carbon\Carbon;
@@ -56,14 +57,41 @@ class UpdateCollectionCardQuantity
 
     private function updateCardQuantity(Card $card, Collection $collection, array $request) : Card
     {
+        $foil        = $card->pivot->foil;
         $quantity    = $card->pivot->quantity;
         $newQuantity = $quantity + $request['quantity'];
         if ($newQuantity < 0) {
             $newQuantity = 0;
         }
 
-        $collection->cards()->updateExistingPivot($card->id, [
-            'quantity' => $newQuantity,
+        $now          = Carbon::now()->toDateTimeString();
+        $date         = $card->pivot->date_added ?: $now;
+        $price        = $card->pivot->price_when_added;
+        $computerCard = (new GetComputed($card))->add('priceNormal')->add('priceFoil')->get();
+        $priceToday   =
+            $foil ?
+            $computerCard->priceFoil :
+            $computerCard->priceNormal;
+        if (!$price) {
+            $price = $priceToday;
+        }
+
+        $collection->cards()
+            ->newPivotStatementForId($card->id)
+            ->where('foil', '=', $foil)
+            ->update([
+                'quantity'         => $newQuantity,
+                'price_when_added' => $price,
+                'date_added'       => $date,
+            ]);
+
+        $card->transactions()->create([
+            'collection_id' => $collection->id,
+            'price'         => $priceToday,
+            'foil'          => $foil,
+            'condition'     => '',
+            'quantity'      => $request['quantity'],
+            'date_added'    => $now,
         ]);
 
         return $card;

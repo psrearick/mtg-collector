@@ -18,6 +18,16 @@ class VaporUiServiceProvider extends ServiceProvider
     }
 
     /**
+     * Register any application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
+    }
+
+    /**
      * Register the Vapor UI gate.
      *
      * This gate determines who can access Vapor UI in non-local environments.
@@ -31,15 +41,5 @@ class VaporUiServiceProvider extends ServiceProvider
                 'psrearick@gmail.com',
             ]);
         });
-    }
-
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        //
     }
 }

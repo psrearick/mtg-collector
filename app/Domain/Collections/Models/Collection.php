@@ -5,9 +5,11 @@ namespace App\Domain\Collections\Models;
 use App\App\Client\Traits\BelongsToUser;
 use App\Domain\Base\Model;
 use App\Domain\Cards\Models\Card;
+use App\Domain\Transactions\Models\Transaction;
 use App\Domain\Users\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Collection extends Model
@@ -22,6 +24,12 @@ class Collection extends Model
     public function cards() : BelongsToMany
     {
         return $this->belongsToMany(Card::class, 'card_collections')
-            ->withPivot(['price_when_added', 'foil', 'description', 'condition', 'quantity', 'date_added', 'created_at']);
+            ->withPivot(['price_when_added', 'foil', 'description', 'condition', 'quantity', 'date_added', 'created_at'])
+            ->using(CardCollection::class);
+    }
+
+    public function transactions() : HasMany
+    {
+        return $this->hasMany(Transaction::class);
     }
 }
