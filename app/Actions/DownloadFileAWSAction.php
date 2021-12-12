@@ -23,7 +23,7 @@ class DownloadFileAWSAction
         // remove old files
         $this->clean($clean, $dir);
 
-        return $filePath;
+        return Storage::url($filePath);
     }
 
     /**

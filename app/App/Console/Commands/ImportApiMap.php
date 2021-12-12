@@ -41,7 +41,7 @@ class ImportApiMap extends Command
         // $job = new GenerateApiMap;
         // $job->handle();
 
-        GenerateApiMap::dispatch();
+        GenerateApiMap::dispatch()->onQueue('long-running-queue');
 
         return true;
     }

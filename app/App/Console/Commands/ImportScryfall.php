@@ -41,7 +41,7 @@ class ImportScryfall extends Command
         // $job = new ImportScryfallData;
         // $job->handle();
 
-        ImportScryfallData::dispatch();
+        ImportScryfallData::dispatch()->onQueue('long-running-queue');
 
         return true;
     }

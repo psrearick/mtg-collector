@@ -41,6 +41,6 @@ class ImportProviderPrices extends Command
         // $job = new ImportCardDataPrices;
         // $job->handle();
 
-        ImportCardDataPrices::dispatch();
+        ImportCardDataPrices::dispatch()->onQueue('long-running-queue');
     }
 }

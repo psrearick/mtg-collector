@@ -71,6 +71,13 @@ return [
             'after_commit' => false,
         ],
 
+        'redis-long-running' => [
+            'driver' => 'redis',
+            'connection' => 'default',
+            'queue' => 'default',
+            'retry_after' => 960,
+        ],
+
     ],
 
     /*
