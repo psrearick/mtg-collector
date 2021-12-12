@@ -26,41 +26,6 @@ class DownloadFileAWSAction
         return Storage::url($filePath);
     }
 
-    /**
-     * get storage directory, make it if needed
-     *
-     * @param string $path
-     * @return string
-     */
-    private function getFileDirectory(string $path) : string
-    {
-        Storage::makeDirectory($path);
-
-        return Storage::path($path);
-    }
-
-    /**
-     * Build the name of the file
-     *
-     * @param array $file
-     * @param string $date_format
-     * @return string
-     */
-    private function getFileName(array $file, string $date_format) : string
-    {
-        $date = '';
-        if ($date_format) {
-            $date = '_' . Carbon::now()->format($date_format);
-        }
-
-        if (array_key_exists('name', $file)) {
-            return $file['name'] . $date . '.' . $file['format'];
-        }
-
-        // return the base name of file
-        return basename($file['url'], '.' . $file['format']) . $date . '.' . $file['format'];
-    }
-
     public function saveFile(string $filePath, string $url) : void
     {
         // Only create the file if it doesn't exist
@@ -70,7 +35,7 @@ class DownloadFileAWSAction
 
         // Initialize the cURL session and open file
         $tmp = tmpfile();
-        $ch = curl_init($url);
+        $ch  = curl_init($url);
         // $fp = fopen($path, 'c');
 
         // set an option for a cURL transfer
@@ -112,6 +77,41 @@ class DownloadFileAWSAction
             }
             $count++;
         }
+    }
+
+    /**
+     * get storage directory, make it if needed
+     *
+     * @param string $path
+     * @return string
+     */
+    private function getFileDirectory(string $path) : string
+    {
+        Storage::makeDirectory($path);
+
+        return Storage::path($path);
+    }
+
+    /**
+     * Build the name of the file
+     *
+     * @param array $file
+     * @param string $date_format
+     * @return string
+     */
+    private function getFileName(array $file, string $date_format) : string
+    {
+        $date = '';
+        if ($date_format) {
+            $date = '_' . Carbon::now()->format($date_format);
+        }
+
+        if (array_key_exists('name', $file)) {
+            return $file['name'] . $date . '.' . $file['format'];
+        }
+
+        // return the base name of file
+        return basename($file['url'], '.' . $file['format']) . $date . '.' . $file['format'];
     }
 
     private function getFilesInDirectory(string $dir) : array

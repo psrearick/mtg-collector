@@ -17,11 +17,11 @@ class ImportCardImages implements ShouldQueue
 
     private Card $card;
 
-    private ?string $url;
+    private DownloadFileAction $downloadFile;
 
     private string $format;
 
-    private DownloadFileAction $downloadFile;
+    private ?string $url;
 
     /**
      * Create a new job instance.
@@ -30,9 +30,9 @@ class ImportCardImages implements ShouldQueue
      */
     public function __construct(int $cardId, ?string $url = '', $format = 'normal')
     {
-        $this->card     = Card::find($cardId);
-        $this->url      = $url;
-        $this->format   = $format;
+        $this->card         = Card::find($cardId);
+        $this->url          = $url;
+        $this->format       = $format;
         $this->downloadFile = new DownloadFileAction;
     }
 
@@ -47,7 +47,7 @@ class ImportCardImages implements ShouldQueue
         $card = $this->card;
 
         if (!$url) {
-            $attr = match($this->format) {
+            $attr = match ($this->format) {
                 'png'           => 'imagePngUri',
                 'borderCrop'    => 'imageBorderCropUri',
                 'artCrop'       => 'imageArtCropUri',
@@ -66,11 +66,11 @@ class ImportCardImages implements ShouldQueue
 
         $basename = basename($url);
         $filename = substr($basename, 0, strpos($basename, '?'));
-        $path = 'public/images/cards';
-        $filepath =  "$path/$filename"; 
-        $exp = explode('.', $filename);
-        $format = array_pop($exp);
-        $name = implode('.', $exp);
+        $path     = 'public/images/cards';
+        $filepath =  "$path/$filename";
+        $exp      = explode('.', $filename);
+        $format   = array_pop($exp);
+        $name     = implode('.', $exp);
 
         $file = [
             'url'           => $url,

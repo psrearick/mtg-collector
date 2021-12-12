@@ -18,12 +18,12 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use pcrov\JsonReader\Exception;
 use pcrov\JsonReader\InputStream\IOException;
 use pcrov\JsonReader\InvalidArgumentException;
 use pcrov\JsonReader\JsonReader;
-use Illuminate\Support\Facades\Http;
 
 class ImportScryfallData implements ShouldQueue
 {
@@ -522,16 +522,16 @@ class ImportScryfallData implements ShouldQueue
         ]);
 
         if (!$currentSet->svgPath) {
-            $url = $currentSet->scryfallSvgUri;
-            $name = strtolower($currentSet->code . '_icon');
-            $format = 'svg';
-            $path = 'public/images/setIcons';
+            $url      = $currentSet->scryfallSvgUri;
+            $name     = strtolower($currentSet->code . '_icon');
+            $format   = 'svg';
+            $path     = 'public/images/setIcons';
             $filepath = "$path/$name.$format";
-            $file = [
-                'url' => $url,
-                'format' => $format,
+            $file     = [
+                'url'          => $url,
+                'format'       => $format,
                 'storage_path' => $path,
-                'name' => $name,
+                'name'         => $name,
             ];
 
             $this->downloadFile->execute($file);
@@ -568,16 +568,16 @@ class ImportScryfallData implements ShouldQueue
         ]);
 
         if (!$symbol->svgPath) {
-            $url = $symbol->svgUri;
-            $name = strtolower($symbol->id . '_symbol');
-            $format = 'svg';
-            $path = 'public/images/symbols';
+            $url      = $symbol->svgUri;
+            $name     = strtolower($symbol->id . '_symbol');
+            $format   = 'svg';
+            $path     = 'public/images/symbols';
             $filepath = "$path/$name.$format";
-            $file = [
-                'url' => $url,
-                'format' => $format,
+            $file     = [
+                'url'          => $url,
+                'format'       => $format,
                 'storage_path' => $path,
-                'name' => $name,
+                'name'         => $name,
             ];
 
             $this->downloadFile->execute($file);
