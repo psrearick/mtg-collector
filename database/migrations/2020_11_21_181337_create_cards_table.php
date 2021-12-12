@@ -34,7 +34,7 @@ class CreateCardsTable extends Migration
             $table->integer('mtgoFoilId')->nullable();
             $table->integer('tcgplayerId')->nullable();
             $table->integer('cardmarketId')->nullable();
-            $table->string('oracleId')->index();
+            $table->string('oracleId')->index()->nullable();
             $table->string('printsSearchUri')->nullable();
             $table->string('rulingsUri')->nullable();
             $table->string('scryfallUri')->nullable();
