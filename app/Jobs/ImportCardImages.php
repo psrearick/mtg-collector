@@ -15,7 +15,7 @@ class ImportCardImages implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private Card $card;
+    private int $cardId;
 
     private DownloadFileAction $downloadFile;
 
@@ -30,7 +30,7 @@ class ImportCardImages implements ShouldQueue
      */
     public function __construct(int $cardId, ?string $url = '', $format = 'normal')
     {
-        $this->card         = Card::find($cardId);
+        $this->cardId       = $cardId;
         $this->url          = $url;
         $this->format       = $format;
         $this->downloadFile = new DownloadFileAction;
@@ -44,7 +44,7 @@ class ImportCardImages implements ShouldQueue
     public function handle()
     {
         $url  = $this->url;
-        $card = $this->card;
+        $card = Card::find($this->cardId);
 
         if (!$url) {
             $attr = match ($this->format) {

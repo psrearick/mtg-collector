@@ -194,7 +194,7 @@ return [
                 ],
                 'balance' => 'simple',
                 'processes' => 9,
-                'tries' => 20,
+                'tries' => 3,
                 'timeout' => 900,
             ],
 
@@ -217,7 +217,7 @@ return [
                 ],
                 'balance' => 'simple',
                 'processes' => 9,
-                'tries' => 20,
+                'tries' => 3,
                 'timeout' => 900,
             ],
         ],
