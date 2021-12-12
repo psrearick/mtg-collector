@@ -193,9 +193,9 @@ return [
                     'long-running-queue'
                 ],
                 'balance' => 'simple',
-                'processes' => 9,
-                'tries' => 3,
-                'timeout' => 900,
+                'maxProcesses' => 9,
+                'tries' => 6,
+                'timeout' => 3600,
             ],
 
         ],
@@ -216,9 +216,9 @@ return [
                     'long-running-queue'
                 ],
                 'balance' => 'simple',
-                'processes' => 9,
-                'tries' => 3,
-                'timeout' => 900,
+                'maxProcesses' => 9,
+                'tries' => 6,
+                'timeout' => 3600,
             ],
         ],
     ],
