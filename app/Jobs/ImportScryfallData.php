@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Actions\DownloadFileAction;
+use App\Actions\DownloadFileAWSAction as DownloadFileAction;
 use App\Domain\CardAttributes\Models\Color;
 use App\Domain\CardAttributes\Models\FrameEffect;
 use App\Domain\CardAttributes\Models\Game;
@@ -13,7 +13,6 @@ use App\Domain\Cards\Models\Card;
 use App\Domain\Prices\Models\PriceProvider;
 use App\Domain\Sets\Models\Set;
 use App\Domain\Symbols\Models\Symbol;
-use Http;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -24,10 +23,13 @@ use pcrov\JsonReader\Exception;
 use pcrov\JsonReader\InputStream\IOException;
 use pcrov\JsonReader\InvalidArgumentException;
 use pcrov\JsonReader\JsonReader;
+use Illuminate\Support\Facades\Http;
 
 class ImportScryfallData implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    private DownloadFileAction $downloadFile;
 
     /**
      * Create a new job instance.
@@ -36,7 +38,7 @@ class ImportScryfallData implements ShouldQueue
      */
     public function __construct()
     {
-        //
+        $this->downloadFile = new DownloadFileAction;
     }
 
     /**
@@ -56,7 +58,7 @@ class ImportScryfallData implements ShouldQueue
             'name'          => 'default_cards',
         ];
 
-        return (new DownloadFileAction())->execute($file, 'Ymd', 5);
+        return $this->downloadFile->execute($file, 'Ymd', 5);
     }
 
     /**
@@ -120,7 +122,7 @@ class ImportScryfallData implements ShouldQueue
      */
     public function saveImage(Card $card) : void
     {
-        ImportCardImages::dispatch($card, $card->imageNormalUri);
+        ImportCardImages::dispatch($card->id, $card->imageNormalUri);
     }
 
     /**
@@ -520,17 +522,20 @@ class ImportScryfallData implements ShouldQueue
         ]);
 
         if (!$currentSet->svgPath) {
-            $filename     = strtolower($currentSet->code . '_icon.svg');
-            $publicDir    = 'images/setIcons';
-            $iconPath     = $publicDir . '/' . $filename;
-            $storageDir   = 'public/' . $publicDir;
-            Storage::makeDirectory($storageDir);
-            $appDir      = 'app/public';
-            $appPath     = $appDir . '/' . $iconPath;
-            $storagePath = storage_path($appPath);
-            app(DownloadFileAction::class)
-                ->saveFile($storagePath, $currentSet->scryfallSvgUri);
-            $currentSet->svgPath = $storagePath;
+            $url = $currentSet->scryfallSvgUri;
+            $name = strtolower($currentSet->code . '_icon');
+            $format = 'svg';
+            $path = 'public/images/setIcons';
+            $filepath = "$path/$name.$format";
+            $file = [
+                'url' => $url,
+                'format' => $format,
+                'storage_path' => $path,
+                'name' => $name,
+            ];
+
+            $this->downloadFile->execute($file);
+            $currentSet->svgPath = $filepath;
             $currentSet->save();
         }
     }
@@ -563,17 +568,20 @@ class ImportScryfallData implements ShouldQueue
         ]);
 
         if (!$symbol->svgPath) {
-            $filename       = strtolower($symbol->id . '_symbol.svg');
-            $publicDir      = 'images/symbols';
-            $symbolPath     = $publicDir . '/' . $filename;
-            $storageDir     = 'public/' . $publicDir;
-            Storage::makeDirectory($storageDir);
-            $appDir      = 'app/public';
-            $appPath     = $appDir . '/' . $symbolPath;
-            $storagePath = storage_path($appPath);
-            app(DownloadFileAction::class)
-                ->saveFile($storagePath, $symbol->svgUri);
-            $symbol->svgPath = 'storage/' . $symbolPath;
+            $url = $symbol->svgUri;
+            $name = strtolower($symbol->id . '_symbol');
+            $format = 'svg';
+            $path = 'public/images/symbols';
+            $filepath = "$path/$name.$format";
+            $file = [
+                'url' => $url,
+                'format' => $format,
+                'storage_path' => $path,
+                'name' => $name,
+            ];
+
+            $this->downloadFile->execute($file);
+            $symbol->svgPath = $filepath;
             $symbol->save();
         }
     }

@@ -5,6 +5,7 @@ namespace App\App\Client\Controllers;
 use App\App\Base\Controller;
 use App\Domain\Symbols\Models\Symbol;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SymbolsController extends Controller
 {
@@ -20,7 +21,7 @@ class SymbolsController extends Controller
             $search = Symbol::where('symbol', '=', $term)->first();
 
             return [
-                'svg'        => asset($search->svgPath) ?: '',
+                'svg'        => $search->svgPath ? Storage::url($search->svgPath) : '',
                 'symbolText' => $term,
             ];
         }, $symbols);

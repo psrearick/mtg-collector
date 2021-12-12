@@ -6,10 +6,6 @@ use Carbon\Carbon;
 
 class DownloadFileAction
 {
-    public function __construct()
-    {
-    }
-
     public function execute(array $file, string $date_format = '', int $clean = 0) : string
     {
         // get file name

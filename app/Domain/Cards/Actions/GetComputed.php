@@ -3,7 +3,6 @@
 namespace App\Domain\Cards\Actions;
 
 use App\Domain\Cards\Models\Card;
-use App\Jobs\ImportCardImages;
 use Illuminate\Support\Str;
 
 class GetComputed

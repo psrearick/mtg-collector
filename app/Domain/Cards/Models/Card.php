@@ -31,6 +31,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 
 class Card extends Model
 {
@@ -205,10 +206,10 @@ class Card extends Model
     public function getImageUrlAttribute() : string
     {
         if ($this->imagePath) {
-            return asset($this->imagePath);
+            return Storage::url($this->imagePath);
         }
-        $imageUrl = app(GetCardImage::class)->execute($this->scryfallId, 'image');
-        ImportCardImages::dispatchAfterResponse($this);
+        $imageUrl = app(GetCardImage::class)->execute($this->cardId, 'image');
+        ImportCardImages::dispatchAfterResponse($this->id, $this->imageNormalUri);
 
         return $imageUrl;
     }
