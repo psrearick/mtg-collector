@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Actions\DownloadFileAWSAction as DownloadFileAction;
 use App\Domain\CardAttributes\Models\Color;
+use App\Domain\CardAttributes\Models\Finish;
 use App\Domain\CardAttributes\Models\FrameEffect;
 use App\Domain\CardAttributes\Models\Game;
 use App\Domain\CardAttributes\Models\Keyword;
@@ -203,6 +204,24 @@ class ImportScryfallData implements ShouldQueue
         }
     }
 
+    public function setFinishes(array $cardData, Card $card) : void
+    {
+        $finishes = $cardData['finishes'] ?? null;
+        if (!$finishes) {
+            return;
+        }
+
+        foreach ($finishes as $finish) {
+            $finishRecord = Finish::firstOrCreate(
+                [
+                    'name' => $finish,
+                ]
+            );
+
+            $card->finishes()->syncWithoutDetaching($finishRecord->id);
+        }
+    }
+
     /**
      * Add the relationship for the cards frame effects
      *
@@ -394,6 +413,7 @@ class ImportScryfallData implements ShouldQueue
         $this->saveImage($card);
         $this->setCardSet($cardData, $card);
         $this->setColorFields($cardData, $card);
+        $this->setFinishes($cardData, $card);
         $this->setFrameEffects($cardData, $card);
         $this->setKeywords($cardData, $card);
         $this->setGames($cardData, $card);
@@ -606,11 +626,7 @@ class ImportScryfallData implements ShouldQueue
      */
     private function ifKey(array $haystack, string $needle)
     {
-        if (!array_key_exists($needle, $haystack)) {
-            return null;
-        }
-
-        return $haystack[$needle];
+        return $haystack[$needle] ?? null;
     }
 
     /**

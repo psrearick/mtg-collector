@@ -6,6 +6,7 @@ use App\App\Scopes\NotOnlineOnlyScope;
 use App\Domain\Base\Model;
 use App\Domain\CardAttributes\Models\Color;
 use App\Domain\CardAttributes\Models\Face;
+use App\Domain\CardAttributes\Models\Finish;
 use App\Domain\CardAttributes\Models\ForeignData;
 use App\Domain\CardAttributes\Models\FrameEffect;
 use App\Domain\CardAttributes\Models\Game;
@@ -84,6 +85,11 @@ class Card extends Model
 //    {
 //        return $this->belongsToMany(Card::class, 'card_faces', 'card_id', 'related_card_id');
 //    }
+
+    public function finishes() : BelongsToMany
+    {
+        return $this->belongsToMany(Finish::class);
+    }
 
     /**
      * Get all foreign data for this card
