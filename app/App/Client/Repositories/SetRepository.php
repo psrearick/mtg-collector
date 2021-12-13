@@ -4,23 +4,21 @@ namespace App\App\Client\Repositories;
 
 use App\App\Base\Repository;
 use App\Domain\Sets\Models\Set;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class SetRepository
-//class SetRepository extends Repository
+class SetRepository extends Repository
 {
     public Builder $query;
 
     public Collection $results;
-//    public string $class = "App\Domain\Sets\Models\Set";
 
-    public string $table = 'sets';
+   public string $class = Set::class;
 
     public function __construct()
     {
-        $this->query = DB::table($this->table);
+        return parent::__construct(app($this->class));
     }
 
 //    public function equals(string $field, string $value) : SetRepository

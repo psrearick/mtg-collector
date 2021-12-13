@@ -15,12 +15,12 @@ class SetSearch
         $this->sets = $setRepository;
     }
 
-    public function paginate(int $perPage = 15) : LengthAwarePaginator
-    {
-        return $this->sets->getPaginated(['perPage' => $perPage]);
-    }
+    // public function paginate(int $perPage = 15) : LengthAwarePaginator
+    // {
+    //     return $this->sets->getPaginated(['perPage' => $perPage]);
+    // }
 
-    public function search(string $searchTerm = '', array $fields = []) : Collection
+    public function execute(string $searchTerm = '', array $fields = []) : Collection
     {
         if ($fields) {
             $this->sets->selectMany($fields);

@@ -98,7 +98,7 @@ export default {
             this.updateQuantity({
                 change: 1,
                 id: card.id,
-                foil: card.is_foil,
+                foil: card.foil,
             });
         });
 
@@ -106,7 +106,7 @@ export default {
             this.updateQuantity({
                 change: -1,
                 id: card.id,
-                foil: card.is_foil,
+                foil: card.foil,
             });
         });
     },
@@ -135,7 +135,7 @@ export default {
                 });
         },
         showFoil(item) {
-            return !(item.own_foil || item.is_foil);
+            return !(item.own_foil || item.foil);
         },
     },
 };

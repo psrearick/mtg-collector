@@ -48,6 +48,7 @@ class GetComputed
             $features['textlessString'],
             //            $features['timeshiftedString'],
             $features['layoutString'],
+            $features['language'],
         ];
         $featureStrings = [];
         foreach ($allFeatures as $feature) {
@@ -87,6 +88,7 @@ class GetComputed
             //            'timeshiftedString'   => $featureCollector->getTimeshiftedString(),
             'layout'              => $featureCollector->getLayout(),
             'layoutString'        => $featureCollector->getLayoutString(),
+            'language'            => $featureCollector->getLanguageCode(),
         ];
     }
 

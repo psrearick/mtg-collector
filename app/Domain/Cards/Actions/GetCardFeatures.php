@@ -77,6 +77,17 @@ class GetCardFeatures
         return $this->getFullArt() ? 'full art' : '';
     }
 
+    public function getLanguageCode() : string
+    {
+        $code = strtoupper($this->card->languageCode);
+        if ($code == 'EN') {
+            return '';
+        }
+
+        return $code;
+
+    }
+
     public function getLayout() : string
     {
         return $this->card->layout ?: '';

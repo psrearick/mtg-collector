@@ -27,7 +27,7 @@ abstract class Repository
         $this->class = get_class($model);
         $this->model = $model;
         $this->query = $model->newQuery();
-        $this->table = $this->table ?: $this->model->getTable();
+        $this->table = $this->table ?? $this->model->getTable();
     }
 
     public function equals(string $field, string $value) : Repository
@@ -128,20 +128,20 @@ abstract class Repository
         return $this;
     }
 
-//    public function select(string $selection) : Repository
-//    {
-//        $this->query = $this->query->select($selection);
-//
-//        return $this;
-//    }
-//
-//    public function selectMany(array $selection) : Repository
-//    {
-//        $this->query = $this->query->select($selection);
-//
-//        return $this;
-//    }
-//
+    public function select(string $selection) : Repository
+    {
+        $this->query = $this->query->select($selection);
+
+        return $this;
+    }
+
+    public function selectMany(array $selection) : Repository
+    {
+        $this->query = $this->query->select($selection);
+
+        return $this;
+    }
+
 //    public function startsWith(string $field, string $term) : Repository
 //    {
 //        $this->query = $this->query->where($this->getField($field), 'LIKE', $term . '%');

@@ -39,14 +39,14 @@ class SetCollectionsPresenter
 
                 return collect([
                     'id'                 => $computedCard->id,
-                    'number'             => $computedCard->number,
+                    'number'             => $computedCard->collectorNumber,
                     'name'               => $computedCard->name,
                     'features'           => $computedCard->feature,
                     'price'              => $computedCard->priceNormal,
                     'price_normal'       => $computedCard->priceNormal,
                     'price_foil'         => $computedCard->priceFoil,
                     'has_foil'           => $computedCard->has_foil,
-                    'is_foil'            => false,
+                    'foil'               => false,
                 ]);
             })->sortBy('number')->values();
     }
@@ -68,7 +68,7 @@ class SetCollectionsPresenter
                     'feature'            => $setCard->get('feature'),
                     'price'              => $setCard->get('price_foil'),
                     'has_foil'           => $setCard->get('has_foil'),
-                    'is_foil'            => true,
+                    'foil'               => true,
                     'quantity'           => $collectionCard->get('quantity'),
                     'acquired_price'     => $collectionCard->get('acquired_price'),
                     'acquired_date'      => $collectionCard->get('acquired_date'),
@@ -84,7 +84,7 @@ class SetCollectionsPresenter
 
         $result = $setCards->sortBy([
             ['number', 'asc'],
-            ['is_foil', 'asc'],
+            ['foil', 'asc'],
         ])->values();
 
         if ($cardTerm = $this->card) {
@@ -98,11 +98,13 @@ class SetCollectionsPresenter
 
     private function getCollectionCards() : BaseCollection
     {
-        return $this->collection->cards
+        return $this->collection->cards()
             ->where('set_id', '=', $this->set->id)
+            ->wherePivot('quantity', '>', 0)
+            ->get()
             ->map(function (Card $card) {
                 return collect([
-                    'number'            => $card->number,
+                    'number'            => $card->collectorNumber,
                     'foil'              => $card->pivot->foil,
                     'quantity'          => $card->pivot->quantity,
                     'acquired_price'    => $card->pivot->price_when_added,

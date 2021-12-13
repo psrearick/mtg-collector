@@ -26,7 +26,7 @@ class SetCollectionsController extends Controller
         $set            = $request->input('set') ?: '';
         $card           = $request->input('card') ?: '';
         $setCards       = [];
-        $setSets        = $this->setSearch->search($query, ['id', 'code', 'name']);
+        $setSets        = $this->setSearch->execute($query, ['id', 'code', 'name']);
         $selectedIndex  = null;
 
         if ($set) {
@@ -44,10 +44,5 @@ class SetCollectionsController extends Controller
             'selected'         => $selectedIndex,
             'setCardQuery'     => $card,
         ]);
-    }
-
-    public function store()
-    {
-        //
     }
 }

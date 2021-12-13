@@ -195,7 +195,7 @@ return [
                 'balance' => 'simple',
                 'maxProcesses' => 9,
                 'tries' => 6,
-                'timeout' => 3600,
+                'timeout' => 43200,
             ],
 
         ],
@@ -218,7 +218,7 @@ return [
                 'balance' => 'simple',
                 'maxProcesses' => 9,
                 'tries' => 6,
-                'timeout' => 3600,
+                'timeout' => 21600,
             ],
         ],
     ],
