@@ -19,7 +19,7 @@ class ImportScryfall extends Command
      *
      * @var string
      */
-    protected $signature = 'import:scryfall';
+    protected $signature = 'import:scryfall {--P|no-prices} {--Y|no-symbols} {--C|no-cards} {--S|no-sets}';
 
     /**
      * Create a new command instance.
@@ -38,7 +38,14 @@ class ImportScryfall extends Command
      */
     public function handle()
     {
-        ImportScryfallData::dispatch()->onQueue('long-running-queue');
+        $options = [
+            'prices'    => !$this->option('no-prices'),
+            'symbols'   => !$this->option('no-symbols'),
+            'cards'     => !$this->option('no-cards'),
+            'sets'      => !$this->option('no-sets'),
+        ];
+
+        ImportScryfallData::dispatch($options)->onQueue('long-running-queue');
 
         return true;
     }

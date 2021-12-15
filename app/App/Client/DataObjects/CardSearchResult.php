@@ -22,6 +22,8 @@ class CardSearchResult
 
     public string $set;
 
+    public string $finish;
+
     public float $today;
 
     public function __construct(array $result)
@@ -36,6 +38,7 @@ class CardSearchResult
         $this->acquired_date  = $result['aquired_dated'] ?? '';
         $this->acquired_price = $result['acquired_price'] ?? 0.0;
         $this->quantity       = $result['quantity'] ?? 0;
+        $this->finish         = $result['finish'] ?? 'nonfoil';
     }
 
     public function toArray()
@@ -51,6 +54,7 @@ class CardSearchResult
             'acquired_date'  => $this->acquired_date,
             'acquired_price' => $this->acquired_price,
             'quantity'       => $this->quantity,
+            'finish'         => $this->finish,
         ];
     }
 }

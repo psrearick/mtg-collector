@@ -78,16 +78,16 @@ class CollectionsShowPresenter extends Presenter
             ],
             'cards'         => $cardsSorted->paginate(20),
             'top_five'      => $cards->sortByDesc('today')->take(5)->values(),
-            'cardQuery'     => $this->request->get('cardSearch') ?: '',
-            'setQuery'      => $this->request->get('setSearch') ?: '',
+            'cardQuery'     => optional($this->request)->get('cardSearch') ?: '',
+            'setQuery'      => optional($this->request)->get('setSearch') ?: '',
         ]);
     }
 
     protected function search()
     {
         $cards       = $this->collection->cards;
-        $setRequest  = $this->request->get('setSearch');
-        $cardRequest = $this->request->get('cardSearch');
+        $setRequest  = optional($this->request)->get('setSearch') ?: null;
+        $cardRequest = optional($this->request)->get('cardSearch') ?: null;
         if ($cardRequest) {
             $cards = $cards->filter(function ($card) use ($cardRequest) {
                 return Str::contains(Str::lower($card->name), Str::lower($cardRequest));

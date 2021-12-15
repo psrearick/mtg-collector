@@ -3,6 +3,7 @@
 namespace App\App\Client\Controllers;
 
 use App\App\Base\Controller;
+use App\App\Client\Presenters\SetCollectionsEditPresenter;
 use App\App\Client\Presenters\SetCollectionsPresenter;
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Sets\Actions\SetSearch;
@@ -30,7 +31,7 @@ class SetCollectionsController extends Controller
         $selectedIndex  = null;
 
         if ($set) {
-            $setCards      = (new SetCollectionsPresenter(Set::find($set), $collection, $card))->present();
+            $setCards      = (new SetCollectionsPresenter(Set::find($set), $card))->present();
             $selectedIndex = $setSets->search(function ($item) use ($set) {
                 return $item->id == $set;
             });
@@ -38,7 +39,7 @@ class SetCollectionsController extends Controller
 
         return Inertia::render('Collections/AddFromSet', [
             'setCards'         => $setCards,
-            'collection'       => $collection,
+            'collection'       => (new SetCollectionsEditPresenter($collection))->present(),
             'setSets'          => $setSets,
             'queryString'      => $query,
             'selected'         => $selectedIndex,

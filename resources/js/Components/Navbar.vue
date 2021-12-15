@@ -75,37 +75,57 @@
                                 leave-from-class="transform opacity-100 scale-100"
                                 leave-to-class="transform opacity-0 scale-95"
                             >
-                                <menu-items
-                                    v-if="profileMenuOpen"
-                                    class="
-                                        origin-top-right
-                                        absolute
-                                        right-0
-                                        mt-2
-                                    "
-                                >
-                                    <menu-item
-                                        id="user-menu-item-0"
-                                        href="profile"
-                                        :current="route().current('profile')"
+                                <div v-if="profileMenuOpen">
+                                    <div
+                                        class="
+                                            fixed
+                                            left-0
+                                            top-0
+                                            h-full
+                                            w-full
+                                            bg-transparent
+                                            z-10
+                                        "
+                                        @click="
+                                            profileMenuOpen = !profileMenuOpen
+                                        "
+                                    />
+                                    <menu-items
+                                        class="
+                                            origin-top-right
+                                            absolute
+                                            right-0
+                                            mt-2
+                                            z-20
+                                        "
                                     >
-                                        Your Profile
-                                    </menu-item>
-                                    <menu-item
-                                        id="user-menu-item-1"
-                                        href="settings"
-                                        :current="route().current('settings')"
-                                    >
-                                        Settings
-                                    </menu-item>
-                                    <menu-item
-                                        id="user-menu-item-2"
-                                        href="/logout"
-                                        method="post"
-                                    >
-                                        Logout
-                                    </menu-item>
-                                </menu-items>
+                                        <menu-item
+                                            id="user-menu-item-0"
+                                            href="profile"
+                                            :current="
+                                                route().current('profile')
+                                            "
+                                        >
+                                            Your Profile
+                                        </menu-item>
+                                        <menu-item
+                                            id="user-menu-item-1"
+                                            href="settings"
+                                            :current="
+                                                route().current('settings')
+                                            "
+                                        >
+                                            Settings
+                                        </menu-item>
+                                        <menu-item
+                                            id="user-menu-item-2"
+                                            href="/logout"
+                                            method="post"
+                                        >
+                                            Logout
+                                        </menu-item>
+                                    </menu-items>
+                                </div>
                             </transition>
                         </div>
                     </div>
@@ -128,11 +148,11 @@
             <div class="pt-4 pb-3 border-t border-gray-700">
                 <div class="flex justify-between px-5">
                     <div class="flex-shrink-0 flex">
-                        <img
+                        <!-- <img
                             class="h-10 w-10 rounded-full"
                             src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixqx=zHlOFbGo5k&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                             alt=""
-                        />
+                        /> -->
                         <div class="ml-3">
                             <div class="text-base font-medium text-white">
                                 Tom Cook

@@ -7,6 +7,7 @@
             class="mt-4"
             :data="data"
             :fields="fields"
+            :field-rows="fieldRows"
             :classes="classes"
         />
         <data-grid-pagination v-if="showPagination" :pagination="pagination" />
@@ -45,6 +46,10 @@ export default {
             default: () => {},
         },
         fields: {
+            type: Array,
+            default: () => {},
+        },
+        fieldRows: {
             type: Array,
             default: () => {},
         },

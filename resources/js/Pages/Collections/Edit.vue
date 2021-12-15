@@ -124,6 +124,9 @@ export default {
                 },
             },
         });
+        this.$store.dispatch("updateCurrentCollection", {
+            collection: this.collection,
+        });
     },
 
     created() {

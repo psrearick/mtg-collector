@@ -32,6 +32,7 @@
                 :show-pagination="false"
                 :data="setCards"
                 :fields="table.fields"
+                :field-rows="table.fieldRows"
                 :classes="dataGridStyles"
             />
         </div>
@@ -124,6 +125,9 @@ export default {
                 },
             },
         });
+        this.$store.dispatch("updateCurrentCollection", {
+            collection: this.collection,
+        });
         this.mapSets();
         this.mount();
     },
@@ -180,6 +184,10 @@ export default {
                     id: set.id,
                 };
             });
+        },
+        unsetResults: function () {
+            this.$store.dispatch("unsetShownRows");
+            this.$store.dispatch("unsetSetCards");
         },
     },
 };

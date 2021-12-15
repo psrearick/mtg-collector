@@ -20,7 +20,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use pcrov\JsonReader\Exception;
 use pcrov\JsonReader\InputStream\IOException;
 use pcrov\JsonReader\InvalidArgumentException;
@@ -32,14 +32,22 @@ class ImportScryfallData implements ShouldQueue
 
     private DownloadFileAction $downloadFile;
 
+    private array $options = [];
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(array $options = [])
     {
         $this->downloadFile = new DownloadFileAction;
+        $this->options      = [
+            'sets'      => $options['sets'] ?? true,
+            'cards'     => $options['cards'] ?? true,
+            'prices'    => $options['prices'] ?? true,
+            'symbols'   => $options['symbols'] ?? true,
+        ];
     }
 
     /**
@@ -69,20 +77,26 @@ class ImportScryfallData implements ShouldQueue
      */
     public function handle() : void
     {
-        echo 'Updating Sets' . PHP_EOL;
-        $this->updateSets();
-
-        echo 'Fetching Card Data' . PHP_EOL;
-        $save_file_loc = $this->getFile();
-        echo 'Processing Card Data' . PHP_EOL;
-
-        try {
-            $this->processCardData($save_file_loc);
-        } catch (InvalidArgumentException | Exception $e) {
+        if ($this->options['sets']) {
+            echo 'Updating Sets' . PHP_EOL;
+            $this->updateSets();
         }
 
-        echo 'Saving Symbols' . PHP_EOL;
-        $this->updateSymbols();
+        if ($this->options['prices'] || $this->options['cards']) {
+            echo 'Fetching Card Data' . PHP_EOL;
+            $save_file_loc = $this->getFile();
+
+            echo 'Processing Card Data' . PHP_EOL;
+            try {
+                $this->processCardData($save_file_loc);
+            } catch (InvalidArgumentException | Exception $e) {
+            }
+        }
+
+        if ($this->options['symbols']) {
+            echo 'Saving Symbols' . PHP_EOL;
+            $this->updateSymbols();
+        }
 
         echo 'Completed' . PHP_EOL;
     }
@@ -108,8 +122,13 @@ class ImportScryfallData implements ShouldQueue
             $cardData = $reader->value();
 
             if ($cardData['object'] == 'card') {
-                $card = $this->updateCard($cardData);
-                $this->updatePricing($cardData, $card);
+                $card = $this->options['cards'] 
+                    ? $this->updateCard($cardData)
+                    : null;
+
+                if ($this->options['prices']) {
+                    $this->updatePricing($cardData, $card);
+                }     
             }
 
             $reader->next();
@@ -410,7 +429,7 @@ class ImportScryfallData implements ShouldQueue
                 : null,
         ]);
 
-        $this->saveImage($card);
+        // $this->saveImage($card);
         $this->setCardSet($cardData, $card);
         $this->setColorFields($cardData, $card);
         $this->setFinishes($cardData, $card);
@@ -475,36 +494,29 @@ class ImportScryfallData implements ShouldQueue
      * @param array $cardData
      * @param Card $card
      */
-    public function updatePricing(array $cardData, Card $card) : void
+    public function updatePricing(array $cardData, ?Card $card = null) : void
     {
         if (!$prices = $cardData['prices']) {
             return;
         }
 
         $provider = PriceProvider::firstOrCreate(['name' => 'scryfall'])->id;
+        $card     = $card ?: Card::where('cardId', '=', $cardData['id'])->first();
 
-        if ($price = $prices['usd']) {
-            $card->prices()->updateOrCreate(
-                [
-                    'card_id'       => $card->id,
-                    'provider_id'   => $provider,
-                    'foil'          => false,
-                ],
-                [
-                    'price'     => $price,
-                ]
-            );
+        if (!$card) {
+            return;
         }
 
-        if ($foilPrice = $prices['usd_foil']) {
+        foreach ($prices as $type => $price){
             $card->prices()->updateOrCreate(
                 [
                     'card_id'       => $card->id,
                     'provider_id'   => $provider,
-                    'foil'          => true,
+                    'foil'          => $type == 'usd_foil' || $type == 'usd_etched',
+                    'type'          => $type,
                 ],
                 [
-                    'price'     => $foilPrice,
+                    'price'         => $price,
                 ]
             );
         }

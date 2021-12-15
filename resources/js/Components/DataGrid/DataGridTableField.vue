@@ -36,6 +36,7 @@
         :data="data"
         :field="field"
         :class="data.classes"
+        v-bind="componentProps"
     />
 </template>
 
@@ -74,6 +75,9 @@ export default {
                 return this.formattedValue.join(", ");
             }
             return this.formattedValue;
+        },
+        componentProps() {
+            return this.field.props || null;
         },
     },
 

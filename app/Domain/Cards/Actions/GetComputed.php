@@ -143,4 +143,39 @@ class GetComputed
                 ->first()
         )->price;
     }
+
+    private function getAllPrices() : array
+    {
+        $prices = $this->card->prices
+            ->where('priceProvider.name', '=', 'scryfall')
+            ->whereNotNull('type')
+            ->where('type', '!=', '');
+        
+        if ($prices->isEmpty()) {
+            return $this->getPricesWithoutType();
+        }
+
+        $priceArray = [];
+        $prices->each(function ($price) use (&$priceArray) {
+            if (!in_array($price->type, ['usd', 'usd_foil', 'usd_etched'])) {
+                return;
+            }
+            $key = match ($price->type) {
+                'usd' => 'nonfoil',
+                'usd_foil' => 'foil',
+                'usd_etched' => 'etched',
+            };
+            $priceArray[$key] = $price->price;
+        });
+
+        return $priceArray;
+    }
+
+    private function getPricesWithoutType() : array
+    {
+        return [
+            'nonfoil' => $this->getPrice(),
+            'foil'    => $this->getPrice(true),
+        ];
+    }
 }
