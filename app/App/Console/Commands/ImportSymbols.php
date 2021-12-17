@@ -2,24 +2,24 @@
 
 namespace App\App\Console\Commands;
 
-use App\Jobs\GenerateApiMap;
+use App\Jobs\ImportScryfallData;
 use Illuminate\Console\Command;
 
-class ImportApiMap extends Command
+class ImportSymbols extends Command
 {
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Generate an API map with MTGJson data';
+    protected $description = 'Import symbols from scryfall';
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'generate:apimap';
+    protected $signature = 'import:symbols';
 
     /**
      * Create a new command instance.
@@ -38,7 +38,14 @@ class ImportApiMap extends Command
      */
     public function handle()
     {
-        GenerateApiMap::dispatch()->onQueue('long-running-queue');
+        $options = [
+            'prices'    => false,
+            'symbols'   => true,
+            'cards'     => false,
+            'sets'      => false,
+        ];
+
+        ImportScryfallData::dispatch($options)->onQueue('long-running-queue');
 
         return Command::SUCCESS;
     }

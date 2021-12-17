@@ -10,11 +10,11 @@ use Carbon\Carbon;
 
 class UpdateCollectionCardQuantity
 {
+    private CollectionCardSearch $collectionCardSearch;
+
     private CreateCollectionCard $createCollectionCard;
 
     private GetCollectionCard $getCollectionCard;
-
-    private CollectionCardSearch $collectionCardSearch;
 
     public function __construct(
         GetCollectionCard $getCollectionCard,
@@ -41,6 +41,7 @@ class UpdateCollectionCardQuantity
         $this->updateCardQuantity($collectionCard, $collection, $changeRequest);
 
         $collectionCardUpdated = $this->getCard($changeRequest)->pivot->toArray();
+
         return [
             'message'        => 'Card quantity was updated',
             'collectionCard' => $collectionCardUpdated,
@@ -74,7 +75,7 @@ class UpdateCollectionCardQuantity
         $newQuantity        = $quantity + $requestQuantity;
         if ($newQuantity < 0) {
             $requestQuantity = 0 - $quantity;
-            $newQuantity = 0;
+            $newQuantity     = 0;
         }
 
         $now          = Carbon::now()->toDateString();

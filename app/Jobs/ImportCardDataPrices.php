@@ -85,7 +85,7 @@ class ImportCardDataPrices implements ShouldQueue
                 continue;
             }
             echo 'Saving Pricing For: ' . $uuid . PHP_EOL;
-            $providers = $this->ifKey($data, 'paper');
+            $providers = $data['paper'] ?? null;
 
             if (!$providers) {
                 $reader->next();
@@ -94,22 +94,22 @@ class ImportCardDataPrices implements ShouldQueue
             }
 
             foreach ($providers as $provider => $providerData) {
-                $priceProvider = PriceProvider::firstOrCreate(['name' => $provider]);
-                $prices        = $this->ifKey($providerData, 'retail');
+                $priceProvider  = PriceProvider::firstOrCreate(['name' => $provider]);
+                $prices         = $providerData['retail'] ?? null;
 
                 if (!$prices) {
                     continue;
                 }
 
-                $nonfoilPrices = $this->ifKey($prices, 'normal') ?: [];
-                $foilPrices    = $this->ifKey($prices, 'foil') ?: [];
+                $nonfoilPrices = $prices['normal'] ?? [];
+                $foilPrices    = $prices['foil'] ?? [];
                 $nonfoilPrice  = $this->getLatestPrice($nonfoilPrices);
                 $foilPrice     = $this->getLatestPrice($foilPrices);
 
                 $card->prices()->updateOrCreate(
                     [
                         'provider_id' => $priceProvider->id,
-                        'foil'        => false,
+                        'finish'      => 'usd',
                     ],
                     ['price' => $nonfoilPrice]
                 );
@@ -117,7 +117,7 @@ class ImportCardDataPrices implements ShouldQueue
                 $card->prices()->updateOrCreate(
                     [
                         'provider_id' => $priceProvider->id,
-                        'foil'        => true,
+                        'finish'      => 'usd_foil',
                     ],
                     ['price' => $foilPrice]
                 );
@@ -142,21 +142,5 @@ class ImportCardDataPrices implements ShouldQueue
         }
 
         return $key ? $prices[$key] : 0.0;
-    }
-
-    /**
-     * if key exists in array, return its value, otherwise return null
-     *
-     * @param array $haystack
-     * @param string $needle
-     * @return mixed|null
-     */
-    private function ifKey(array $haystack, string $needle)
-    {
-        if (!array_key_exists($needle, $haystack)) {
-            return null;
-        }
-
-        return $haystack[$needle];
     }
 }

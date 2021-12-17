@@ -47,6 +47,6 @@ class ImportScryfall extends Command
 
         ImportScryfallData::dispatch($options)->onQueue('long-running-queue');
 
-        return true;
+        return Command::SUCCESS;
     }
 }

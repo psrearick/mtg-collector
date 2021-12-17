@@ -14,6 +14,8 @@ class CardEditSearchResult implements DataObjectInterface
 
     public int $id;
 
+    public string $image;
+
     public string $name;
 
     public array $quantities;
@@ -23,8 +25,6 @@ class CardEditSearchResult implements DataObjectInterface
     public string $set_name;
 
     public array $today;
-
-    public string $image;
 
     public function __construct(array $data)
     {
@@ -37,7 +37,7 @@ class CardEditSearchResult implements DataObjectInterface
         $this->today          = $data['today'] ?? [];
         $this->quantities     = $data['quantities'] ?? [];
         $this->finishes       = $data['finishes'] ?? [];
-        $this->image          = $data['image'] ?? "";
+        $this->image          = $data['image'] ?? '';
     }
 
     public function toArray() : array

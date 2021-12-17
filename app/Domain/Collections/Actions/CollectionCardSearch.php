@@ -10,8 +10,8 @@ use App\Domain\Cards\Actions\GetComputed;
 use App\Domain\Collections\Models\Collection;
 use Carbon\Carbon;
 use Illuminate\Pagination\AbstractPaginator;
-use Illuminate\Support\Str;
 use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Support\Str;
 
 class CollectionCardSearch
 {
@@ -65,6 +65,46 @@ class CollectionCardSearch
         }
 
         return $this->transformCollection($this->addRelations($this->cards->get()));
+    }
+
+    private function addRelations(BaseCollection $collection) : BaseCollection
+    {
+        $collectionId = $this->collection->id;
+
+        return $collection->load([
+            'collections' => function ($query) use ($collectionId) {
+                $query->where('collections.id', '=', $collectionId);
+            },
+            'frameEffects',
+            'set',
+            'prices',
+            'prices.priceProvider',
+        ]);
+    }
+
+    private function filterOnCards($exact) : void
+    {
+        $search = $this->cardSearch;
+        if ($exact) {
+            $this->cards->equals('name', $search);
+        } else {
+            $term = preg_replace('/[^A-Za-z0-9]/', '', $search);
+            $this->cards->like($term, 'name_normalized');
+        }
+    }
+
+    private function filterOnSets($exact) : void
+    {
+        $search = $this->setSearch;
+        if ($exact) {
+            $this->sets->equals('id', $search);
+        } else {
+            $this->sets->like($search);
+        }
+        $setIds = $this->sets->ids();
+        if ($setIds) {
+            $this->cards->filterOnSets($setIds);
+        }
     }
 
     private function transformCollection(BaseCollection $collection) : BaseCollection
@@ -142,44 +182,5 @@ class CollectionCardSearch
                 'image'         => $computed->image_url,
             ]);
         });
-    }
-
-    private function addRelations(BaseCollection $collection) : BaseCollection
-    {
-        $collectionId = $this->collection->id;
-        return $collection->load([
-            'collections' => function ($query) use ($collectionId) {
-                $query->where('collections.id', '=', $collectionId);
-            },
-            'frameEffects',
-            'set',
-            'prices',
-            'prices.priceProvider',
-        ]);
-    }
-
-    private function filterOnCards($exact) : void
-    {
-        $search = $this->cardSearch;
-        if ($exact) {
-            $this->cards->equals('name', $search);
-        } else {
-            $term = preg_replace('/[^A-Za-z0-9]/', '', $search);
-            $this->cards->like($term, 'name_normalized');
-        }
-    }
-
-    private function filterOnSets($exact) : void
-    {
-        $search = $this->setSearch;
-        if ($exact) {
-            $this->sets->equals('id', $search);
-        } else {
-            $this->sets->like($search);
-        }
-        $setIds = $this->sets->ids();
-        if ($setIds) {
-            $this->cards->filterOnSets($setIds);
-        }
     }
 }

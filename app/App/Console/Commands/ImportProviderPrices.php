@@ -12,7 +12,7 @@ class ImportProviderPrices extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Import pricing data from all providers';
 
     /**
      * The name and signature of the console command.
@@ -38,9 +38,8 @@ class ImportProviderPrices extends Command
      */
     public function handle()
     {
-        // $job = new ImportCardDataPrices;
-        // $job->handle();
-
         ImportCardDataPrices::dispatch()->onQueue('long-running-queue');
+
+        return Command::SUCCESS;
     }
 }

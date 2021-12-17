@@ -48,24 +48,6 @@ class CollectionsEditPresenter extends Presenter
         ];
     }
 
-    private function search() : BaseCollection
-    {
-        $cards      = $this->collection->cards->load('prices', 'frameEffects', 'prices.priceProvider');
-
-        if ($cardQuery = $this->cardQuery) {
-            $cards = $cards->filter(function ($card) use ($cardQuery) {
-                return Str::contains(Str::lower($card->name), Str::lower($cardQuery));
-            });
-        }
-
-        if ($setQuery = $this->setQuery) {
-            $setIds = $this->setRepository->like($setQuery)->ids();
-            $cards  = $cards->whereIn('set_id', $setIds);
-        }
-
-        return $cards;
-    }
-
     private function buildCards() : BaseCollection
     {
         return $this->search()->map(function ($card) {
@@ -94,6 +76,7 @@ class CollectionsEditPresenter extends Presenter
         })
         ->mapToGroups(function ($card) {
             $key = $card->id . $card->finish;
+
             return [$key => $card];
         })
         ->map(function ($cardCollection) {
@@ -113,5 +96,23 @@ class CollectionsEditPresenter extends Presenter
                 'image'             => $card->image,
             ]);
         })->values();
+    }
+
+    private function search() : BaseCollection
+    {
+        $cards      = $this->collection->cards->load('prices', 'frameEffects', 'prices.priceProvider');
+
+        if ($cardQuery = $this->cardQuery) {
+            $cards = $cards->filter(function ($card) use ($cardQuery) {
+                return Str::contains(Str::lower($card->name), Str::lower($cardQuery));
+            });
+        }
+
+        if ($setQuery = $this->setQuery) {
+            $setIds = $this->setRepository->like($setQuery)->ids();
+            $cards  = $cards->whereIn('set_id', $setIds);
+        }
+
+        return $cards;
     }
 }
