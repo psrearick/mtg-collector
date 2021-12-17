@@ -3,6 +3,7 @@
 namespace App\Domain\Collections\DataActions;
 
 use App\Domain\Cards\Models\Card;
+use Carbon\Carbon;
 
 class CreateCollectionCard
 {
@@ -17,10 +18,8 @@ class CreateCollectionCard
     {
         $collectionCard['collection']->cards()
             ->attach($collectionCard['id'], [
-                // 'price_when_added'  => $collectionCard['price'] ?? null,
-                'foil'              => $collectionCard['foil'],
-                // 'quantity'          => $collectionCard['quantity'],
-                // 'date_added'        => $collectionCard['date'] ?? null,
+                'finish'        => $collectionCard['finish'],
+                'date_added'    => $collectionCard['date'] ?? Carbon::now()->toDateString(),
             ]);
 
         return $this->getCollectionCard->execute($collectionCard);

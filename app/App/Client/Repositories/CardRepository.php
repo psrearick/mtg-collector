@@ -4,6 +4,7 @@ namespace App\App\Client\Repositories;
 
 use App\App\Base\Repository;
 use App\App\Client\Traits\WithLoadAttribute;
+use App\Domain\Cards\Models\Card;
 
 class CardRepository extends Repository
 {
@@ -13,9 +14,9 @@ class CardRepository extends Repository
 
     public string $table = 'cards';
 
-    public function __construct()
+    public function __construct(?Card $card = null)
     {
-        return parent::__construct(app($this->class));
+        return parent::__construct($card ?: app($this->class));
     }
 
     /**

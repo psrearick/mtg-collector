@@ -85,7 +85,6 @@ class GetCardFeatures
         }
 
         return $code;
-
     }
 
     public function getLayout() : string

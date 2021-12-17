@@ -1,5 +1,4 @@
 // import HorizontalIncrementer from "@/Components/Buttons/HorizontalIncrementer";
-import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import CollectionSetBottomRowImage from "@/Components/DataGrid/CollectionSetDataGrid/CollectionSetBottomRowImage";
 import CollectionSetBottomRowEntries from "@/Components/DataGrid/CollectionSetDataGrid/CollectionSetBottomRowEntries";
 
@@ -45,7 +44,7 @@ export default {
                             {
                                 visible: true,
                                 type: "component",
-                                component: PrimaryButton,
+                                component: "PrimaryButton",
                                 label: "",
                                 link: true,
                                 events: {

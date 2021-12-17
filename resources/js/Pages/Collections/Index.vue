@@ -35,14 +35,13 @@
 
 <script>
 import Layout from "@/Layouts/Authenticated";
-import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import CardListCard from "@/Components/CardLists/CardListCard";
 import { formatCurrency } from "@/Shared/api/ConvertValue";
 
 export default {
     name: "Index",
 
-    components: { CardListCard, PrimaryButton },
+    components: { CardListCard },
 
     layout: Layout,
 
@@ -60,7 +59,7 @@ export default {
     mounted() {
         this.$store.dispatch("updateHeaderRightComponent", {
             component: {
-                is: PrimaryButton,
+                is: " PrimaryButton",
                 props: {
                     text: "Create Collection",
                     href: route("collections.create"),

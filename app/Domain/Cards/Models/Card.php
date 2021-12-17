@@ -54,7 +54,7 @@ class Card extends Model
     public function collections() : BelongsToMany
     {
         return $this->belongsToMany(CollectionsCollection::class, 'card_collections')
-            ->withPivot(['price_when_added', 'foil', 'description', 'condition', 'quantity', 'finish'])
+            ->withPivot(['price_when_added', 'foil', 'description', 'condition', 'quantity', 'finish', 'date_added', 'created_at'])
             ->using(CardCollection::class);
     }
 

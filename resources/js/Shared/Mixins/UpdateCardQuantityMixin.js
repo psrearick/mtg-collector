@@ -1,6 +1,6 @@
 export default {
     props: {
-        collection: {
+        page: {
             type: Object,
             default: () => {},
         },
@@ -18,8 +18,8 @@ export default {
     },
     methods: {
         addCollectionsToStore: async function () {
-            if (this.collection.cards.length) {
-                for (const card of this.collection.cards) {
+            if (this.page.cards.length) {
+                for (const card of this.page.cards) {
                     await this.saveCard(card.pivot);
                 }
             } else {
@@ -33,7 +33,7 @@ export default {
         },
         deleteCard: function (id, foil) {
             const collectionCard = this.$store.getters.collectionCard(
-                this.collection.id,
+                this.page.collection.id,
                 id,
                 foil
             );
@@ -45,13 +45,13 @@ export default {
         },
         findCardInStore: function (card) {
             return this.$store.getters.collectionCard(
-                this.collection.id,
+                this.page.collection.id,
                 card.card_id,
                 card.foil
             );
         },
         findCollectionInStore: function () {
-            return this.$store.getters.collection(this.collection.id);
+            return this.$store.getters.collection(this.page.collection.id);
         },
         findCollectionInStoreOrCreate: async function () {
             const storeCollection = this.findCollectionInStore();
@@ -60,7 +60,7 @@ export default {
             }
             await this.$store.dispatch("addCollection", {
                 collection: {
-                    id: this.collection.id,
+                    id: this.page.collection.id,
                 },
             });
             return this.findCollectionInStore();
@@ -99,7 +99,7 @@ export default {
             axios
                 .post("/card-collections/card-collections", {
                     ...change,
-                    collection: this.collection.id,
+                    collection: this.page.collection.id,
                 })
                 .then((res) => {
                     const data = res.data;
@@ -107,14 +107,13 @@ export default {
                         return;
                     }
 
-                    this.updateSearchResultsQuantity(data, change);
-                    if (data.collectionCard) {
-                        this.saveCard(data.collectionCard);
-                    } else {
-                        this.deleteCard(change.id, change.foil);
-                    }
+                    this.$store.dispatch(
+                        "updateCardSearchResultsCard",
+                        data.searchCard
+                    );
+
                     this.$inertia.reload({
-                        only: ["collection", "collectionComplete"],
+                        only: ["page"],
                     });
                 });
         },

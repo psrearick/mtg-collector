@@ -17,7 +17,7 @@ class SetCollectionCardsPresenter
 
     public function present() : Collection
     {
-        $compute = new GetComputed($this->card);
+        $compute  = new GetComputed($this->card);
         $computed = $compute
             ->add('feature')
             ->add('allPrices')

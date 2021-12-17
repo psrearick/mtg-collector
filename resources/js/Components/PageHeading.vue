@@ -23,7 +23,7 @@
             <div class="mt-4 flex md:mt-0 md:ml-4">
                 <slot name="header-right" />
                 <component
-                    :is="headerRightComponent.is"
+                    :is="component"
                     v-if="headerRightComponent"
                     v-bind="headerRightComponent.props"
                 ></component>
@@ -33,6 +33,12 @@
 </template>
 
 <script>
+import PrimaryButton from "@/Components/Buttons/PrimaryButton";
+
+const componentMap = {
+    PrimaryButton: PrimaryButton,
+};
+
 export default {
     name: "PageHeading",
 
@@ -45,6 +51,9 @@ export default {
         },
         headerRightComponent() {
             return this.$store.getters.headerRightComponent;
+        },
+        component() {
+            return componentMap[this.headerRightComponent.is];
         },
     },
 };

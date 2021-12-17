@@ -4,7 +4,6 @@ namespace App\App\Base;
 
 use App\Domain\Base\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -15,8 +14,6 @@ abstract class Repository
     public Model $model;
 
     public Builder $query;
-
-    public Request $request;
 
     public Collection $results;
 
@@ -51,18 +48,18 @@ abstract class Repository
         return $this->table ? "$this->table.$field" : $field;
     }
 
-//    public function getPaginated(array $pagination) : LengthAwarePaginator
-//    {
-//        $perPage = $pagination['perPage'] ?: 15;
-//        $request = $pagination['request'] ?: $this->request;
-//        $page    = $pagination['page '] ?: optional($request)->page;
-//
-//        if (!$this->results) {
-//            $this->run();
-//        }
-//
-//        return $this->results->paginate($perPage, $this->results->count(), $page)->withQueryString();
-//    }
+    public function getPaginated(array $pagination = []) : LengthAwarePaginator
+    {
+        $perPage = $pagination['perPage'] ?? 15;
+        $request = $pagination['request'] ?? null;
+        $page    = $pagination['current_page'] ?? optional($request)->page;
+
+        if (!isset($this->results)) {
+            $this->run();
+        }
+
+        return $this->results->paginate($perPage, $this->results->count(), $page)->withQueryString();
+    }
 //
 //    public function ids() : array
 //    {

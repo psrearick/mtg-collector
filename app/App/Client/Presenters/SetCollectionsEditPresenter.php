@@ -29,12 +29,12 @@ class SetCollectionsEditPresenter
 
     private function getCard(Card $card) : CardSearchResult
     {
-        $compute = new GetComputed($card);
+        $compute  = new GetComputed($card);
         $computed = $compute
             ->add('feature')
             ->add('allPrices')
             ->get();
-        
+
         return new CardSearchResult([
             'id'                => $card->id,
             'name'              => $card->name,
@@ -42,7 +42,7 @@ class SetCollectionsEditPresenter
             'foil'              => $card->pivot->foil,
             'foil_formatted'    => $card->pivot->foil ? '(Foil)' : '',
             'features'          => $computed->feature,
-            'today'             => $computed->allPrices[$card->pivot->fininsh ?? 'nonfoil'] ?: null,
+            'today'             => $computed->allPrices[$card->pivot->finish ?? 'nonfoil'] ?: null,
             'acquired_date'     => (new Carbon($card->pivot->date_added ?: $card->pivot->created_at))->toFormattedDateString(),
             'acquired_price'    => $card->pivot->price_when_added,
             'quantity'          => $card->pivot->quantity,

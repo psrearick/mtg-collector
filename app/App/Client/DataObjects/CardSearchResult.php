@@ -2,7 +2,9 @@
 
 namespace App\App\Client\DataObjects;
 
-class CardSearchResult
+use App\App\Contracts\DataObjectInterface;
+
+class CardSearchResult implements DataObjectInterface
 {
     public string $acquired_date;
 
@@ -10,11 +12,11 @@ class CardSearchResult
 
     public string $features;
 
-    public bool $foil;
-
-    public string $foil_formatted;
+    public string $finish;
 
     public int $id;
+
+    public string $image;
 
     public string $name;
 
@@ -22,39 +24,35 @@ class CardSearchResult
 
     public string $set;
 
-    public string $finish;
-
     public float $today;
 
-    public function __construct(array $result)
+    public function __construct(array $data)
     {
-        $this->id             = $result['id'] ?? null;
-        $this->name           = $result['name'] ?? '';
-        $this->set            = $result['set'] ?? '';
-        $this->foil           = $result['foil'] ?? false;
-        $this->foil_formatted = $result['foil_formatted'] ?? '';
-        $this->features       = $result['features'] ?? '';
-        $this->today          = $result['today'] ?? 0.0;
-        $this->acquired_date  = $result['aquired_dated'] ?? '';
-        $this->acquired_price = $result['acquired_price'] ?? 0.0;
-        $this->quantity       = $result['quantity'] ?? 0;
-        $this->finish         = $result['finish'] ?? 'nonfoil';
+        $this->id             = $data['id'] ?? null;
+        $this->name           = $data['name'] ?? '';
+        $this->set            = strtoupper($data['set'] ?? '');
+        $this->features       = $data['features'] ?? '';
+        $this->today          = $data['today'] ?? 0.0;
+        $this->acquired_date  = $data['acquired_date'] ?? '';
+        $this->acquired_price = $data['acquired_price'] ?? 0.0;
+        $this->quantity       = $data['quantity'] ?? 0;
+        $this->finish         = $data['finish'] ?? 'nonfoil';
+        $this->image          = $data['image'] ?? '';
     }
 
-    public function toArray()
+    public function toArray() : array
     {
         return [
             'id'             => $this->id,
             'name'           => $this->name,
             'set'            => $this->set,
-            'foil'           => $this->foil,
-            'foil_formatted' => $this->foil_formatted,
             'features'       => $this->features,
             'today'          => $this->today,
             'acquired_date'  => $this->acquired_date,
             'acquired_price' => $this->acquired_price,
             'quantity'       => $this->quantity,
             'finish'         => $this->finish,
+            'image'          => $this->image,
         ];
     }
 }

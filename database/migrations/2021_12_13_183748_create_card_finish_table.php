@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Schema;
 class CreateCardFinishTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('card_finish');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -19,15 +29,5 @@ class CreateCardFinishTable extends Migration
             $table->unsignedBigInteger('finish_id')->index();
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('card_finish');
     }
 }

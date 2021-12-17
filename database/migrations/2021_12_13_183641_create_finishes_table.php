@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Schema;
 class CreateFinishesTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('finishes');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -18,15 +28,5 @@ class CreateFinishesTable extends Migration
             $table->string('name');
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('finishes');
     }
 }

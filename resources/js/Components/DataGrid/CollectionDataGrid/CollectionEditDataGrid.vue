@@ -36,8 +36,8 @@ export default {
                     {
                         visible: true,
                         type: "text",
-                        label: "Foil",
-                        key: "foil",
+                        label: "Finish",
+                        key: "finish",
                     },
                     {
                         visible: true,

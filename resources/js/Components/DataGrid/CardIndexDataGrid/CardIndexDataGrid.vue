@@ -1,8 +1,9 @@
 <template>
     <div>
         <CardSetSearch
+            v-if="showSearch"
             v-model="cardSearchTerm"
-            v-model:setName="setSearchTerm"
+            v-model:set-name="setSearchTerm"
             :card-search="cardSearch"
             :set-search="setSearch"
         />
@@ -60,7 +61,7 @@ export default {
             default: true,
         },
         data: {
-            type: Array,
+            type: Object,
             default: () => {},
         },
         fields: {

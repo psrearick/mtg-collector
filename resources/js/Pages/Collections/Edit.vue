@@ -9,16 +9,14 @@
                     <SuccessButton
                         type="button"
                         text="Add Cards from Set"
-                        :href="route('collection-set.edit', [collection.id])"
+                        :href="
+                            route('collection-set.edit', [page.collection.id])
+                        "
                     />
                 </div>
             </div>
             <div class="w-full">
-                <CardSearch
-                    :collection="collection"
-                    :collection-complete="collectionComplete"
-                    :search="search"
-                />
+                <CardSearch />
             </div>
         </div>
         <div>
@@ -44,7 +42,6 @@
 
 <script>
 import Layout from "@/Layouts/Authenticated";
-import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import CardSearch from "@/Components/Form/CardSearch/CardSearch";
 import CardIndexDataGrid from "@/Components/DataGrid/CardIndexDataGrid/CardIndexDataGrid";
 import CollectionsEditTable from "@/Shared/TableDefinitions/CollectionsEditTable";
@@ -54,7 +51,7 @@ import SuccessButton from "@/Components/Buttons/SuccessButton";
 export default {
     name: "EditCollection",
 
-    components: { SuccessButton, PrimaryButton, CardIndexDataGrid, CardSearch },
+    components: { SuccessButton, CardIndexDataGrid, CardSearch },
 
     mixins: [CollectionsEditTable, UpdateCardQuantityMixin],
 
@@ -63,15 +60,7 @@ export default {
     title: "MTG Collector - Edit Collection",
 
     props: {
-        collection: {
-            type: Object,
-            default: () => {},
-        },
-        collectionComplete: {
-            type: Object,
-            default: () => {},
-        },
-        search: {
+        page: {
             type: Object,
             default: () => {},
         },
@@ -89,60 +78,64 @@ export default {
 
     watch: {
         cardSearchTerm() {
-            if (this.cardSearchTerm !== this.cardQuery && this.loaded) {
+            if (this.cardSearchTerm !== this.page.cardQuery && this.loaded) {
                 this.query();
             }
         },
         setSearchTerm() {
-            if (this.setSearchTerm !== this.setQuery && this.loaded) {
+            if (this.setSearchTerm !== this.page.setQuery && this.loaded) {
                 this.query();
             }
         },
-        collection() {
-            this.$store.dispatch("addFilteredCollection", {
-                collection: this.collection.cards,
-            });
-            this.filteredCollection = this.$store.getters.filteredCollection;
+        "page.cards.data": {
+            deep: true,
+            handler() {
+                this.$store.dispatch("addFilteredCollection", {
+                    collection: this.page.cards,
+                });
+                this.filteredCollection =
+                    this.$store.getters.filteredCollection;
+            },
         },
     },
 
     mounted() {
         this.$store.dispatch("updateHeader", {
-            header: "Edit: " + this.collection.name,
+            header: "Edit: " + this.page.collection.name,
         });
         this.$store.dispatch("updateSubheader", {
-            subheader: this.collection.description,
+            subheader: this.page.collection.description,
         });
         this.$store.dispatch("updateHeaderRightComponent", {
             component: {
-                is: PrimaryButton,
+                is: "PrimaryButton",
                 props: {
                     text: "Done Editing",
                     href: route("collections.show", {
-                        collection: this.collection.id,
+                        collection: this.page.collection.id,
                     }),
                 },
             },
         });
         this.$store.dispatch("updateCurrentCollection", {
-            collection: this.collection,
+            collection: this.page.collection,
         });
     },
 
     created() {
         this.mount();
         this.$store.dispatch("addFilteredCollection", {
-            collection: this.collection.cards,
+            collection: this.page.cards,
         });
     },
 
     methods: {
         mount() {
-            this.cardSearchTerm = this.collection.cardQuery;
-            this.setSearchTerm = this.collection.setQuery;
+            this.cardSearchTerm = this.page.cardQuery;
+            this.setSearchTerm = this.page.setQuery;
             this.loaded = true;
             this.$store.dispatch("addFilteredCollection", {
-                collection: this.collection.cards,
+                collection: this.page.cards,
             });
             this.filteredCollection = this.$store.getters.filteredCollection;
         },
@@ -153,7 +146,7 @@ export default {
                     cardSearch: this.cardSearchTerm,
                     setSearch: this.setSearchTerm,
                 },
-                only: ["collection"],
+                only: ["page"],
                 onSuccess: () => {
                     this.searching = false;
                     this.mount();

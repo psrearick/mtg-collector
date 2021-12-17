@@ -50,7 +50,7 @@ const actions = {
         commit("setCardSearchResults", searchResults);
     },
     updateCardSearchResultsCard({ commit }, card) {
-        commit("updateCardSearchResultsCardQuantity", card);
+        commit("updateCardSearchResultsCard", card);
     },
     addSetSearchResults({ commit }, searchResults) {
         commit("setSetSearchResults", searchResults);
@@ -98,15 +98,11 @@ const mutations = {
     setCardSearchResults(state, { searchResults }) {
         state.cardSearchResults = searchResults;
     },
-    updateCardSearchResultsCardQuantity(state, card) {
-        const srCard = state.cardSearchResults.find(
+    updateCardSearchResultsCard(state, card) {
+        const srCardId = state.cardSearchResults.findIndex(
             (srCard) => srCard.id === card.id
         );
-        if (card.foil) {
-            srCard.foil_collected = card.quantity;
-        } else {
-            srCard.nonfoil_collected = card.quantity;
-        }
+        state.cardSearchResults[srCardId] = card;
     },
     setSetSearchResults(state, { searchResults }) {
         state.setSearchResults = searchResults;

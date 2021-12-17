@@ -87,6 +87,7 @@ class ImportScryfallData implements ShouldQueue
             $save_file_loc = $this->getFile();
 
             echo 'Processing Card Data' . PHP_EOL;
+
             try {
                 $this->processCardData($save_file_loc);
             } catch (InvalidArgumentException | Exception $e) {
@@ -122,13 +123,13 @@ class ImportScryfallData implements ShouldQueue
             $cardData = $reader->value();
 
             if ($cardData['object'] == 'card') {
-                $card = $this->options['cards'] 
+                $card = $this->options['cards']
                     ? $this->updateCard($cardData)
                     : null;
 
                 if ($this->options['prices']) {
                     $this->updatePricing($cardData, $card);
-                }     
+                }
             }
 
             $reader->next();
@@ -507,7 +508,7 @@ class ImportScryfallData implements ShouldQueue
             return;
         }
 
-        foreach ($prices as $type => $price){
+        foreach ($prices as $type => $price) {
             $card->prices()->updateOrCreate(
                 [
                     'card_id'       => $card->id,

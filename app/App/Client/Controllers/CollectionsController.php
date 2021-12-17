@@ -4,6 +4,7 @@ namespace App\App\Client\Controllers;
 
 use App\App\Base\Controller;
 use App\App\Client\Presenters\CollectionCardsSearchPresenter;
+use App\App\Client\Presenters\CollectionsEditPresenter;
 use App\App\Client\Presenters\CollectionsIndexPresenter;
 use App\App\Client\Presenters\CollectionsShowPresenter;
 use App\Domain\Cards\Actions\CardSearch;
@@ -30,12 +31,8 @@ class CollectionsController extends Controller
      */
     public function edit(Collection $collection, Request $request, CardSearch $cardSearch) : Response
     {
-        $collectionEdit = Collection::with('cards', 'cards.frameEffects', 'cards.prices', 'cards.prices.priceProvider', 'cards.set')->find($collection->id);
-
         return Inertia::render('Collections/Edit', [
-            'collectionComplete'    => $collectionEdit,
-            'collection'            => (new CollectionsShowPresenter($collectionEdit, $request))->present(),
-            'search'                => (new CollectionCardsSearchPresenter($cardSearch->execute($request, ['perPage' => 0, 'withImage' => true]), 25, 1, 'cardsPage'))->present(),
+            'page'            => (new CollectionsEditPresenter($collection, $request))->present(),
         ]);
     }
 

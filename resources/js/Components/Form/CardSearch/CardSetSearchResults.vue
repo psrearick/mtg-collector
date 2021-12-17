@@ -1,9 +1,6 @@
 <template>
     <div class="w-full">
-        <div
-            v-if="cards.length || sets.length"
-            class="rounded-md mt-4 p-4 bg-gray-200"
-        >
+        <div v-if="cards.length" class="rounded-md mt-4 p-4 bg-gray-200">
             <div v-if="cards.length" class="p-4">
                 <div
                     v-for="(card, index) in cards"
@@ -117,9 +114,6 @@ export default {
     computed: {
         cards() {
             return this.$store.getters.cardSearchResults;
-        },
-        sets() {
-            return this.$store.getters.setSearchResults;
         },
     },
 

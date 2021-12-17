@@ -4,7 +4,6 @@
         type="button"
         class="
             bg-gray-800
-            rounded-full
             flex
             text-sm text-gray-500
             focus:text-gray-200

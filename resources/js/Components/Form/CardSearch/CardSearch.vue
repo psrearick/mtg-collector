@@ -1,32 +1,53 @@
 <template>
-    <CardSetSearch v-model="cardSearchTerm" v-model:setName="setSearchTerm" />
+    <card-set-search
+        v-model="cardSearchTerm"
+        v-model:set-name="setSearchTerm"
+    />
     <p v-if="searching" class="text-xs text-gray-400">Searching...</p>
-    <CardSetSearchResults :pagination="search.cards" />
+    <collection-card-search-results
+        :paginator="paginator"
+        :search="searchTerms"
+        @update:paginator="updatePage"
+    />
 </template>
 
 <script>
 import CardSetSearch from "@/Components/Form/CardSearch/CardSetSearch";
 import CardSetSearchResults from "@/Components/Form/CardSearch/CardSetSearchResults";
+import CollectionCardSearchResults from "@/Components/DataGrid/CollectionCardSearchResults";
 export default {
     name: "CardSearch",
 
-    components: { CardSetSearchResults, CardSetSearch },
-
-    props: {
-        search: {
-            type: Object,
-            default: () => {},
-        },
+    components: {
+        CardSetSearchResults,
+        CardSetSearch,
+        CollectionCardSearchResults,
     },
 
     data() {
         return {
             cardSearchTerm: "",
             setSearchTerm: "",
-            cards: [],
-            sets: [],
             searching: false,
+            paginator: {
+                current_page: null,
+                from: null,
+                last_page: null,
+                per_page: 15,
+                to: null,
+                total: null,
+                links: [],
+            },
         };
+    },
+
+    computed: {
+        searchTerms() {
+            return {
+                card: this.cardSearchTerm,
+                set: this.setSearchTerm,
+            };
+        },
     },
 
     watch: {
@@ -36,76 +57,44 @@ export default {
         setSearchTerm() {
             this.query();
         },
-        search(val) {
-            this.runSearchResults(val);
-        },
-    },
-
-    mounted() {
-        if (this.search && this.search.cards) {
-            this.cardSearchTerm = this.search.cardQuery;
-            this.setSearchTerm = this.search.setQuery;
-            this.runSearchResults(this.search);
-        }
     },
 
     methods: {
-        runSearchResults(val) {
-            let cardData = [];
-
-            const cardResults =
-                val &&
-                Object.keys(val).length &&
-                val.cards &&
-                typeof val.cards.data !== "undefined";
-
-            if (cardResults) {
-                if (typeof val.cards.data.length === "undefined") {
-                    cardData = Object.values(val.cards.data);
-                } else if (val.cards.data.length) {
-                    cardData = val.cards.data;
-                }
-            }
-
-            this.$store.dispatch("addCardSearchResults", {
-                searchResults: cardData,
-            });
-
-            let setData = [];
-
-            const setResults =
-                val &&
-                Object.keys(val).length &&
-                val.sets &&
-                typeof val.sets.results !== "undefined";
-
-            if (setResults) {
-                if (typeof val.sets.results.length === "undefined") {
-                    setData = Object.values(val.sets.results);
-                } else if (val.sets.results.length) {
-                    setData = val.sets.results;
-                }
-            }
-
-            this.$store.dispatch("addSetSearchResults", {
-                searchResults: setData,
-            });
-        },
         query: _.debounce(function () {
             this.searching = true;
-            this.cards = [];
-            this.sets = [];
-            this.$inertia.reload({
-                data: {
-                    card: this.cardSearchTerm,
-                    set: this.setSearchTerm,
-                },
-                only: ["search"],
-                onSuccess: () => {
+            const collectionId = this.$store.getters.currentCollection.id;
+            axios
+                .post(
+                    "/collections/collections/" + collectionId + "/edit/search",
+                    {
+                        card: this.cardSearchTerm,
+                        set: this.setSearchTerm,
+                        paginator: this.paginator,
+                    }
+                )
+                .then((res) => {
                     this.searching = false;
-                },
-            });
+                    this.runSearchResults(res.data.cards.data);
+                    this.paginator = _.pick(res.data.cards, [
+                        "current_page",
+                        "from",
+                        "last_page",
+                        "per_page",
+                        "to",
+                        "total",
+                        "links",
+                    ]);
+                });
         }, 1200),
+        runSearchResults(val) {
+            this.$store.dispatch("addCardSearchResults", {
+                searchResults: val,
+            });
+        },
+        updatePage(paginator) {
+            this.paginator = paginator;
+            this.query();
+        },
     },
 };
 </script>

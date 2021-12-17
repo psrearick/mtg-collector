@@ -31,7 +31,7 @@
         </span>
     </p>
     <component
-        :is="field.component"
+        :is="component"
         v-if="field.type === 'component' && showField(data)"
         :data="data"
         :field="field"
@@ -42,6 +42,13 @@
 
 <script>
 import { formatCurrency } from "@/Shared/api/ConvertValue";
+import HorizontalIncrementer from "@/Components/Buttons/HorizontalIncrementer";
+import PrimaryButton from "@/Components/Buttons/PrimaryButton";
+
+const componentMap = {
+    HorizontalIncrementer: HorizontalIncrementer,
+    PrimaryButton: PrimaryButton,
+};
 
 export default {
     name: "DataGridTableField",
@@ -78,6 +85,11 @@ export default {
         },
         componentProps() {
             return this.field.props || null;
+        },
+        component() {
+            return this.field.component
+                ? componentMap[this.field.component]
+                : {};
         },
     },
 

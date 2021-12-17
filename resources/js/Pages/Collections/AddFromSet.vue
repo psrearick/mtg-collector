@@ -41,7 +41,6 @@
 
 <script>
 import Layout from "@/Layouts/Authenticated";
-import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import SearchSelect from "@/Components/Form/SearchSelect/SearchSelect";
 import SuccessButton from "@/Components/Buttons/SuccessButton";
 import AddFromSetTable from "@/Shared/TableDefinitions/AddFromSetTable";
@@ -116,7 +115,7 @@ export default {
         });
         this.$store.dispatch("updateHeaderRightComponent", {
             component: {
-                is: PrimaryButton,
+                is: "PrimaryButton",
                 props: {
                     text: "Done Editing",
                     href: route("collections.show", {

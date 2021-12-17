@@ -1,5 +1,3 @@
-import HorizontalIncrementer from "@/Components/Buttons/HorizontalIncrementer";
-
 export default {
     data() {
         return {
@@ -16,7 +14,7 @@ export default {
                                 classes: "",
                             },
                             {
-                                key: "foil_formatted",
+                                key: "finish",
                                 classes: "text-sm text-gray-500 pl-2",
                             },
                         ],
@@ -58,7 +56,7 @@ export default {
                     {
                         visible: true,
                         type: "component",
-                        component: HorizontalIncrementer,
+                        component: "HorizontalIncrementer",
                         label: "Quantity",
                         key: "quantity",
                     },

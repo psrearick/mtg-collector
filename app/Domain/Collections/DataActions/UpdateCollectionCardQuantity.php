@@ -4,6 +4,7 @@ namespace App\Domain\Collections\DataActions;
 
 use App\Domain\Cards\Actions\GetComputed;
 use App\Domain\Cards\Models\Card;
+use App\Domain\Collections\Actions\CollectionCardSearch;
 use App\Domain\Collections\Models\Collection;
 use Carbon\Carbon;
 
@@ -13,10 +14,16 @@ class UpdateCollectionCardQuantity
 
     private GetCollectionCard $getCollectionCard;
 
-    public function __construct(GetCollectionCard $getCollectionCard, CreateCollectionCard $createCollectionCard)
-    {
+    private CollectionCardSearch $collectionCardSearch;
+
+    public function __construct(
+        GetCollectionCard $getCollectionCard,
+        CreateCollectionCard $createCollectionCard,
+        CollectionCardSearch $collectionCardSearch
+    ) {
         $this->getCollectionCard    = $getCollectionCard;
         $this->createCollectionCard = $createCollectionCard;
+        $this->collectionCardSearch = $collectionCardSearch;
     }
 
     public function execute(array $change) : array
@@ -25,17 +32,21 @@ class UpdateCollectionCardQuantity
         $changeRequest  = [
             'collection'    => $collection,
             'id'            => $change['id'] ?? null,
-            'foil'          => $change['foil'] ?? false,
+            'finish'        => $change['finish'] ?? '',
             'date'          => $change['date'] ?? Carbon::today(),
             'quantity'      => $change['change'] ?? $change['quantity'],
         ];
         $collectionCard  = $this->getCard($changeRequest);
 
-        $card = $this->updateCardQuantity($collectionCard, $collection, $changeRequest);
+        $this->updateCardQuantity($collectionCard, $collection, $changeRequest);
 
+        $collectionCardUpdated = $this->getCard($changeRequest)->pivot->toArray();
         return [
             'message'        => 'Card quantity was updated',
-            'collectionCard' => $this->getCard($changeRequest)->pivot->toArray(),
+            'collectionCard' => $collectionCardUpdated,
+            'searchCard'     => (new $this->collectionCardSearch($collection))->execute([
+                'cardId' => $collectionCardUpdated['card_id'],
+            ])->first(),
         ];
     }
 
@@ -57,40 +68,39 @@ class UpdateCollectionCardQuantity
 
     private function updateCardQuantity(Card $card, Collection $collection, array $request) : Card
     {
-        $foil        = $card->pivot->foil;
-        $quantity    = $card->pivot->quantity;
-        $newQuantity = $quantity + $request['quantity'];
+        $finish             = $request['finish'];
+        $quantity           = $card->pivot->quantity;
+        $requestQuantity    = $request['quantity'];
+        $newQuantity        = $quantity + $requestQuantity;
         if ($newQuantity < 0) {
+            $requestQuantity = 0 - $quantity;
             $newQuantity = 0;
         }
 
-        $now          = Carbon::now()->toDateTimeString();
+        $now          = Carbon::now()->toDateString();
         $date         = $card->pivot->date_added ?: $now;
         $price        = $card->pivot->price_when_added;
-        $computerCard = (new GetComputed($card))->add('priceNormal')->add('priceFoil')->get();
-        $priceToday   =
-            $foil ?
-            $computerCard->priceFoil :
-            $computerCard->priceNormal;
+        $computerCard = (new GetComputed($card))->add('allPrices')->get();
+        $priceToday   = $computerCard->allPrices[$finish];
         if (!$price) {
             $price = $priceToday;
         }
 
         $collection->cards()
             ->newPivotStatementForId($card->id)
-            ->where('foil', '=', $foil)
+            ->where('finish', '=', $finish)
+            ->where('date_added', '=', $date)
             ->update([
                 'quantity'         => $newQuantity,
                 'price_when_added' => $price,
-                'date_added'       => $date,
             ]);
 
         $card->transactions()->create([
             'collection_id' => $collection->id,
             'price'         => $priceToday,
-            'foil'          => $foil,
+            'finish'        => $finish,
             'condition'     => '',
-            'quantity'      => $request['quantity'],
+            'quantity'      => $requestQuantity,
             'date_added'    => $now,
         ]);
 

@@ -19,7 +19,6 @@
 
 <script>
 import Layout from "@/Layouts/Authenticated";
-import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import CardIndexDataGrid from "@/Components/DataGrid/CardIndexDataGrid/CardIndexDataGrid";
 import CollectionsShowCardList from "@/Components/CardLists/CollectionsShowCardList";
 import CollectionsShowTable from "@/Shared/TableDefinitions/CollectionsShowTable";
@@ -74,7 +73,7 @@ export default {
         });
         this.$store.dispatch("updateHeaderRightComponent", {
             component: {
-                is: PrimaryButton,
+                is: "PrimaryButton",
                 props: {
                     text: "Edit Collection",
                     href: route("collections.edit", {

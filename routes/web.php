@@ -4,8 +4,9 @@ use App\App\Client\Controllers\CardCollectionsController;
 use App\App\Client\Controllers\CardsController;
 use App\App\Client\Controllers\CardSearchController;
 use App\App\Client\Controllers\CollectionsController;
-use App\App\Client\Controllers\SetCollectionsController;
+use App\App\Client\Controllers\CollectionsEditSearchController;
 use App\App\Client\Controllers\SetCollectionCardsController;
+use App\App\Client\Controllers\SetCollectionsController;
 use App\App\Client\Controllers\SymbolsController;
 use App\App\Client\Middleware\RedirectIfAuthenticated;
 use Illuminate\Foundation\Application;
@@ -49,6 +50,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('collections')->group(function () {
         Route::resource('collections', CollectionsController::class);
+        Route::post('collections/{collection}/edit/search', [CollectionsEditSearchController::class, 'store'])->name('collection-edit-search.store');
         Route::get('collections/{collection}/set/edit', [SetCollectionsController::class, 'edit'])->name('collection-set.edit');
         Route::post('collections/{collection}/set/edit', [SetCollectionsController::class, 'store'])->name('collection-set.update');
         Route::get('collections/{collection}/set/card/{card}', [SetCollectionCardsController::class, 'show'])->name('collection-card-set.edit');

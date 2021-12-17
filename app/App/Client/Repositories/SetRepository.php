@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\DB;
 
 class SetRepository extends Repository
 {
+    public string $class = Set::class;
+
     public Builder $query;
 
     public Collection $results;
-
-   public string $class = Set::class;
 
     public function __construct()
     {

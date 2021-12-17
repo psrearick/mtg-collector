@@ -160,7 +160,7 @@ export default {
 
     props: {
         data: {
-            type: Array,
+            type: Object,
             default: () => {},
         },
         fields: {
