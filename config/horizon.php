@@ -184,7 +184,7 @@ return [
                     'default'
                 ],
                 'balance' => 'simple',
-                'maxProcesses' => 9,
+                'maxProcesses' => 5,
                 'tries' => 2,
             ],
             'supervisor-long-running' => [
@@ -193,8 +193,8 @@ return [
                     'long-running-queue'
                 ],
                 'balance' => 'simple',
-                'maxProcesses' => 9,
-                'tries' => 6,
+                'maxProcesses' => 5,
+                'tries' => 2,
                 'timeout' => 43200,
             ],
 
@@ -207,7 +207,7 @@ return [
                     'default'
                 ],
                 'balance' => 'simple',
-                'maxProcesses' => 9,
+                'maxProcesses' => 5,
                 'tries' => 2,
             ],
             'supervisor-long-running' => [
@@ -216,8 +216,8 @@ return [
                     'long-running-queue'
                 ],
                 'balance' => 'simple',
-                'maxProcesses' => 9,
-                'tries' => 6,
+                'maxProcesses' => 5,
+                'tries' => 2,
                 'timeout' => 21600,
             ],
         ],

@@ -1,4 +1,4 @@
-id: 26866
+id: 27051
 name: mtg-collector
 environments:
     production:
@@ -10,8 +10,6 @@ environments:
             - 'php artisan event:cache'
             - 'npm ci && npm run prod && rm -rf node_modules'
     staging:
-        database: mtg-collector-dev
-        database-proxy: true
         memory: 1024
         cli-memory: 512
         runtime: 'php-8.1:al2'

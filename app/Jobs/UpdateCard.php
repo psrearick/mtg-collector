@@ -53,7 +53,7 @@ class UpdateCard implements ShouldQueue
             ? $this->updateCard($this->cardData)
             : null;
 
-        $this->updateRelationships($this->cardData, $card);
+        // $this->updateRelationships($this->cardData, $card);
 
         if ($this->options['prices']) {
             $this->updatePricing($this->cardData, $card);
