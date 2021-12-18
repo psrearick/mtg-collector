@@ -53,7 +53,7 @@ class UpdateCard implements ShouldQueue
             ? $this->updateCard($this->cardData)
             : null;
 
-        // $this->updateRelationships($this->cardData, $card);
+        $this->updateRelationships($this->cardData, $card);
 
         if ($this->options['prices']) {
             $this->updatePricing($this->cardData, $card);
@@ -151,17 +151,17 @@ class UpdateCard implements ShouldQueue
             return;
         }
 
-        // SetCardImages::dispatch($card);
-        SetCardSet::dispatch($cardData, $card);
-        SetColorFields::dispatch($cardData, $card);
-        SetFinishes::dispatch($cardData, $card);
-        SetFrameEffects::dispatch($cardData, $card);
-        SetKeywords::dispatch($cardData, $card);
-        SetGames::dispatch($cardData, $card);
-        SetLegalities::dispatch($cardData, $card);
-        SetMultiverseIds::dispatch($cardData, $card);
-        SetRelatedObjects::dispatch($cardData, $card);
-        SetFaces::dispatch($cardData, $card);
-        SetPromoTypes::dispatch($cardData, $card);
+        // SetCardImages::dispatch($card)->delay(now()->addMinutes(10));
+        SetCardSet::dispatch($cardData, $card)->delay(now()->addMinutes(10));
+        SetColorFields::dispatch($cardData, $card)->delay(now()->addMinutes(10));
+        SetFinishes::dispatch($cardData, $card)->delay(now()->addMinutes(10));
+        SetFrameEffects::dispatch($cardData, $card)->delay(now()->addMinutes(10));
+        SetKeywords::dispatch($cardData, $card)->delay(now()->addMinutes(10));
+        SetGames::dispatch($cardData, $card)->delay(now()->addMinutes(10));
+        SetLegalities::dispatch($cardData, $card)->delay(now()->addMinutes(10));
+        SetMultiverseIds::dispatch($cardData, $card)->delay(now()->addMinutes(10));
+        SetRelatedObjects::dispatch($cardData, $card)->delay(now()->addMinutes(10));
+        SetFaces::dispatch($cardData, $card)->delay(now()->addMinutes(10));
+        SetPromoTypes::dispatch($cardData, $card)->delay(now()->addMinutes(10));
     }
 }
