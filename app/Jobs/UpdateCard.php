@@ -151,17 +151,17 @@ class UpdateCard implements ShouldQueue
             return;
         }
 
-        // SetCardImages::dispatch($card)->delay(now()->addMinutes(10));
+        // SetCardImages::dispatch($card)->delay(now()->addMinutes(5));
         SetCardSet::dispatch($cardData, $card)->delay(now()->addMinutes(10));
-        SetColorFields::dispatch($cardData, $card)->delay(now()->addMinutes(10));
-        SetFinishes::dispatch($cardData, $card)->delay(now()->addMinutes(10));
-        SetFrameEffects::dispatch($cardData, $card)->delay(now()->addMinutes(10));
-        SetKeywords::dispatch($cardData, $card)->delay(now()->addMinutes(10));
-        SetGames::dispatch($cardData, $card)->delay(now()->addMinutes(10));
-        SetLegalities::dispatch($cardData, $card)->delay(now()->addMinutes(10));
-        SetMultiverseIds::dispatch($cardData, $card)->delay(now()->addMinutes(10));
-        SetRelatedObjects::dispatch($cardData, $card)->delay(now()->addMinutes(10));
-        SetFaces::dispatch($cardData, $card)->delay(now()->addMinutes(10));
-        SetPromoTypes::dispatch($cardData, $card)->delay(now()->addMinutes(10));
+        SetColorFields::dispatch($cardData, $card)->delay(now()->addMinutes(15));
+        SetFinishes::dispatch($cardData, $card)->delay(now()->addMinutes(20));
+        SetFrameEffects::dispatch($cardData, $card)->delay(now()->addMinutes(25));
+        SetKeywords::dispatch($cardData, $card)->delay(now()->addMinutes(30));
+        SetGames::dispatch($cardData, $card)->delay(now()->addMinutes(35));
+        SetLegalities::dispatch($cardData, $card)->delay(now()->addMinutes(40));
+        SetMultiverseIds::dispatch($cardData, $card)->delay(now()->addMinutes(45));
+        SetRelatedObjects::dispatch($cardData, $card)->delay(now()->addMinutes(50));
+        SetFaces::dispatch($cardData, $card)->delay(now()->addMinutes(55));
+        SetPromoTypes::dispatch($cardData, $card)->delay(now()->addMinutes(60));
     }
 }
