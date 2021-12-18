@@ -51,7 +51,7 @@ export default {
 
     props: {
         collections: {
-            type: Array,
+            type: Object,
             default: () => {},
         },
     },
@@ -59,7 +59,7 @@ export default {
     mounted() {
         this.$store.dispatch("updateHeaderRightComponent", {
             component: {
-                is: " PrimaryButton",
+                is: "PrimaryButton",
                 props: {
                     text: "Create Collection",
                     href: route("collections.create"),

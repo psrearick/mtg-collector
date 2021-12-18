@@ -2,9 +2,6 @@
     <div
         class="
             relative
-            flex
-            items-top
-            justify-center
             min-h-screen
             bg-gray-100
             dark:bg-gray-900
@@ -12,10 +9,16 @@
             sm:pt-0
         "
     >
-        <div
-            v-if="canLogin"
-            class="hidden fixed top-0 right-0 px-6 py-4 sm:block"
-        >
+        <div class="w-full text-center pt-32 px-16 pb-16">
+            <Icon
+                icon="logo"
+                size="14rem"
+                classes="text-gray-600 fill-current inline-block"
+            />
+            <h1 class="text-4xl mt-4 text-gray-600">MTG Collector</h1>
+        </div>
+
+        <div v-if="canLogin" class="px-6 py-4 block">
             <inertia-link
                 v-if="$page.props.auth.user"
                 href="/dashboard"
@@ -24,31 +27,12 @@
                 Dashboard
             </inertia-link>
 
-            <template v-else>
-                <inertia-link
-                    :href="route('login')"
-                    class="text-sm text-gray-700 underline"
-                >
-                    Log in
-                </inertia-link>
-
-                <inertia-link
-                    v-if="canRegister"
-                    :href="route('register')"
-                    class="ml-4 text-sm text-gray-700 underline"
-                >
+            <div v-else class="flex justify-around max-w-sm mx-auto">
+                <primary-button :href="route('login')"> Log in </primary-button>
+                <primary-button v-if="canRegister" :href="route('register')">
                     Register
-                </inertia-link>
-            </template>
-        </div>
-
-        <div class="max-w-6xl mx-auto sm:px-6 lg:px-8 text-center">
-            <Icon
-                icon="logo"
-                size="14rem"
-                classes="text-gray-600 fill-current"
-            />
-            <h1 class="text-4xl mt-4 text-gray-600">MTG Collector</h1>
+                </primary-button>
+            </div>
         </div>
     </div>
 </template>
@@ -56,9 +40,10 @@
 <script>
 import Layout from "@/Layouts/Layout";
 import Icon from "@/Components/Icon";
+import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 
 export default {
-    components: { Icon },
+    components: { Icon, PrimaryButton },
     layout: Layout,
     props: {
         auth: { type: Object, default: () => {} },
