@@ -3,11 +3,9 @@
 namespace App\App\Client\Controllers;
 
 use App\App\Base\Controller;
-use App\App\Client\Presenters\CollectionCardsSearchPresenter;
 use App\App\Client\Presenters\CollectionsEditPresenter;
 use App\App\Client\Presenters\CollectionsIndexPresenter;
 use App\App\Client\Presenters\CollectionsShowPresenter;
-use App\Domain\Cards\Actions\CardSearch;
 use App\Domain\Collections\Models\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,7 +27,7 @@ class CollectionsController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function edit(Collection $collection, Request $request, CardSearch $cardSearch) : Response
+    public function edit(Collection $collection, Request $request) : Response
     {
         return Inertia::render('Collections/Edit', [
             'page'            => (new CollectionsEditPresenter($collection, $request))->present(),

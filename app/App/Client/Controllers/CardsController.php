@@ -3,9 +3,7 @@
 namespace App\App\Client\Controllers;
 
 use App\App\Base\Controller;
-use App\App\Client\Presenters\CardsSearchPresenter;
 use App\App\Client\Presenters\CardsShowPresenter;
-use App\Domain\Cards\Actions\CardSearch;
 use App\Domain\Cards\Models\Card;
 use Illuminate\Http\Request;
 use Inertia\Inertia;

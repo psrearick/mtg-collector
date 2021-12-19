@@ -32,7 +32,7 @@ class CollectionsEditPresenter extends Presenter
         $this->setRepository    = new SetRepository();
     }
 
-    public function present() : array
+    public function present($sort = 'name', $paginate = 20) : array
     {
         $presentedCollection = new CollectionData([
             'id'            => $this->collection->id,
@@ -40,9 +40,14 @@ class CollectionsEditPresenter extends Presenter
             'description'   => $this->collection->description,
         ]);
 
+        $cards = $this->buildCards()->sortBy($sort)->values();
+        if ($paginate && $paginate > 0) {
+            $cards = $cards->paginate($paginate);
+        }
+
         return [
             'collection'    => $presentedCollection->toArray(),
-            'cards'         => $this->buildCards()->paginate(20),
+            'cards'         => $cards,
             'cardQuery'     => $this->cardQuery,
             'setQuery'      => $this->setQuery,
         ];

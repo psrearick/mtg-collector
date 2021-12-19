@@ -14,7 +14,7 @@ export default {
                                 classes: "",
                             },
                             {
-                                key: "foil_formatted",
+                                key: "finish",
                                 classes: "text-sm text-gray-500 pl-2",
                             },
                         ],
