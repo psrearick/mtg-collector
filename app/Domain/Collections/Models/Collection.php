@@ -25,7 +25,9 @@ class Collection extends Model
     {
         return $this->belongsToMany(Card::class, 'card_collections')
             ->withPivot(['price_when_added', 'foil', 'description', 'condition', 'quantity', 'date_added', 'created_at', 'finish'])
-            ->using(CardCollection::class);
+            ->whereNull('card_collections.deleted_at')
+            ->using(CardCollection::class)
+            ->withTimestamps();
     }
 
     public function transactions() : HasMany

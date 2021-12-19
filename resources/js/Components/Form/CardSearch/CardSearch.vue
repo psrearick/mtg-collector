@@ -29,6 +29,15 @@ export default {
             cardSearchTerm: "",
             setSearchTerm: "",
             searching: false,
+            default_paginator: {
+                current_page: null,
+                from: null,
+                last_page: null,
+                per_page: 15,
+                to: null,
+                total: null,
+                links: [],
+            },
             paginator: {
                 current_page: null,
                 from: null,
@@ -52,9 +61,11 @@ export default {
 
     watch: {
         cardSearchTerm() {
+            this.paginator = this.default_paginator;
             this.query();
         },
         setSearchTerm() {
+            this.paginator = this.default_paginator;
             this.query();
         },
     },

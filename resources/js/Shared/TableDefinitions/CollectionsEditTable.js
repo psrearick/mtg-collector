@@ -82,7 +82,7 @@ export default {
             this.emitter.emit("updateCardQuantity", {
                 change: 1,
                 id: card.id,
-                foil: card.foil,
+                finish: card.finish,
             });
         });
 
@@ -90,7 +90,7 @@ export default {
             this.emitter.emit("updateCardQuantity", {
                 change: -1,
                 id: card.id,
-                foil: card.foil,
+                finish: card.finish,
             });
         });
     },

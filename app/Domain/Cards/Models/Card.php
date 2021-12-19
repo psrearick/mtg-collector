@@ -55,7 +55,9 @@ class Card extends Model
     {
         return $this->belongsToMany(CollectionsCollection::class, 'card_collections')
             ->withPivot(['price_when_added', 'foil', 'description', 'condition', 'quantity', 'finish', 'date_added', 'created_at'])
-            ->using(CardCollection::class);
+            ->whereNull('card_collections.deleted_at')
+            ->using(CardCollection::class)
+            ->withTimestamps();
     }
 
     /**
@@ -346,12 +348,4 @@ class Card extends Model
 //    {
 //        return $this->belongsToMany(Token::class);
 //    }
-
-    /*
-     * booted
-     */
-    // protected static function booted() : void
-    // {
-        // static::addGlobalScope(new NotOnlineOnlyScope);
-    // }
 }

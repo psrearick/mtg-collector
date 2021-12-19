@@ -102,9 +102,7 @@ class CollectionCardSearch
             $this->sets->like($search);
         }
         $setIds = $this->sets->ids();
-        if ($setIds) {
-            $this->cards->filterOnSets($setIds);
-        }
+        $this->cards->filterOnSets($setIds);
     }
 
     private function transformCollection(BaseCollection $collection) : BaseCollection
@@ -137,7 +135,7 @@ class CollectionCardSearch
                 return $price->price && in_array($price->type, [
                     'usd',
                     'usd_foil',
-                    'etched',
+                    'usd_etched',
                 ]);
             })->map(function ($price) {
                 return [
@@ -150,7 +148,7 @@ class CollectionCardSearch
                 $prices[$finish] = match ($finish) {
                     'nonfoil'   => $priceMap->where('type', '=', 'usd')->first()['price'] ?? 0,
                     'foil'      => $priceMap->where('type', '=', 'usd_foil')->first()['price'] ?? 0,
-                    'etched'    => $priceMap->where('type', '=', 'etched')->first()['price'] ?? 0,
+                    'etched'    => $priceMap->where('type', '=', 'usd_etched')->first()['price'] ?? 0,
                     default     => $priceMap->where('type', '=', 'usd')->first()['price'] ?? 0,
                 };
             }

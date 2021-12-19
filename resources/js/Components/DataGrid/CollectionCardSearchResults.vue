@@ -150,10 +150,13 @@ export default {
             this.activeFieldFinish = null;
             let change =
                 value -
-                this.cards.find((card) => card.id === id)["quantities"][finish];
+                (this.cards.find((card) => card.id === id)["quantities"][
+                    finish
+                ] || 0);
             if (change === 0) {
                 return;
             }
+
             this.emitter.emit("updateCardQuantity", {
                 change: change,
                 id: id,
