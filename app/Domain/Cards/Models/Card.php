@@ -348,4 +348,12 @@ class Card extends Model
 //    {
 //        return $this->belongsToMany(Token::class);
 //    }
+
+    /*
+     * booted
+     */
+    // protected static function booted() : void
+    // {
+        // static::addGlobalScope(new NotOnlineOnlyScope);
+    // }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Domain\Sets\Models;
 
+use App\App\Scopes\NotOnlineOnlySetScope;
 use App\Domain\Base\Model;
 use App\Domain\CardAttributes\Models\Printing;
 use App\Domain\Cards\Models\Card;
@@ -39,5 +40,10 @@ class Set extends Model
     public function tokens() : HasMany
     {
         return $this->hasMany(Token::class);
+    }
+
+    public static function booted() : void
+    {
+        static::addGlobalScope(new NotOnlineOnlySetScope);
     }
 }

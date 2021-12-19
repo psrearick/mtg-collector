@@ -5,6 +5,7 @@ namespace App\App\Client\Presenters;
 use App\App\Base\Presenter;
 use App\App\Client\DataObjects\CardSearchResult;
 use App\App\Client\DataObjects\Collection as CollectionData;
+use App\App\Client\Repositories\CardRepository;
 use App\App\Client\Repositories\SetRepository;
 use App\Domain\Cards\Actions\GetComputed;
 use App\Domain\Collections\Models\Collection;

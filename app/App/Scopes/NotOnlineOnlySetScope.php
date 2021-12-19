@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 
-class NotOnlineOnlyScope implements Scope
+class NotOnlineOnlySetScope implements Scope
 {
     /**
      * Apply the scope to a given Eloquent query builder.
@@ -17,6 +17,6 @@ class NotOnlineOnlyScope implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-        $builder->where('cards.isOnlineOnly', '=', false);
+        $builder->where('sets.isOnlineOnly', '=', false);
     }
 }
