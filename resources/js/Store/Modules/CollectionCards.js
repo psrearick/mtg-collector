@@ -12,7 +12,7 @@ const getters = {
     collectionCards: (state, getters) => (id) => {
         return getters.collection(id).cards;
     },
-    collectionCard: (state) => (id, cardId, foil) => {
+    collectionCard: (state) => (id, cardId, finish) => {
         const collection = state.collections.find(
             (collection) => collection.id === id
         );
@@ -20,7 +20,7 @@ const getters = {
             return null;
         }
         return collection.cards.find(
-            (card) => card.card_id === cardId && card.foil === foil
+            (card) => card.card_id === cardId && card.finish === finish
         );
     },
     cardSearchResults: (state) => state.cardSearchResults,

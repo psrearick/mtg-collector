@@ -8,33 +8,39 @@
                 <SuccessButton
                     type="button"
                     text="Add Cards by Name"
-                    :href="route('collections.edit', [collection.id])"
+                    :href="route('collections.edit', [page.collection.id])"
                 />
             </div>
         </div>
 
-        <SearchSelect
-            class="mb-12"
-            :selected="selected"
-            label="Select a Set"
-            :options="allSets"
-            :search-term="searchTerm"
-            :searching="searching"
-            @update:selectedOption="queryCards"
-            @update:searchTerm="querySets"
-        />
+        <div class="flex">
+            <search-select
+                v-model:search-term="setSearchTerm"
+                class="mb-12 flex-1"
+                :selected="page.selectedIndex"
+                label="Select a Set"
+                :options="sets"
+                :searching="setSearching"
+                @update:selected-option="selectSet"
+            />
+            <div class="py-6">
+                <primary-button
+                    class="ml-2"
+                    type="button"
+                    @click="resetSetField"
+                >
+                    Reset
+                </primary-button>
+            </div>
+        </div>
 
         <div class="w-full">
-            <DataGrid
-                v-model:search-term="cardSearchTerm"
-                v-model:searching="dataGridSearching"
-                :show-search="true"
-                :show-pagination="false"
-                :data="setCards"
-                :fields="table.fields"
-                :field-rows="table.fieldRows"
-                :classes="dataGridStyles"
+            <card-set-search
+                v-model="cardSearchTerm"
+                :set-search="false"
+                :searching="dataGridSearching"
             />
+            <collection-set-card-search-results :search="cardSearchTerm" />
         </div>
     </div>
 </template>
@@ -43,75 +49,80 @@
 import Layout from "@/Layouts/Authenticated";
 import SearchSelect from "@/Components/Form/SearchSelect/SearchSelect";
 import SuccessButton from "@/Components/Buttons/SuccessButton";
-import AddFromSetTable from "@/Shared/TableDefinitions/AddFromSetTable";
-import DataGrid from "@/Components/DataGrid/DataGrid";
+import CollectionSetCardSearchResults from "@/Components/DataGrid/CollectionSetCardSearchResults";
+import PrimaryButton from "@/Components/Buttons/PrimaryButton";
+import CardSetSearch from "@/Components/Form/CardSearch/CardSetSearch";
+import UpdateCardQuantityMixin from "@/Shared/Mixins/UpdateCardQuantityMixin";
 
 export default {
     name: "AddFromSet",
 
-    components: { SearchSelect, SuccessButton, DataGrid },
+    components: {
+        SearchSelect,
+        SuccessButton,
+        PrimaryButton,
+        CollectionSetCardSearchResults,
+        CardSetSearch,
+    },
 
-    mixins: [AddFromSetTable],
+    mixins: [UpdateCardQuantityMixin],
 
     layout: Layout,
 
     title: "MTG Collector - Add Set to Collection",
 
     props: {
-        collection: {
+        page: {
             type: Object,
             default: () => {},
-        },
-        setCards: {
-            type: Object,
-            default: () => {},
-        },
-        setSets: {
-            type: Array,
-            default: () => {},
-        },
-        selected: {
-            type: Number,
-            default: null,
-        },
-        queryString: {
-            type: String,
-            default: "",
-        },
-        setCardQuery: {
-            type: String,
-            default: "",
         },
     },
 
     data() {
         return {
-            allSets: [],
+            setId: null,
             cardSearchTerm: "",
-            searching: false,
+            setSearchTerm: "",
+            setSearching: false,
             dataGridSearching: false,
-            searchTerm: "",
-            dataGridStyles: {
-                tableCell: "py-1 px-6",
-            },
             loaded: false,
         };
     },
 
+    computed: {
+        sets() {
+            return this.page.sets.map((set) => {
+                return {
+                    primary: set.name,
+                    secondary: set.code.toUpperCase(),
+                    id: set.id,
+                };
+            });
+        },
+    },
+
     watch: {
         cardSearchTerm() {
-            if (this.cardSearchTerm !== this.setCardQuery && this.loaded) {
-                this.querySetCards();
+            if (this.cardSearchTerm !== this.page.cardSearch && this.loaded) {
+                if (!this.setId) {
+                    return;
+                }
+                this.searchCards();
+            }
+        },
+        setSearchTerm() {
+            if (this.setSearchTerm !== this.page.setSearch && this.loaded) {
+                this.searchSets();
             }
         },
     },
 
     mounted() {
         this.$store.dispatch("updateHeader", {
-            header: "Add Cards to Collection by Set",
+            header: "Edit: " + this.page.collection.name,
         });
         this.$store.dispatch("updateSubheader", {
-            subheader: "Editing " + this.collection.name,
+            subheader: "Add Cards to Collection by Set",
         });
         this.$store.dispatch("updateHeaderRightComponent", {
             component: {
@@ -119,75 +130,70 @@ export default {
                 props: {
                     text: "Done Editing",
                     href: route("collections.show", {
-                        collection: this.collection.id,
+                        collection: this.page.collection.id,
                     }),
                 },
             },
         });
         this.$store.dispatch("updateCurrentCollection", {
-            collection: this.collection,
+            collection: this.page.collection,
         });
-        this.mapSets();
         this.mount();
     },
 
     methods: {
         mount: function () {
-            this.cardSearchTerm = this.setCardQuery;
+            this.cardSearchTerm = this.page.cardSearch;
+            this.setSearchTerm = this.page.setSearch;
+            this.setId = this.page.setId;
             this.loaded = true;
+            this.$store.dispatch("addCardSearchResults", {
+                searchResults: this.page.cards,
+            });
         },
-        querySetCards: _.debounce(function () {
-            this.dataGridSearching = true;
+        query: function () {
             this.$inertia.reload({
                 data: {
-                    card: this.cardSearchTerm,
+                    set: this.setId,
+                    setSearch: this.setSearchTerm,
+                    cardSearch: this.cardSearchTerm,
                 },
-                only: ["setCards", "setCardQuery"],
                 onSuccess: () => {
                     this.dataGridSearching = false;
+                    this.setSearching = false;
                     this.mount();
                 },
             });
+        },
+        resetSetField() {
+            this.setSearching = true;
+            this.dataGridSearching = true;
+            this.setId = null;
+            this.setSearchTerm = "";
+            this.cardSearchTerm = "";
+            this.query();
+        },
+        searchCards: _.debounce(function () {
+            this.dataGridSearching = true;
+            this.query();
         }, 1200),
-        queryCards: function (set) {
+        searchSets: _.debounce(function () {
+            this.setSearching = true;
+            this.sets = [];
+            this.query();
+        }, 1200),
+        selectSet: function (set) {
             if (set < 0) {
                 return;
             }
-            this.$inertia.reload({
-                data: {
-                    set: set,
-                },
-                only: ["setCards", "selected"],
-            });
+            this.setSearching = true;
+            this.setId = set;
+            this.query();
         },
-        querySets: _.debounce(function (term) {
-            this.searching = true;
-            this.allSets = [];
-            this.$inertia.reload({
-                data: {
-                    query: term,
-                },
-                only: ["setSets", "queryString"],
-                onSuccess: () => {
-                    this.searching = false;
-                    this.mapSets();
-                },
-            });
-        }, 1200),
-        mapSets: function () {
-            this.searchTerm = this.queryString;
-            this.allSets = this.setSets.map((set) => {
-                return {
-                    primary: set.name,
-                    secondary: set.code,
-                    id: set.id,
-                };
-            });
-        },
-        unsetResults: function () {
-            this.$store.dispatch("unsetShownRows");
-            this.$store.dispatch("unsetSetCards");
-        },
+        // unsetResults: function () {
+        //     this.$store.dispatch("unsetShownRows");
+        //     this.$store.dispatch("unsetSetCards");
+        // },
     },
 };
 </script>

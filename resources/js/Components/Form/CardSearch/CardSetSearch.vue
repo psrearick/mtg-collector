@@ -1,45 +1,52 @@
 <template>
     <div class="w-full">
-        <div :class="containerClasses">
-            <div v-if="cardSearch" :class="cardContainerClasses">
-                <label class="ml-3 text-xs text-gray-500" for="searchCard"
-                    >Card</label
-                >
-                <div class="relative">
-                    <div :class="iconClass">
-                        <Icon icon="search" />
+        <div class="w-full">
+            <div :class="containerClasses">
+                <div v-if="cardSearch" :class="cardContainerClasses">
+                    <label class="ml-3 text-xs text-gray-500" for="searchCard"
+                        >Card</label
+                    >
+                    <div class="relative">
+                        <div :class="iconClass">
+                            <Icon icon="search" />
+                        </div>
+                        <input
+                            id="searchCard"
+                            name="searchCard"
+                            :class="cardFieldClasses"
+                            placeholder="Search by Card Name"
+                            type="search"
+                            :value="modelValue"
+                            @input="
+                                $emit('update:modelValue', $event.target.value)
+                            "
+                        />
                     </div>
-                    <input
-                        id="searchCard"
-                        name="searchCard"
-                        :class="cardFieldClasses"
-                        placeholder="Search by Card Name"
-                        type="search"
-                        :value="modelValue"
-                        @input="$emit('update:modelValue', $event.target.value)"
-                    />
                 </div>
-            </div>
-            <div v-if="setSearch">
-                <label for="searchSet" class="ml-3 text-xs text-gray-500"
-                    >Set</label
-                >
-                <div class="relative">
-                    <div :class="iconClass">
-                        <Icon icon="search" />
+                <div v-if="setSearch">
+                    <label for="searchSet" class="ml-3 text-xs text-gray-500"
+                        >Set</label
+                    >
+                    <div class="relative">
+                        <div :class="iconClass">
+                            <Icon icon="search" />
+                        </div>
+                        <input
+                            id="searchSet"
+                            name="searchSet"
+                            :class="setFieldClasses"
+                            placeholder="Search by Set Name or Code"
+                            type="search"
+                            :value="setName"
+                            @input="
+                                $emit('update:setName', $event.target.value)
+                            "
+                        />
                     </div>
-                    <input
-                        id="searchSet"
-                        name="searchSet"
-                        :class="setFieldClasses"
-                        placeholder="Search by Set Name or Code"
-                        type="search"
-                        :value="setName"
-                        @input="$emit('update:setName', $event.target.value)"
-                    />
                 </div>
             </div>
         </div>
+        <p v-if="searching" class="text-xs text-gray-400">Searching...</p>
     </div>
 </template>
 
@@ -67,6 +74,10 @@ export default {
         modelValue: {
             type: String,
             default: "",
+        },
+        searching: {
+            type: Boolean,
+            default: false,
         },
     },
 

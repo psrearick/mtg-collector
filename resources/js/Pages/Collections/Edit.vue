@@ -6,9 +6,9 @@
                     Add Cards to Collection
                 </h3>
                 <div class="py-4">
-                    <SuccessButton
+                    <success-button
                         type="button"
-                        text="Add Cards from Set"
+                        text="Add Cards by Set"
                         :href="
                             route('collection-set.edit', [page.collection.id])
                         "
@@ -16,7 +16,7 @@
                 </div>
             </div>
             <div class="w-full">
-                <CardSearch />
+                <card-search />
             </div>
         </div>
         <div>
@@ -24,7 +24,7 @@
                 Edit Collection
             </h3>
             <div class="w-full">
-                <CardIndexDataGrid
+                <card-index-data-grid
                     v-model:card-term="cardSearchTerm"
                     v-model:set-term="setSearchTerm"
                     v-model:searching="searching"

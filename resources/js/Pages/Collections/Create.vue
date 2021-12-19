@@ -45,11 +45,11 @@
                     <inertia-link :href="route('collections.index')">
                         <WhiteButton type="button">Cancel</WhiteButton>
                     </inertia-link>
-                    <PrimaryButton
+                    <primary-button
                         type="button"
                         class="ml-2"
                         @click="submitForm"
-                        >Create Collection</PrimaryButton
+                        >Create Collection</primary-button
                     >
                 </div>
             </div>

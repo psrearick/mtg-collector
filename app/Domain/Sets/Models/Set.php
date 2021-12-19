@@ -12,6 +12,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Set extends Model
 {
+    public static function booted() : void
+    {
+        static::addGlobalScope(new NotOnlineOnlySetScope);
+    }
+
     /**
      * get all cards in this set
      *
@@ -40,10 +45,5 @@ class Set extends Model
     public function tokens() : HasMany
     {
         return $this->hasMany(Token::class);
-    }
-
-    public static function booted() : void
-    {
-        static::addGlobalScope(new NotOnlineOnlySetScope);
     }
 }

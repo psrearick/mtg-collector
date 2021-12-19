@@ -3,6 +3,7 @@ const state = () => ({
     subheader: "",
     headerRightComponent: null,
     currentRoute: "",
+    emitters: [],
 });
 
 const getters = {
@@ -10,6 +11,7 @@ const getters = {
     subheader: (state) => state.subheader,
     headerRightComponent: (state) => state.headerRightComponent,
     currentRoute: (state) => state.currentRoute,
+    emitters: (state) => state.emitters,
 };
 
 const actions = {
@@ -25,9 +27,15 @@ const actions = {
     updateCurrentRoute({ commit }, currentRoute) {
         commit("setCurrentRoute", currentRoute);
     },
+    addEmitter({ commit }, emitter) {
+        commit("addEmitter", emitter);
+    },
 };
 
 const mutations = {
+    addEmitter(state, emitter) {
+        state.emitters.push(emitter);
+    },
     setHeader(state, { header }) {
         state.header = header;
     },

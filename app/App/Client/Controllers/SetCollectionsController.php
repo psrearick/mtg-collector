@@ -4,46 +4,17 @@ namespace App\App\Client\Controllers;
 
 use App\App\Base\Controller;
 use App\App\Client\Presenters\SetCollectionsEditPresenter;
-use App\App\Client\Presenters\SetCollectionsPresenter;
 use App\Domain\Collections\Models\Collection;
-use App\Domain\Sets\Actions\SetSearch;
-use App\Domain\Sets\Models\Set;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class SetCollectionsController extends Controller
 {
-    public SetSearch $setSearch;
-
-    public function __construct(SetSearch $search)
-    {
-        $this->setSearch = $search;
-    }
-
     public function edit(Collection $collection, Request $request) : Response
     {
-        $query          = $request->input('query') ?: '';
-        $set            = $request->input('set') ?: '';
-        $card           = $request->input('card') ?: '';
-        $setCards       = [];
-        $setSets        = $this->setSearch->execute($query, ['id', 'code', 'name']);
-        $selectedIndex  = null;
-
-        if ($set) {
-            $setCards      = (new SetCollectionsPresenter(Set::find($set), $card))->present();
-            $selectedIndex = $setSets->search(function ($item) use ($set) {
-                return $item->id == $set;
-            });
-        }
-
         return Inertia::render('Collections/AddFromSet', [
-            'setCards'         => $setCards,
-            'collection'       => (new SetCollectionsEditPresenter($collection))->present(),
-            'setSets'          => $setSets,
-            'queryString'      => $query,
-            'selected'         => $selectedIndex,
-            'setCardQuery'     => $card,
+            'page' => (new SetCollectionsEditPresenter($collection, $request))->present(),
         ]);
     }
 }

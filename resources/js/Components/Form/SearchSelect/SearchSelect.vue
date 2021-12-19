@@ -102,6 +102,17 @@ export default {
         },
     },
 
+    watch: {
+        selected() {
+            if (
+                this.selected === null ||
+                typeof this.selected === "undefined"
+            ) {
+                this.selectedOptionIndex = null;
+            }
+        },
+    },
+
     mounted() {
         if (this.selected !== null && typeof this.selected !== "undefined") {
             this.selectedOptionIndex = this.selected + 1;

@@ -36,9 +36,12 @@ class CollectionCardSearch
 
     public function execute(array $searchParameters = [])
     {
-        $paginator      = $searchParameters['paginator'] ?? null;
-        $exact          = $searchParameters['exact'] ?? false;
         $cardId         = $searchParameters['cardId'] ?? null;
+        $exactCard      = $searchParameters['exactCard'] ?? false;
+        $exactSet       = $searchParameters['exactSet'] ?? false;
+        $paginator      = $searchParameters['paginator'] ?? null;
+
+        $this->cards->equals('isOnlineOnly', false);
 
         if ($cardId) {
             return $this->transformCollection(
@@ -51,11 +54,11 @@ class CollectionCardSearch
         }
 
         if ($this->cardSearch) {
-            $this->filterOnCards($exact);
+            $this->filterOnCards($exactCard);
         }
 
         if ($this->setSearch) {
-            $this->filterOnSets($exact);
+            $this->filterOnSets($exactSet);
         }
 
         if ($paginator) {
@@ -127,6 +130,7 @@ class CollectionCardSearch
                     'quantity'          => $collection->pivot->quantity,
                     'finish'            => $collection->pivot->finish,
                     'image'             => $computed->image_url,
+                    'collector_number'  => $computed->collectorNumber,
                 ]);
             });
             $prices     = [];
@@ -168,16 +172,17 @@ class CollectionCardSearch
             });
 
             return new CardEditSearchResult([
-                'id'            => $computed->id,
-                'name'          => $computed->name,
-                'set_code'      => $computed->set->code,
-                'set_name'      => $computed->set->name,
-                'collected'     => $collected->toArray(),
-                'features'      => $computed->feature,
-                'today'         => $prices,
-                'quantities'    => $quantities,
-                'finishes'      => $finishesMap,
-                'image'         => $computed->image_url,
+                'id'                => $computed->id,
+                'name'              => $computed->name,
+                'set_code'          => $computed->set->code,
+                'set_name'          => $computed->set->name,
+                'collected'         => $collected->toArray(),
+                'features'          => $computed->feature,
+                'today'             => $prices,
+                'quantities'        => $quantities,
+                'finishes'          => $finishesMap,
+                'image'             => $computed->image_url,
+                'collector_number'  => $computed->collectorNumber,
             ]);
         });
     }

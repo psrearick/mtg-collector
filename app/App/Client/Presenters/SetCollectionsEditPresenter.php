@@ -3,50 +3,91 @@
 namespace App\App\Client\Presenters;
 
 use App\App\Client\DataObjects\CardSearchResult;
+use App\App\Client\DataObjects\Collection as CollectionData;
 use App\Domain\Cards\Actions\GetComputed;
 use App\Domain\Cards\Models\Card;
+use App\Domain\Collections\Actions\CollectionCardSearch;
 use App\Domain\Collections\Models\Collection;
+use App\Domain\Sets\Actions\SetSearch;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class SetCollectionsEditPresenter
 {
+    private string $cardSearch;
+
     private Collection $collection;
 
-    public function __construct(Collection $collection)
+    private SetSearch $search;
+
+    private ?int $setId;
+
+    private string $setSearch;
+
+    public function __construct(Collection $collection, Request $request)
     {
         $this->collection = $collection;
+        $this->setId      = $request->set ?: null;
+        $this->setSearch  = $request->setSearch ?: '';
+        $this->cardSearch = $request->cardSearch ?: '';
+        $this->search     = app(SetSearch::class);
     }
 
     public function present() : array
     {
-        $collection             = $this->collection->only(['id', 'name', 'description']);
-        $collection['cards']    = $this->collection->cards->load('set', 'prices', 'frameEffects', 'prices.priceProvider')->map(function ($card) {
-            return $this->getCard($card);
-        });
+        $presentedCollection = new CollectionData([
+            'id'            => $this->collection->id,
+            'name'          => $this->collection->name,
+            'description'   => $this->collection->description,
+        ]);
 
-        return $collection;
+        $sets = $this->getSets();
+
+        return [
+            'cards'         => $this->getCards(),
+            'collection'    => $presentedCollection,
+            'sets'          => $sets,
+            'setSearch'     => $this->setSearch,
+            'cardSearch'    => $this->cardSearch,
+            'setId'         => $this->setId,
+            'selectedIndex' => $this->getSelectedIndex($sets),
+        ];
     }
 
-    private function getCard(Card $card) : CardSearchResult
+    private function getCards() : array
     {
-        $compute  = new GetComputed($card);
-        $computed = $compute
-            ->add('feature')
-            ->add('allPrices')
-            ->get();
+        if (!$this->setId) {
+            return [];
+        }
 
-        return new CardSearchResult([
-            'id'                => $card->id,
-            'name'              => $card->name,
-            'set'               => $card->set->code,
-            'foil'              => $card->pivot->foil,
-            'foil_formatted'    => $card->pivot->foil ? '(Foil)' : '',
-            'features'          => $computed->feature,
-            'today'             => $computed->allPrices[$card->pivot->finish ?? 'nonfoil'] ?: null,
-            'acquired_date'     => (new Carbon($card->pivot->date_added ?: $card->pivot->created_at))->toFormattedDateString(),
-            'acquired_price'    => $card->pivot->price_when_added,
-            'quantity'          => $card->pivot->quantity,
-            'finish'            => $card->pivot->finish,
-        ]);
+        return (new CollectionCardSearch(
+            $this->collection,
+            $this->cardSearch,
+            $this->setId))
+            ->execute([
+                'exactSet' => true,
+            ])
+            ->sortBy('collector_number')
+            ->values()
+            ->toArray();
+    }
+
+    private function getSelectedIndex(array $sets) : ?int
+    {
+        $setId = $this->setId;
+        if (!$setId) {
+            return null;
+        }
+
+        return collect($sets)->search(function ($set) use ($setId) {
+            return $set->id == $setId;
+        });
+    }
+
+    private function getSets() : array
+    {
+        return $this->search
+            ->execute($this->setSearch, ['id', 'code', 'name'])
+            ->all();
     }
 }
