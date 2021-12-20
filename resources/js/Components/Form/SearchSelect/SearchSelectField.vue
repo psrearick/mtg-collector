@@ -18,6 +18,7 @@
                 focus:border-indigo-500
                 sm:text-sm
                 z-10
+                md:h-10
             "
             aria-haspopup="listbox"
             aria-expanded="true"
