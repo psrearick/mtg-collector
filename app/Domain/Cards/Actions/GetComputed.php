@@ -3,6 +3,7 @@
 namespace App\Domain\Cards\Actions;
 
 use App\Domain\Cards\Models\Card;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class GetComputed
@@ -100,7 +101,7 @@ class GetComputed
      */
     public function getImageUrl(bool $dispatch = true) : string
     {
-        return asset($this->card->imagePath);
+        return Storage::url($this->card->imagePath);
     }
 
     /**
@@ -121,6 +122,11 @@ class GetComputed
     public function getPriceNormal() : ?float
     {
         return $this->getPrice();
+    }
+
+    public function getSetImageUrl() : string
+    {
+        return Storage::url($this->card->set->svgPath);
     }
 
     private function getAllPrices() : array

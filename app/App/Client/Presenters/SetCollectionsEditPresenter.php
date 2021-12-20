@@ -2,14 +2,10 @@
 
 namespace App\App\Client\Presenters;
 
-use App\App\Client\DataObjects\CardSearchResult;
 use App\App\Client\DataObjects\Collection as CollectionData;
-use App\Domain\Cards\Actions\GetComputed;
-use App\Domain\Cards\Models\Card;
 use App\Domain\Collections\Actions\CollectionCardSearch;
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Sets\Actions\SetSearch;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class SetCollectionsEditPresenter

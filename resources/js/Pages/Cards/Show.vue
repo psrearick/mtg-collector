@@ -29,6 +29,8 @@
                         </h3>
                         <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
                             <div
+                                v-for="(price, finish) in card.allFinishPrices"
+                                :key="finish"
                                 class="
                                     px-4
                                     py-5
@@ -47,7 +49,7 @@
                                         truncate
                                     "
                                 >
-                                    Non-Foil
+                                    {{ finish }}
                                 </dt>
                                 <dd
                                     class="
@@ -57,40 +59,7 @@
                                         text-gray-900
                                     "
                                 >
-                                    {{ format(card.price_normal) }}
-                                </dd>
-                            </div>
-
-                            <div
-                                class="
-                                    px-4
-                                    py-5
-                                    bg-white
-                                    shadow
-                                    rounded-lg
-                                    overflow-hidden
-                                    sm:p-6
-                                "
-                            >
-                                <dt
-                                    class="
-                                        text-sm
-                                        font-medium
-                                        text-gray-500
-                                        truncate
-                                    "
-                                >
-                                    Foil
-                                </dt>
-                                <dd
-                                    class="
-                                        mt-1
-                                        text-3xl
-                                        font-semibold
-                                        text-gray-900
-                                    "
-                                >
-                                    {{ format(card.price_foil) }}
+                                    {{ format(price) }}
                                 </dd>
                             </div>
                         </dl>
@@ -205,11 +174,19 @@
                             <dd
                                 class="
                                     mt-1
-                                    text-sm text-gray-900
+                                    text-sm text-gray-900 text-center
                                     sm:mt-0
                                     sm:col-span-2
+                                    flex
+                                    md:block
+                                    justify-start
                                 "
                             >
+                                <img
+                                    :src="card.set_image_url"
+                                    :alt="card.set.name"
+                                    class="w-12 md:mb-4 mr-4 md:mx-auto"
+                                />
                                 {{ card.set.name }}
                             </dd>
                         </div>
@@ -436,8 +413,8 @@ export default {
                         visible: true,
                         type: "currency",
                         link: false,
-                        label: "Non-Foil Price",
-                        key: "non_foil_price",
+                        label: "Nonfoil",
+                        key: "nonfoil",
                         sortable: false,
                         filterable: false,
                     },
@@ -445,8 +422,17 @@ export default {
                         visible: true,
                         type: "currency",
                         link: false,
-                        label: "Foil Price",
-                        key: "foil_price",
+                        label: "Foil",
+                        key: "foil",
+                        sortable: false,
+                        filterable: false,
+                    },
+                    {
+                        visible: true,
+                        type: "currency",
+                        link: false,
+                        label: "Etched",
+                        key: "etched",
                         sortable: false,
                         filterable: false,
                     },
@@ -475,8 +461,9 @@ export default {
             let printing = this.card.printings[key];
             allPrintings.push({
                 id: printing.id,
-                non_foil_price: printing.price_normal,
-                foil_price: printing.price_foil,
+                nonfoil: printing.allPrices["nonfoil"] || 0,
+                foil: printing.allPrices["foil"] || 0,
+                etched: printing.allPrices["etched"] || 0,
                 rarity: printing.rarity,
                 set_name: printing.set.name,
                 release_date: printing.set.releaseDate,

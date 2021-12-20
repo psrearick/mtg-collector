@@ -15,8 +15,8 @@ class Collection implements DataObjectInterface
     public function __construct(array $data)
     {
         $this->id           = $data['id'] ?: null;
-        $this->name         = $data['name'] ?: "";
-        $this->description  = $data['description'] ?: "";
+        $this->name         = $data['name'] ?: '';
+        $this->description  = $data['description'] ?: '';
     }
 
     public function toArray() : array

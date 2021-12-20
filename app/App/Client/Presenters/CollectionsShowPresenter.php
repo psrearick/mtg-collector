@@ -2,7 +2,6 @@
 
 namespace App\App\Client\Presenters;
 
-use Illuminate\Support\Collection as ModelCollection;
 use App\App\Base\Presenter;
 use App\App\Client\DataObjects\CardSearchResult;
 use App\App\Client\Repositories\SetRepository;
@@ -10,6 +9,7 @@ use App\Domain\Cards\Actions\GetComputed;
 use App\Domain\Collections\Models\Collection;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection as ModelCollection;
 use Illuminate\Support\Str;
 
 class CollectionsShowPresenter extends Presenter
@@ -25,6 +25,40 @@ class CollectionsShowPresenter extends Presenter
         $this->collection       = $collection;
         $this->request          = $request;
         $this->setRepository    = app(SetRepository::class);
+    }
+
+    public function present() : ModelCollection
+    {
+        $editPresenter   = (new CollectionsEditPresenter($this->collection, $this->request))->present('name', 0);
+        $cards           = $editPresenter['cards'];
+
+        return collect([
+            'cardQuery'     => optional($this->request)->get('cardSearch') ?: '',
+            'setQuery'      => optional($this->request)->get('setSearch') ?: '',
+            'id'            => $editPresenter['collection']['id'],
+            'name'          => $editPresenter['collection']['name'],
+            'description'   => $editPresenter['collection']['description'],
+            'summary'       => $this->getSummary($cards),
+            'cards'         => $cards->paginate(20),
+        ]);
+    }
+
+    protected function search()
+    {
+        $cards       = $this->collection->cards->load('prices', 'frameEffects', 'prices.priceProvider');
+        $setRequest  = optional($this->request)->get('setSearch') ?: null;
+        $cardRequest = optional($this->request)->get('cardSearch') ?: null;
+        if ($cardRequest) {
+            $cards = $cards->filter(function ($card) use ($cardRequest) {
+                return Str::contains(Str::lower($card->name), Str::lower($cardRequest));
+            });
+        }
+        if ($setRequest) {
+            $setIds   = $this->setRepository->like($setRequest)->ids();
+            $cards    = $cards->whereIn('set_id', $setIds);
+        }
+
+        return $cards;
     }
 
     private function buildCards()
@@ -77,26 +111,10 @@ class CollectionsShowPresenter extends Presenter
         })->values();
     }
 
-    public function present() : ModelCollection
-    {
-        $editPresenter = (new CollectionsEditPresenter($this->collection, $this->request))->present('name', 0);
-        $cards           = $editPresenter['cards'];
-
-        return collect([
-            'cardQuery'     => optional($this->request)->get('cardSearch') ?: '',
-            'setQuery'      => optional($this->request)->get('setSearch') ?: '',
-            'id'            => $editPresenter['collection']['id'],
-            'name'          => $editPresenter['collection']['name'],
-            'description'   => $editPresenter['collection']['description'],
-            'summary'       => $this->getSummary($cards),
-            'cards'         => $cards->paginate(20),
-        ]);
-    }
-
     private function getSummary(ModelCollection $cards)
     {
-        $count = 0;
-        $current = 0;
+        $count    = 0;
+        $current  = 0;
         $acquired = 0;
 
         $cards->each(function ($card) use (&$count, &$current, &$acquired) {
@@ -117,23 +135,5 @@ class CollectionsShowPresenter extends Presenter
             'gainLossPercent' => $gainLossPercent,
             'top_five'        => $cards->sortByDesc('today')->take(5)->values(),
         ];
-    }
-
-    protected function search()
-    {
-        $cards       = $this->collection->cards->load('prices', 'frameEffects', 'prices.priceProvider');
-        $setRequest  = optional($this->request)->get('setSearch') ?: null;
-        $cardRequest = optional($this->request)->get('cardSearch') ?: null;
-        if ($cardRequest) {
-            $cards = $cards->filter(function ($card) use ($cardRequest) {
-                return Str::contains(Str::lower($card->name), Str::lower($cardRequest));
-            });
-        }
-        if ($setRequest) {
-            $setIds   = $this->setRepository->like($setRequest)->ids();
-            $cards    = $cards->whereIn('set_id', $setIds);
-        }
-
-        return $cards;
     }
 }

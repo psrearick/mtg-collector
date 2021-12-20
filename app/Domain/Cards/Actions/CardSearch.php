@@ -39,7 +39,6 @@ class CardSearch
                 $term = preg_replace('/[^A-Za-z0-9]/', '', $cardRequest);
                 $this->cards->like($term, 'name_normalized');
             }
-            // $this->cards->withoutOnline();
             $hasResults = true;
         }
 
@@ -65,9 +64,6 @@ class CardSearch
             if ($withImage) {
                 $this->cards->loadAttribute($results, ['image_url']);
             }
-            // if ($perPage > 0) {
-                // $results = $results->paginate($perPage)->withQueryString();
-            // }
         }
 
         return [
