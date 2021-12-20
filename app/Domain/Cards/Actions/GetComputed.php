@@ -101,7 +101,7 @@ class GetComputed
      */
     public function getImageUrl(bool $dispatch = true) : string
     {
-        return Storage::url($this->card->imagePath);
+        return asset($this->card->imagePath);
     }
 
     /**
