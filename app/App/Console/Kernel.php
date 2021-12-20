@@ -39,12 +39,15 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule
-            ->job(new GenerateApiMap())
+        $schedule->command('import:pricing')
+            ->dailyAt('1:00');
+        $schedule->command('import:cards')
             ->weeklyOn(6, '1:00');
-        $schedule->job(new ImportCardDataPrices())
-            ->dailyAt('3:30');
-        $schedule->job(new ImportScryfallData())
-            ->dailyAt('4:30');
+        $schedule->command('import:symbols')
+            ->weeklyOn(6, '3:00');
+        $schedule->command('generate:apimap')
+            ->weeklyOn(6, '4:00');
+        $schedule->command('import:sets')
+            ->weeklyOn(6, '0:30');
     }
 }
