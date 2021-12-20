@@ -1,5 +1,5 @@
 <template>
-    <CardList classes="md:grid-cols-4 mb-8">
+    <CardList classes="lg:grid-cols-4 mb-8">
         <CardListCard>
             <dt class="text-sm font-medium text-gray-500 truncate">
                 Total Cards
@@ -30,7 +30,9 @@
             </dt>
             <dd
                 class="mt-1 text-3xl font-semibold"
-                :class="summary.gainLoss > 0 ? 'text-gray-900' : 'text-red-500'"
+                :class="
+                    summary.gainLoss >= 0 ? 'text-gray-900' : 'text-red-500'
+                "
             >
                 {{ formattedCurrency(summary.gainLoss) }} ({{
                     formattedPercentage(summary.gainLossPercent)

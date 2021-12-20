@@ -139,6 +139,13 @@ abstract class Repository
         return $this;
     }
 
+    public function sortBy(string $sort) : Repository
+    {
+        $this->query = $this->query->orderBy($sort);
+
+        return $this;
+    }
+
 //    public function startsWith(string $field, string $term) : Repository
 //    {
 //        $this->query = $this->query->where($this->getField($field), 'LIKE', $term . '%');

@@ -155,10 +155,10 @@
                         /> -->
                         <div class="ml-3">
                             <div class="text-base font-medium text-white">
-                                Tom Cook
+                                {{ $page.props.auth.user.name }}
                             </div>
                             <div class="text-sm font-medium text-gray-400">
-                                tom@example.com
+                                {{ $page.props.auth.user.email }}
                             </div>
                         </div>
                     </div>

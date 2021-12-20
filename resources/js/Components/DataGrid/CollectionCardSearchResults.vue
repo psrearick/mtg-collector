@@ -9,7 +9,7 @@
                     v-for="(card, index) in cards"
                     :key="index"
                     class="
-                        flex
+                        md:flex
                         justify-between
                         bg-white
                         rounded-md
@@ -19,12 +19,12 @@
                         mb-2
                     "
                 >
-                    <div>
+                    <div class="h-48 px-4 text-center">
                         <img
                             v-if="card.image.length"
                             :src="card.image"
                             :alt="card.name"
-                            class="h-48 px-4"
+                            class="h-full inline"
                         />
                     </div>
                     <div class="flex flex-col justify-between">
@@ -42,7 +42,7 @@
                             <vertical-incrementer
                                 v-for="(finish, finishIndex) in card.finishes"
                                 :key="finishIndex"
-                                class="mx-4"
+                                class="md:mx-4"
                                 :label="finishIndex"
                                 :model-value="card.quantities[finishIndex]"
                                 :active="
@@ -60,7 +60,7 @@
                         <p
                             v-for="(price, priceIndex) in card.today"
                             :key="priceIndex"
-                            class="text-right"
+                            class="text-center md:text-right md:pr-1"
                         >
                             <span class="text-sm text-gray-500 mr-2">{{
                                 card.finishes[priceIndex]

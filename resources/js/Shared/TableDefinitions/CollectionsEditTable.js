@@ -60,15 +60,15 @@ export default {
                         label: "Quantity",
                         key: "quantity",
                     },
-                    {
-                        visible: true,
-                        type: "text",
-                        link: true,
-                        value: "Edit",
-                        events: {
-                            click: "collection_card_edit_click",
-                        },
-                    },
+                    // {
+                    //     visible: true,
+                    //     type: "text",
+                    //     link: true,
+                    //     value: "Edit",
+                    //     events: {
+                    //         click: "collection_card_edit_click",
+                    //     },
+                    // },
                 ],
             },
         };

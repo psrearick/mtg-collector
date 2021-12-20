@@ -40,6 +40,7 @@ class CollectionCardSearch
         $exactCard      = $searchParameters['exactCard'] ?? false;
         $exactSet       = $searchParameters['exactSet'] ?? false;
         $paginator      = $searchParameters['paginator'] ?? null;
+        $sort           = $searchParameters['sort'] ?? 'name';
 
         $this->cards->equals('isOnlineOnly', false);
 
@@ -60,6 +61,8 @@ class CollectionCardSearch
         if ($this->setSearch) {
             $this->filterOnSets($exactSet);
         }
+
+        $this->cards->sortBy($sort);
 
         if ($paginator) {
             return tap($this->cards->getPaginated($paginator), function (AbstractPaginator $paginator) {

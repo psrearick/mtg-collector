@@ -1,5 +1,5 @@
 <template>
-    <div class="grid grid-cols-3">
+    <div class="grid grid-cols-3 w-32">
         <button :class="buttonClass" @click="decrement">-</button>
         <div :class="numberClass">{{ data.quantity }}</div>
         <button :class="buttonClass" @click="increment">+</button>

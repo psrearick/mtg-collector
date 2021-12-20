@@ -10,6 +10,7 @@
         :filter="table.filter"
         :sort="table.sort"
         :pagination="cards"
+        :hide-without-data="true"
     />
 </template>
 

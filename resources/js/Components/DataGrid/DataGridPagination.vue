@@ -13,7 +13,7 @@
     >
         <div class="flex-1 flex justify-between sm:hidden">
             <a
-                :href="pagination.previous_page_url"
+                :href="pagination.prev_page_url"
                 class="
                     relative
                     inline-flex

@@ -1,10 +1,10 @@
 <template>
     <div>
-        <div class="flex justify-between">
-            <h3 class="text-lg leading-6 font-medium text-gray-900 py-4">
+        <div class="flex justify-between flex-wrap">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 py-4 px-4">
                 Select a Set
             </h3>
-            <div class="py-4">
+            <div class="py-4 px-4">
                 <SuccessButton
                     type="button"
                     text="Add Cards by Name"
@@ -13,10 +13,10 @@
             </div>
         </div>
 
-        <div class="flex">
+        <div class="md:flex md:flex-wrap mb-12">
             <search-select
                 v-model:search-term="setSearchTerm"
-                class="mb-12 flex-1"
+                class="md:flex-1 max-w-full"
                 :selected="page.selectedIndex"
                 label="Select a Set"
                 :options="sets"

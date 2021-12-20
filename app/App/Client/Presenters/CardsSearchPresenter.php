@@ -35,8 +35,7 @@ class CardsSearchPresenter extends Presenter
             $computed = new GetComputed($card);
             $computedCard = $computed
                 ->add('feature')
-                ->add('priceNormal')
-                ->add('priceFoil')
+                ->add('allPrices')
                 ->get();
 
             return [
@@ -46,8 +45,9 @@ class CardsSearchPresenter extends Presenter
                 'set_name'           => $card->set->name,
                 'set_id'             => $card->set->id,
                 'feature'            => $computedCard->feature,
-                'price'              => $computedCard->priceNormal,
-                'price_foil'         => $computedCard->priceFoil,
+                'price'              => $computedCard->allPrices['nonfoil'],
+                'price_foil'         => $computedCard->allPrices['foil'],
+                'price_etched'       => $computedCard->allPrices['etched'],
                 'quantity_collected' => $foil + $nonfoil,
                 'nonfoil_collected'  => $nonfoil,
                 'foil_collected'     => $foil,

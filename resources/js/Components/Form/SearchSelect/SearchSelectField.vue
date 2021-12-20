@@ -42,7 +42,7 @@
                     @input="$emit('update:modelValue', $event.target.value)"
                 />
                 <span v-else class="py-2 w-full inline-flex truncate">
-                    <span class="truncate h-4">
+                    <span class="truncate">
                         {{ selectedOption.primary }}
                     </span>
                     <span class="ml-2 truncate text-gray-500">
