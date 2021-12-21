@@ -6,20 +6,37 @@ use App\App\Base\Controller;
 use App\App\Client\Presenters\CollectionsEditPresenter;
 use App\App\Client\Presenters\CollectionsIndexPresenter;
 use App\App\Client\Presenters\CollectionsShowPresenter;
+use App\App\Client\Repositories\CollectionRepository;
 use App\Domain\Collections\Models\Collection;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class CollectionsController extends Controller
 {
+    private CollectionRepository $repository;
+
+    public function __construct(CollectionRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+
     /**
      * @return Response
      */
     public function create() : Response
     {
         return Inertia::render('Collections/Create');
+    }
+
+    public function destroy(Collection $collection) : RedirectResponse
+    {
+        $this->repository->deleteCollection($collection);
+
+        return Redirect::back();
     }
 
     /**
@@ -63,5 +80,12 @@ class CollectionsController extends Controller
         ]);
 
         return redirect()->action([CollectionsController::class, 'show'], ['collection' => $card->id]);
+    }
+
+    public function update(Collection $collection, Request $request) : RedirectResponse
+    {
+        $this->repository->updateCollection($collection, $request->all());
+
+        return Redirect::back();
     }
 }
