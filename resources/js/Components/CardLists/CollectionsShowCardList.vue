@@ -67,7 +67,7 @@ export default {
             return formatCurrency(value);
         },
         formattedPercentage(value) {
-            return formatPercentage(value, 2, true);
+            return formatPercentage(value, 2, true, true);
         },
     },
 };

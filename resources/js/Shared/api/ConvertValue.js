@@ -7,7 +7,12 @@ export function formatCurrency(value) {
     return formatter.format(value);
 }
 
-export function formatPercentage(value, precision, string = false) {
+export function formatPercentage(
+    value,
+    precision,
+    string = false,
+    convert = false
+) {
     let negative = false;
 
     if (precision === undefined) {
@@ -21,6 +26,9 @@ export function formatPercentage(value, precision, string = false) {
 
     let multiplier = Math.pow(10, precision);
     value = parseFloat((value * multiplier).toFixed(11));
+    if (convert) {
+        value = value * 100;
+    }
     value = (Math.round(value) / multiplier).toFixed(precision);
 
     if (negative) {
