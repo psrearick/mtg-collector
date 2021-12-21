@@ -1,5 +1,5 @@
 <template>
-    <inertia-link
+    <div
         class="
             block
             w-full
@@ -15,7 +15,27 @@
             duration-150
             ease-in-out
         "
+        @click="linkClicked"
     >
         <slot />
-    </inertia-link>
+    </div>
 </template>
+
+<script>
+export default {
+    name: "DropdownLink",
+
+    props: {
+        click: {
+            type: Object,
+            default: () => {},
+        },
+    },
+
+    methods: {
+        linkClicked() {
+            this.emitter.emit("dropdown_link_click", this.click);
+        },
+    },
+};
+</script>

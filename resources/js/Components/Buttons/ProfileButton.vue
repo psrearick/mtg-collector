@@ -7,6 +7,7 @@
             flex
             text-sm text-gray-500
             focus:text-gray-200
+            hover:text-gray-200
             focus:outline-none
         "
         aria-expanded="false"

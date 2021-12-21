@@ -1,18 +1,16 @@
 <template>
     <div>
-        <div v-if="!collections.data.length">
-            <p>You do not have any collections. Please create one.</p>
-        </div>
         <div v-if="collections.data.length">
-            <div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-                <inertia-link
+            <card-list>
+                <card-list-card-with-menu
                     v-for="(collection, index) in collections.data"
                     :key="index"
                     :href="
                         route('collections.show', { collection: collection.id })
                     "
+                    :menu="getMenu(index)"
                 >
-                    <CardListCard link>
+                    <template #main>
                         <div class="py-4">
                             {{ collection.name }}
                         </div>
@@ -26,22 +24,41 @@
                                 <p>{{ format(collection.value) }}</p>
                             </div>
                         </div>
-                    </CardListCard>
-                </inertia-link>
-            </div>
+                    </template>
+                </card-list-card-with-menu>
+            </card-list>
         </div>
+        <div v-else>
+            <p>You do not have any collections. Please create one.</p>
+        </div>
+        <edit-collection-panel
+            v-model:show="showEditCollectionPanel"
+            :collection="editCollection"
+        />
+        <delete-collection-panel
+            v-model:show="showDeleteCollectionPanel"
+            :collection="editCollection"
+        />
     </div>
 </template>
 
 <script>
 import Layout from "@/Layouts/Authenticated";
-import CardListCard from "@/Components/CardLists/CardListCard";
 import { formatCurrency } from "@/Shared/api/ConvertValue";
+import CardList from "@/Components/CardLists/CardList.vue";
+import CardListCardWithMenu from "@/Components/CardLists/CardListCardWithMenu.vue";
+import EditCollectionPanel from "@/Components/Panels/EditCollectionPanel.vue";
+import DeleteCollectionPanel from "@/Components/Panels/DeleteCollectionPanel.vue";
 
 export default {
     name: "Index",
 
-    components: { CardListCard },
+    components: {
+        CardList,
+        CardListCardWithMenu,
+        EditCollectionPanel,
+        DeleteCollectionPanel,
+    },
 
     layout: Layout,
 
@@ -56,6 +73,14 @@ export default {
         },
     },
 
+    data() {
+        return {
+            showEditCollectionPanel: false,
+            showDeleteCollectionPanel: false,
+            editCollection: {},
+        };
+    },
+
     mounted() {
         this.$store.dispatch("updateHeaderRightComponent", {
             component: {
@@ -68,9 +93,38 @@ export default {
         });
     },
 
+    created() {
+        this.emitter.on("dropdown_link_click", (clickData) => {
+            this.linkClicked(clickData);
+        });
+    },
+
     methods: {
         format(value) {
             return value ? formatCurrency(value) : "N/A";
+        },
+        linkClicked(clickData) {
+            this.editCollection = clickData.collection;
+            if (clickData.action === "edit") {
+                this.showEditCollectionPanel = true;
+                return;
+            }
+
+            this.showDeleteCollectionPanel = true;
+        },
+        getMenu(index) {
+            return [
+                {
+                    content: "Edit",
+                    action: "edit",
+                    collection: this.collections.data[index],
+                },
+                {
+                    content: "Delete",
+                    action: "delete",
+                    collection: this.collections.data[index],
+                },
+            ];
         },
     },
 };
