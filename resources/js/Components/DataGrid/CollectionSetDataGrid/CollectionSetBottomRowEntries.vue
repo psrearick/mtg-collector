@@ -61,7 +61,6 @@ export default {
             if (!this.show) {
                 this.emitter.emit("expand_collection_card", card);
             }
-            // console.log("click", card);
         });
     },
 };

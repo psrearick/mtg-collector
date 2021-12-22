@@ -21,9 +21,11 @@ module.exports = {
             red: colors.red,
             emerald: colors.emerald,
             success: colors.emerald,
+            green: colors.emerald,
             primary: colors.blue,
             secondary: colors.orange,
             warning: colors.amber,
+            yellow: colors.amber,
             danger: colors.red,
         },
         extend: {

@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import UiInputLabel from "@/UI/UIInputLabel";
+import UiInputLabel from "@/UI/Form/UIInputLabel";
 export default {
     name: "UiTextArea",
     components: { UiInputLabel },

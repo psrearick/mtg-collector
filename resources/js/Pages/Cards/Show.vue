@@ -68,7 +68,7 @@
                         <h3 class="text-lg leading-6 font-medium text-gray-900">
                             Legalities
                         </h3>
-                        <CardList class="pt-4">
+                        <CardList class="pt-4" max-cols="2">
                             <CardListCard
                                 v-for="(legality, index) in card.legalities"
                                 :key="index"

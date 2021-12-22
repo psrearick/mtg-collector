@@ -48,6 +48,9 @@ export default {
             if (this.buttonStyle === "primary-outline") {
                 return "border border-primary-400 text-primary-500 bg-white hover:bg-primary-500 hover:text-primary-800";
             }
+            if (this.buttonStyle === "success-outline") {
+                return "border border-success-400 text-success-500 bg-white hover:bg-success-500 hover:text-success-800";
+            }
             if (this.buttonStyle === "secondary") {
                 return "border border-secondary-200 text-gray-700 bg-secondary-400 hover:bg-secondary-500";
             }

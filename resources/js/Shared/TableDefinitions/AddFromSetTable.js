@@ -151,7 +151,6 @@ export default {
         // });
 
         // this.emitter.on("add_new_row", (card) => {
-        //     console.log("click", card);
         // });
 
         // this.emitter.on("set_card_foil_click", (card) => {

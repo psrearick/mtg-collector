@@ -1,6 +1,13 @@
 <template>
     <div class="flex flex-col">
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div v-if="hasSelectMenu" class="float-right sm:mx-6 lg:mx-8">
+                <ui-dropdown
+                    :label="selectMenuLabel"
+                    :menu="selectMenuWithItems"
+                    :active="selectedOptions.length > 0"
+                />
+            </div>
             <div
                 class="
                     py-2
@@ -32,6 +39,12 @@
                                     classes.headerRow ? classes.headerRow : ''
                                 "
                             >
+                                <th v-if="hasSelectMenu" class="p-2 pl-4">
+                                    <ui-checkbox
+                                        v-model:value="selectAll"
+                                        @update:value="updateSelectAll"
+                                    />
+                                </th>
                                 <th
                                     v-for="(field, index) in topRowFields"
                                     :key="index"
@@ -74,6 +87,12 @@
                                     classes.tableRow ? classes.tableRow : ''
                                 "
                             >
+                                <td v-if="hasSelectMenu" class="p-2 pl-4">
+                                    <ui-checkbox
+                                        :value="selectedOptions.includes(key)"
+                                        @update:value="check(key)"
+                                    />
+                                </td>
                                 <td
                                     v-for="(field, fieldKey) in topRowFields"
                                     :key="fieldKey"
@@ -152,24 +171,38 @@
 
 <script>
 import DataGridTableField from "@/Components/DataGrid/DataGridTableField";
+import UiCheckbox from "@/UI/Form/UICheckbox";
+import UiDropdown from "@/UI/Dropdown/UIDropdown";
 
 export default {
     name: "DataTable",
 
-    components: { DataGridTableField },
+    components: { DataGridTableField, UiCheckbox, UiDropdown },
 
     props: {
+        gridName: {
+            type: String,
+            default: "",
+        },
         data: {
             type: Object,
             default: () => {},
         },
         fields: {
             type: Array,
-            default: () => {},
+            default: () => [],
+        },
+        selectMenu: {
+            type: Array,
+            default: () => [],
+        },
+        selected: {
+            type: Array,
+            default: () => [],
         },
         fieldRows: {
             type: Array,
-            default: () => {},
+            default: () => [],
         },
         sort: {
             type: Object,
@@ -188,10 +221,19 @@ export default {
     data() {
         return {
             sorts: {},
+            selectAll: false,
+            selectedOptions: [],
+            selectMenuWithItems: [],
         };
     },
 
     computed: {
+        hasSelectMenu() {
+            return this.selectMenu.length > 0;
+        },
+        selectMenuLabel() {
+            return "Edit Selected (" + this.selectedOptions.length + ")";
+        },
         topRowFields() {
             if (this.fields) {
                 return this.filterFields(this.fields);
@@ -219,7 +261,24 @@ export default {
         },
     },
 
+    mounted() {
+        this.selectedOptions = _.clone(this.selected);
+        this.setMenu();
+    },
+
+    created() {
+        this.emitter.on(
+            "clear_data_grid_selections",
+            this.clearDataGridSelections
+        );
+    },
+
     methods: {
+        clearDataGridSelections(value) {
+            if (value === this.gridName) {
+                this.updateSelectAll();
+            }
+        },
         filterFields(fields) {
             return fields.filter((field) => {
                 return field.visible;
@@ -235,8 +294,48 @@ export default {
         click(item, field) {
             this.emitter.emit(field.events.click, item);
         },
+        updateSelectAll(value) {
+            if (!value) {
+                this.selectedOptions = [];
+                this.selectAll = false;
+                return;
+            }
+
+            this.data.forEach((el, index) => {
+                if (!this.isChecked(index)) {
+                    this.check(index);
+                }
+            });
+        },
+        isChecked(key) {
+            return this.selectedOptions.includes(key);
+        },
+        check(key) {
+            const index = this.selectedOptions.indexOf(key);
+            if (index > -1) {
+                this.selectedOptions.splice(index, 1);
+                return;
+            }
+
+            this.selectedOptions.push(key);
+        },
+        getData() {
+            return this.data;
+        },
+        getSelectedOptions() {
+            return this.selectedOptions;
+        },
+        setMenu() {
+            if (!this.hasSelectMenu) {
+                return;
+            }
+
+            this.selectMenuWithItems = this.selectMenu.map((item) => {
+                item["selectedItems"] = this.getSelectedOptions;
+                item["data"] = this.getData;
+                return item;
+            });
+        },
     },
 };
 </script>
-
-<style scoped></style>

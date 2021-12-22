@@ -1,6 +1,6 @@
 <template>
     <div class="relative">
-        <div @click="open = !open">
+        <div @click="toggleOpen">
             <slot name="trigger" />
         </div>
 
@@ -17,8 +17,8 @@
         >
             <div
                 v-show="open"
-                class="absolute z-50 mt-8 rounded-md shadow-lg"
-                :class="[widthClass, alignmentClasses]"
+                class="absolute z-50 rounded-md shadow-lg"
+                :class="[widthClass, alignmentClasses, topClass]"
                 style="display: none"
                 @click="open = false"
             >
@@ -37,7 +37,13 @@
 import { onMounted, onUnmounted, ref } from "vue";
 
 export default {
+    name: "UiDropdownMenu",
+
     props: {
+        active: {
+            type: Boolean,
+            default: true,
+        },
         align: {
             type: String,
             default: "right",
@@ -49,6 +55,10 @@ export default {
         contentClasses: {
             type: [Array, String],
             default: () => ["py-1", "bg-white"],
+        },
+        topClass: {
+            type: String,
+            default: "mt-4",
         },
     },
 
@@ -86,6 +96,17 @@ export default {
             } else {
                 return "origin-top";
             }
+        },
+    },
+
+    methods: {
+        toggleOpen() {
+            if (!this.active) {
+                this.open = false;
+                return;
+            }
+
+            this.open = !this.open;
         },
     },
 };

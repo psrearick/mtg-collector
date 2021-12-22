@@ -10,10 +10,7 @@
         @close="closePanel"
         @save="save"
     >
-        <p>
-            Do you really want to delete the following collection? This will
-            remove all cards in the collection as well.
-        </p>
+        <p>Do you really want to delete the following collection?</p>
         <p class="text-gray-500 text-sm pt-6">{{ collection.name }}</p>
         <p class="text-gray-500 text-sm pt-1">{{ collection.description }}</p>
     </ui-panel>
@@ -21,7 +18,6 @@
 
 <script>
 import UiPanel from "@/UI/UIPanel";
-import UiInput from "@/UI/UIInput";
 import UiButton from "@/UI/UIButton";
 import UiTextArea from "@/UI/UITextArea";
 
@@ -31,7 +27,6 @@ export default {
     components: {
         UiTextArea,
         UiButton,
-        UiInput,
         UiPanel,
     },
 

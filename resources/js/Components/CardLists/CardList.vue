@@ -1,7 +1,11 @@
 <template>
     <div
-        class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3"
-        :class="classes"
+        :class="
+            'grid grid-cols-1 gap-4 sm:grid-cols-2 ' +
+            maxClass() +
+            ' ' +
+            classes
+        "
     >
         <slot></slot>
     </div>
@@ -14,6 +18,15 @@ export default {
         classes: {
             type: String,
             default: "",
+        },
+        maxCols: {
+            type: String,
+            default: "3",
+        },
+    },
+    methods: {
+        maxClass() {
+            return "md:grid-cols-" + this.maxCols;
         },
     },
 };
