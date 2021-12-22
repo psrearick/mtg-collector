@@ -39,7 +39,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('import:pricing')
+        $schedule->command('import:prices')
             ->dailyAt('1:00');
         $schedule->command('import:cards')
             ->weeklyOn(6, '1:00');
