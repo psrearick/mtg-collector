@@ -1,11 +1,14 @@
 <template>
     <div>
-        <CardSetSearch
+        <card-set-search
             v-if="showSearch"
             v-model="cardSearchTerm"
             v-model:set-name="setSearchTerm"
             :card-search="cardSearch"
             :set-search="setSearch"
+            @gridConfigurationClick="
+                gridConfigurationPanelShow = !gridConfigurationPanelShow
+            "
         />
         <p v-if="searching" class="text-xs text-gray-400">Searching...</p>
         <data-table
@@ -19,6 +22,10 @@
             :grid-name="gridName"
         />
         <data-grid-pagination v-if="showPagination" :pagination="pagination" />
+        <grid-configuration-panel
+            v-model:show="gridConfigurationPanelShow"
+            :fields="configurableFields"
+        />
     </div>
 </template>
 
@@ -27,11 +34,18 @@ import DataTable from "@/Components/DataGrid/DataGridTable";
 import Search from "@/Components/Form/Search";
 import DataGridPagination from "@/Components/DataGrid/DataGridPagination";
 import CardSetSearch from "@/Components/Form/CardSearch/CardSetSearch";
+import GridConfigurationPanel from "@/Components/Panels/GridConfigurationPanel.vue";
 
 export default {
     name: "CardIndexDataGrid",
 
-    components: { CardSetSearch, DataTable, Search, DataGridPagination },
+    components: {
+        CardSetSearch,
+        DataTable,
+        Search,
+        DataGridPagination,
+        GridConfigurationPanel,
+    },
 
     props: {
         gridName: {
@@ -70,17 +84,21 @@ export default {
             type: Object,
             default: () => {},
         },
+        configurableFields: {
+            type: Array,
+            default: () => [],
+        },
         fields: {
             type: Array,
-            default: () => {},
+            default: () => [],
         },
         selectMenu: {
             type: Array,
-            default: () => {},
+            default: () => [],
         },
         fieldRows: {
             type: Array,
-            default: () => {},
+            default: () => [],
         },
         hideWithoutData: {
             type: Boolean,
@@ -92,7 +110,7 @@ export default {
         },
         filter: {
             type: Array,
-            default: () => {},
+            default: () => [],
         },
         pagination: {
             type: Object,
@@ -112,6 +130,7 @@ export default {
             sortFields: {},
             cardSearchTerm: "",
             setSearchTerm: "",
+            gridConfigurationPanelShow: false,
         };
     },
 

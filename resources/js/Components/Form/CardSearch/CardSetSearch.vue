@@ -1,6 +1,6 @@
 <template>
     <div class="w-full">
-        <div class="w-full">
+        <div class="w-full flex">
             <div :class="containerClasses">
                 <div v-if="cardSearch" :class="cardContainerClasses">
                     <label class="ml-3 text-xs text-gray-500" for="searchCard"
@@ -45,6 +45,11 @@
                     </div>
                 </div>
             </div>
+            <div class="flex flex-col-reverse">
+                <ui-button class="ml-2" @click="$emit('gridConfigurationClick')"
+                    ><icon icon="cog" size="1.4rem" />
+                </ui-button>
+            </div>
         </div>
         <p v-if="searching" class="text-xs text-gray-400">Searching...</p>
     </div>
@@ -52,11 +57,12 @@
 
 <script>
 import Icon from "@/Components/Icon";
+import UiButton from "@/UI/UIButton.vue";
 
 export default {
     name: "CardSetSearch",
 
-    components: { Icon },
+    components: { Icon, UiButton },
 
     props: {
         cardSearch: {
@@ -81,7 +87,7 @@ export default {
         },
     },
 
-    emits: ["update:setName", "update:modelValue"],
+    emits: ["update:setName", "update:modelValue", "gridConfigurationClick"],
 
     data() {
         return {
@@ -97,7 +103,7 @@ export default {
             return this.cardSearch && this.setSearch;
         },
         containerClasses() {
-            let classes = "grid grid-cols-1";
+            let classes = "flex-1 grid grid-cols-1";
             if (this.both) {
                 classes += " md:grid-cols-3 lg:grid-cols-4";
             }
