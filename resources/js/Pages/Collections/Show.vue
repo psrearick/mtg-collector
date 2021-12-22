@@ -2,7 +2,7 @@
     <div>
         <CollectionsShowCardList :summary="collection.summary" />
         <div>
-            <CardIndexDataGrid
+            <card-index-data-grid
                 v-model:card-term="cardSearchTerm"
                 v-model:set-term="setSearchTerm"
                 v-model:searching="searching"

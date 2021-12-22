@@ -7,6 +7,7 @@ export default {
                         visible: true,
                         type: "composite-text",
                         link: true,
+                        key: "name",
                         label: "Card",
                         values: [
                             {
