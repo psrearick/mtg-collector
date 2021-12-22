@@ -5,6 +5,8 @@ use App\App\Client\Controllers\CardsController;
 use App\App\Client\Controllers\CardSearchController;
 use App\App\Client\Controllers\CollectionsController;
 use App\App\Client\Controllers\CollectionsEditSearchController;
+use App\App\Client\Controllers\MoveCollectionsController;
+use App\App\Client\Controllers\RemoveCardsController;
 use App\App\Client\Controllers\SetCollectionCardsController;
 use App\App\Client\Controllers\SetCollectionsController;
 use App\App\Client\Controllers\SymbolsController;
@@ -49,11 +51,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('collections')->group(function () {
+        Route::get('collections/index', [CollectionsController::class, 'allIndex']);
         Route::resource('collections', CollectionsController::class);
         Route::post('collections/{collection}/edit/search', [CollectionsEditSearchController::class, 'store'])->name('collection-edit-search.store');
         Route::get('collections/{collection}/set/edit', [SetCollectionsController::class, 'edit'])->name('collection-set.edit');
         Route::post('collections/{collection}/set/edit', [SetCollectionsController::class, 'store'])->name('collection-set.update');
         Route::get('collections/{collection}/set/card/{card}', [SetCollectionCardsController::class, 'show'])->name('collection-card-set.edit');
+        Route::post('cards/move-collection', [MoveCollectionsController::class, 'store'])->name('move-collection.store');
+        Route::delete('cards/remove-card', [RemoveCardsController::class, 'destroy'])->name('remove-card.destroy');
     });
 
     Route::prefix('cards')->group(function () {

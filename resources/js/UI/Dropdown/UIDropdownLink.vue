@@ -14,6 +14,7 @@
             transition
             duration-150
             ease-in-out
+            cursor-pointer
         "
         @click="linkClicked"
     >
@@ -23,7 +24,7 @@
 
 <script>
 export default {
-    name: "DropdownLink",
+    name: "UiDropdownLink",
 
     props: {
         click: {

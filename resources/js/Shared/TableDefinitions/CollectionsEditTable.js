@@ -60,15 +60,16 @@ export default {
                         label: "Quantity",
                         key: "quantity",
                     },
-                    // {
-                    //     visible: true,
-                    //     type: "text",
-                    //     link: true,
-                    //     value: "Edit",
-                    //     events: {
-                    //         click: "collection_card_edit_click",
-                    //     },
-                    // },
+                ],
+                selectMenu: [
+                    {
+                        content: "Move to Collection",
+                        action: "move_to_collection",
+                    },
+                    {
+                        content: "Remove from Collection",
+                        action: "remove_from_collection",
+                    },
                 ],
             },
         };
@@ -92,6 +93,16 @@ export default {
                 id: card.id,
                 finish: card.finish,
             });
+        });
+
+        this.emitter.on("move_to_collection", (data) => {
+            this.moveToCollectionPanelData = data;
+            this.moveToCollectionPanelShow = true;
+        });
+
+        this.emitter.on("remove_from_collection", (data) => {
+            this.removeFromCollectionPanelData = data;
+            this.removeFromCollectionPanelShow = true;
         });
     },
 };

@@ -14,7 +14,9 @@
             class="mt-4"
             :data="data"
             :fields="fields"
+            :select-menu="selectMenu"
             :field-rows="fieldRows"
+            :grid-name="gridName"
         />
         <data-grid-pagination v-if="showPagination" :pagination="pagination" />
     </div>
@@ -32,6 +34,10 @@ export default {
     components: { CardSetSearch, DataTable, Search, DataGridPagination },
 
     props: {
+        gridName: {
+            type: String,
+            default: "",
+        },
         cardSearch: {
             type: Boolean,
             default: true,
@@ -65,6 +71,10 @@ export default {
             default: () => {},
         },
         fields: {
+            type: Array,
+            default: () => {},
+        },
+        selectMenu: {
             type: Array,
             default: () => {},
         },

@@ -20,7 +20,7 @@
             <div class="col-span-1 flex flex-col">
                 <div v-if="menu">
                     <div>
-                        <dropdown>
+                        <ui-dropdown-menu top-class="mt-8">
                             <template #trigger>
                                 <Icon
                                     icon="dots-vertical"
@@ -33,15 +33,15 @@
                                 />
                             </template>
                             <template #content>
-                                <dropdown-link
+                                <ui-dropdown-link
                                     v-for="(menuItem, menuIndex) in menu"
                                     :key="menuIndex"
                                     :click="menuItem"
                                 >
                                     {{ menuItem.content }}
-                                </dropdown-link>
+                                </ui-dropdown-link>
                             </template>
-                        </dropdown>
+                        </ui-dropdown-menu>
                     </div>
                 </div>
                 <slot name="right"></slot>
@@ -51,14 +51,14 @@
 </template>
 
 <script>
-import Dropdown from "@/Components/Dropdown.vue";
+import UiDropdownMenu from "@/UI/Dropdown/UIDropdownMenu.vue";
 import Icon from "@/Components/Icon.vue";
-import DropdownLink from "@/Components/DropdownLink.vue";
+import UiDropdownLink from "@/UI/Dropdown/UIDropdownLink.vue";
 
 export default {
     name: "CardListCardWithMenu",
 
-    components: { Dropdown, Icon, DropdownLink },
+    components: { UiDropdownMenu, Icon, UiDropdownLink },
 
     props: {
         href: {

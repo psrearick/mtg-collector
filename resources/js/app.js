@@ -9,6 +9,7 @@ import { InertiaProgress } from "@inertiajs/progress";
 
 import TitleMixin from "@/Shared/Mixins/TitleMixin";
 import HeaderMixin from "@/Shared/Mixins/HeaderMixin";
+import { closable } from "@/directives";
 
 import store from "./Store";
 import mitt from "mitt";
@@ -26,6 +27,7 @@ createInertiaApp({
             .mixin(ActivePageMixin)
             .mixin(TitleMixin)
             .mixin(HeaderMixin)
+            .directive("closable", closable)
             .use(plugin);
         vueApp.config.globalProperties.emitter = emitter;
         vueApp.use(store);

@@ -8,6 +8,7 @@ use App\App\Client\Presenters\CollectionsIndexPresenter;
 use App\App\Client\Presenters\CollectionsShowPresenter;
 use App\App\Client\Repositories\CollectionRepository;
 use App\Domain\Collections\Models\Collection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +23,13 @@ class CollectionsController extends Controller
     public function __construct(CollectionRepository $repository)
     {
         $this->repository = $repository;
+    }
+
+    public function allIndex() : JsonResponse
+    {
+        $collections = Collection::all()->values();
+
+        return response()->json($collections);
     }
 
     /**

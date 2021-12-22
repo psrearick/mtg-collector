@@ -6,13 +6,17 @@
                     Add Cards to Collection
                 </h3>
                 <div class="py-4">
-                    <success-button
-                        type="button"
-                        text="Add Cards by Set"
+                    <inertia-link
                         :href="
                             route('collection-set.edit', [page.collection.id])
                         "
-                    />
+                    >
+                        <ui-button
+                            text="Add Cards by Set"
+                            button-style="success-outline"
+                        >
+                        </ui-button>
+                    </inertia-link>
                 </div>
             </div>
             <div class="w-full">
@@ -30,13 +34,28 @@
                     v-model:searching="searching"
                     :data="filteredCollection.data"
                     :fields="table.fields"
+                    :select-menu="table.selectMenu"
                     :show-pagination="true"
                     :force-show="true"
                     :show-search="true"
                     :pagination="filteredCollection"
+                    :grid-name="dataGridName"
                 />
             </div>
         </div>
+        <move-to-collection-panel
+            v-model:show="moveToCollectionPanelShow"
+            :data="moveToCollectionPanelData"
+            :collection="page.collection"
+            @saved="clearDataGrid"
+            @close="clearPanelData"
+        />
+        <remove-from-collection-panel
+            v-model:show="removeFromCollectionPanelShow"
+            :data="removeFromCollectionPanelData"
+            :collection="page.collection"
+            @saved="clearDataGrid"
+        />
     </div>
 </template>
 
@@ -47,11 +66,21 @@ import CardIndexDataGrid from "@/Components/DataGrid/CardIndexDataGrid/CardIndex
 import CollectionsEditTable from "@/Shared/TableDefinitions/CollectionsEditTable";
 import UpdateCardQuantityMixin from "@/Shared/Mixins/UpdateCardQuantityMixin";
 import SuccessButton from "@/Components/Buttons/SuccessButton";
+import MoveToCollectionPanel from "@/Components/Panels/MoveToCollectionPanel";
+import UiButton from "@/UI/UIButton.vue";
+import RemoveFromCollectionPanel from "@/Components/Panels/RemoveFromCollectionPanel";
 
 export default {
     name: "EditCollection",
 
-    components: { SuccessButton, CardIndexDataGrid, CardSearch },
+    components: {
+        SuccessButton,
+        CardIndexDataGrid,
+        CardSearch,
+        MoveToCollectionPanel,
+        RemoveFromCollectionPanel,
+        UiButton,
+    },
 
     mixins: [CollectionsEditTable, UpdateCardQuantityMixin],
 
@@ -73,6 +102,11 @@ export default {
             loaded: false,
             searching: false,
             filteredCollection: {},
+            dataGridName: "CollectionsEditDataGrid",
+            removeFromCollectionPanelShow: false,
+            removeFromCollectionPanelData: {},
+            moveToCollectionPanelShow: false,
+            moveToCollectionPanelData: {},
         };
     },
 
@@ -130,6 +164,12 @@ export default {
     },
 
     methods: {
+        clearDataGrid() {
+            this.emitter.emit("clear_data_grid_selections", this.dataGridName);
+        },
+        clearPanelData() {
+            this.moveToCollectionPanelData = {};
+        },
         mount() {
             this.cardSearchTerm = this.page.cardQuery;
             this.setSearchTerm = this.page.setQuery;

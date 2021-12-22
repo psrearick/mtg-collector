@@ -121,6 +121,10 @@ export default {
             return this.$store.getters.cardSearchResults;
         },
         cardsLength() {
+            if (!this.cards) {
+                return 0;
+            }
+
             return Object.keys(this.cards).length;
         },
         hasResults() {

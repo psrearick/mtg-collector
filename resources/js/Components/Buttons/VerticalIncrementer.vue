@@ -1,7 +1,7 @@
 <template>
     <div class="p-2 shadow-md bg-gray-100 w-32">
         <button
-            class="p-2 bg-green-500 hover:bg-green-900 text-white w-full"
+            class="p-2 bg-success-500 hover:bg-green-900 text-white w-full"
             @click="$emit('update:modelValue', modelValue + 1)"
         >
             +

@@ -35,7 +35,7 @@
 
 <script>
 import UiPanel from "@/UI/UIPanel";
-import UiInput from "@/UI/UIInput";
+import UiInput from "@/UI/Form/UIInput";
 import UiButton from "@/UI/UIButton";
 import UiTextArea from "@/UI/UITextArea";
 
