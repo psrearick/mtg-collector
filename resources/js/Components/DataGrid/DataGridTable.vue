@@ -185,8 +185,8 @@ export default {
             default: "",
         },
         data: {
-            type: Object,
-            default: () => {},
+            type: Array,
+            default: () => [],
         },
         fields: {
             type: Array,
@@ -285,10 +285,18 @@ export default {
             });
         },
         sortField(field) {
-            this.sorts[field] = _.has(this.sorts, field)
-                ? !this.sorts[field]
-                : true;
+            if (!(field in this.sorts)) {
+                this.sorts[field] = "ASC";
+                return;
+            }
 
+            let currentField = this.sorts[field];
+            if (currentField === "DESC") {
+                delete this.sorts[field];
+                return;
+            }
+
+            this.sorts[field] = "DESC";
             this.$emit("update:sort", this.sorts);
         },
         click(item, field) {

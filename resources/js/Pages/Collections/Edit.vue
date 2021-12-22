@@ -110,6 +110,23 @@ export default {
         };
     },
 
+    computed: {
+        cardData() {
+            let cards = _.cloneDeep(this.page.cards);
+            if (!cards || !cards.data) {
+                return cards;
+            }
+
+            if (Array.isArray(cards.data)) {
+                return cards;
+            }
+
+            cards.data = Object.values(cards.data);
+
+            return cards;
+        },
+    },
+
     watch: {
         cardSearchTerm() {
             if (this.cardSearchTerm !== this.page.cardQuery && this.loaded) {
@@ -125,7 +142,7 @@ export default {
             deep: true,
             handler() {
                 this.$store.dispatch("addFilteredCollection", {
-                    collection: this.page.cards,
+                    collection: this.cardData,
                 });
                 this.filteredCollection =
                     this.$store.getters.filteredCollection;
@@ -159,7 +176,7 @@ export default {
     created() {
         this.mount();
         this.$store.dispatch("addFilteredCollection", {
-            collection: this.page.cards,
+            collection: this.cardData,
         });
     },
 
@@ -175,7 +192,7 @@ export default {
             this.setSearchTerm = this.page.setQuery;
             this.loaded = true;
             this.$store.dispatch("addFilteredCollection", {
-                collection: this.page.cards,
+                collection: this.cardData,
             });
             this.filteredCollection = this.$store.getters.filteredCollection;
         },
