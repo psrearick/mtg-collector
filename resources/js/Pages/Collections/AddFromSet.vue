@@ -190,10 +190,6 @@ export default {
             this.setId = set;
             this.query();
         },
-        // unsetResults: function () {
-        //     this.$store.dispatch("unsetShownRows");
-        //     this.$store.dispatch("unsetSetCards");
-        // },
     },
 };
 </script>

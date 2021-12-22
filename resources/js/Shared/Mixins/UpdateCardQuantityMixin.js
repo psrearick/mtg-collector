@@ -100,10 +100,13 @@ export default {
         //     });
         // },
         updateCardQuantity: function (change) {
+            let collection =
+                this.$store.getters.currentCollection || this.page.collection;
+
             axios
                 .post("/card-collections/card-collections", {
                     ...change,
-                    collection: this.page.collection.id,
+                    collection: collection.id,
                 })
                 .then((res) => {
                     const data = res.data;
