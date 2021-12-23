@@ -6,6 +6,7 @@
             v-model:set-name="setSearchTerm"
             :card-search="cardSearch"
             :set-search="setSearch"
+            :configure-table="configureTable"
             @gridConfigurationClick="
                 gridConfigurationPanelShow = !gridConfigurationPanelShow
             "
@@ -86,6 +87,10 @@ export default {
         configurableFields: {
             type: Array,
             default: () => [],
+        },
+        configureTable: {
+            type: Boolean,
+            default: true,
         },
         fields: {
             type: Array,

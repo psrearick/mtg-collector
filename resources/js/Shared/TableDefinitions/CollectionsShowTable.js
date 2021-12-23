@@ -5,6 +5,7 @@ export default {
                 fields: [
                     {
                         visible: true,
+                        sortable: true,
                         type: "composite-text",
                         link: true,
                         key: "name",
@@ -25,6 +26,7 @@ export default {
                     },
                     {
                         visible: true,
+                        sortable: true,
                         type: "text",
                         link: false,
                         label: "Set",
@@ -38,9 +40,10 @@ export default {
                     },
                     {
                         visible: true,
+                        sortable: true,
                         type: "currency",
                         label: "Value",
-                        key: "today",
+                        key: "price",
                     },
                     {
                         visible: false,
@@ -50,23 +53,49 @@ export default {
                     },
                     {
                         visible: false,
+                        sortable: true,
                         type: "currency",
                         label: "Acquired Price",
                         key: "acquired_price",
                     },
                     {
                         visible: true,
+                        sortable: true,
                         type: "text",
                         label: "Quantity",
                         key: "quantity",
                     },
                 ],
             },
+            gridName: "collection-show",
         };
+    },
+    computed: {
+        sortFields() {
+            let fields = this.$store.getters.sortFields;
+            if (fields) {
+                return fields[this.gridName];
+            }
+
+            return {};
+        },
     },
     created() {
         this.emitter.on("collection_card_name_click", (card) => {
             this.$inertia.get(`/cards/cards/${card.id}`);
         });
+        this.emitter.on("sort", (gridName) => {
+            if (gridName === this.gridName) {
+                this.search();
+            }
+        });
+    },
+    methods: {
+        setSort() {
+            this.$store.dispatch("setSortFields", {
+                gridName: this.gridName,
+                fields: this.collection.sortQuery || {},
+            });
+        },
     },
 };

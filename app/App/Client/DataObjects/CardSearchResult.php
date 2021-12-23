@@ -26,7 +26,7 @@ class CardSearchResult implements DataObjectInterface
 
     public string $set;
 
-    public float $today;
+    public float $price;
 
     public function __construct(array $data)
     {
@@ -34,7 +34,7 @@ class CardSearchResult implements DataObjectInterface
         $this->name             = $data['name'] ?? '';
         $this->set              = strtoupper($data['set'] ?? '');
         $this->features         = $data['features'] ?? '';
-        $this->today            = $data['today'] ?? 0.0;
+        $this->price            = $data['price'] ?? 0.0;
         $this->acquired_date    = $data['acquired_date'] ?? '';
         $this->acquired_price   = $data['acquired_price'] ?? 0.0;
         $this->quantity         = $data['quantity'] ?? 0;
@@ -50,7 +50,7 @@ class CardSearchResult implements DataObjectInterface
             'name'             => $this->name,
             'set'              => $this->set,
             'features'         => $this->features,
-            'today'            => $this->today,
+            'price'            => $this->price,
             'acquired_date'    => $this->acquired_date,
             'acquired_price'   => $this->acquired_price,
             'quantity'         => $this->quantity,

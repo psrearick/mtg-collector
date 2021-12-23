@@ -41,6 +41,9 @@ const mutations = {
         }
     },
     setSortFields(state, { gridName, fields }) {
+        if (Array.isArray(fields)) {
+            fields = {};
+        }
         state.sortFields[gridName] = fields;
     },
 };

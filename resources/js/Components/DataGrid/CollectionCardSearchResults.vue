@@ -58,7 +58,7 @@
                     </div>
                     <div>
                         <p
-                            v-for="(price, priceIndex) in card.today"
+                            v-for="(price, priceIndex) in card.price"
                             :key="priceIndex"
                             class="text-center md:text-right md:pr-1"
                         >

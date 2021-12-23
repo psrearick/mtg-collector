@@ -45,9 +45,12 @@
                     </div>
                 </div>
             </div>
-            <div class="flex flex-col-reverse">
-                <ui-button class="ml-2" @click="$emit('gridConfigurationClick')"
-                    ><icon icon="cog" size="1.4rem" />
+            <div v-if="configureTable" class="flex flex-col-reverse">
+                <ui-button
+                    class="ml-2"
+                    @click="$emit('gridConfigurationClick')"
+                >
+                    <icon icon="cog" size="1.4rem" />
                 </ui-button>
             </div>
         </div>
@@ -66,6 +69,10 @@ export default {
 
     props: {
         cardSearch: {
+            type: Boolean,
+            default: true,
+        },
+        configureTable: {
             type: Boolean,
             default: true,
         },

@@ -29,12 +29,13 @@ class CollectionsShowPresenter extends Presenter
 
     public function present() : SupportCollection
     {
-        $editPresenter   = (new CollectionsEditPresenter($this->collection, $this->request))->present('name', 0);
+        $editPresenter   = (new CollectionsEditPresenter($this->collection, $this->request))->present('', 0);
         $cards           = $editPresenter['cards'];
 
         return collect([
             'cardQuery'     => optional($this->request)->get('cardSearch') ?: '',
             'setQuery'      => optional($this->request)->get('setSearch') ?: '',
+            'sortQuery'     => $editPresenter['sortQuery'],
             'id'            => $editPresenter['collection']['id'],
             'name'          => $editPresenter['collection']['name'],
             'description'   => $editPresenter['collection']['description'],

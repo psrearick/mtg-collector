@@ -91,7 +91,33 @@ export default {
                     // },
                 ],
             },
+            gridName: "card-index",
         };
     },
-    created() {},
+    computed: {
+        sortFields() {
+            let fields = this.$store.getters.sortFields;
+            if (fields) {
+                return fields[this.gridName];
+            }
+
+            return {};
+        },
+    },
+    created() {
+        this.emitter.on("card_name_click", (card) => {
+            this.showCard(card.id);
+        });
+        this.emitter.on("sort", (gridName) => {
+            if (gridName === this.gridName) {
+                this.search();
+            }
+        });
+    },
+    mounted() {
+        this.$store.dispatch("setSortFields", {
+            gridName: this.gridName,
+            fields: this.sortQuery,
+        });
+    },
 };

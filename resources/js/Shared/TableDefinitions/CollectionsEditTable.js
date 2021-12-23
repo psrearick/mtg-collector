@@ -5,9 +5,11 @@ export default {
                 fields: [
                     {
                         visible: true,
+                        sortable: true,
                         type: "composite-text",
                         link: true,
                         label: "Card",
+                        key: "name",
                         values: [
                             {
                                 key: "name",
@@ -24,6 +26,7 @@ export default {
                     },
                     {
                         visible: true,
+                        sortable: true,
                         type: "text",
                         link: false,
                         label: "Set",
@@ -37,24 +40,28 @@ export default {
                     },
                     {
                         visible: true,
+                        sortable: true,
                         type: "currency",
                         label: "Value",
-                        key: "today",
+                        key: "price",
                     },
                     {
                         visible: false,
+                        sortable: true,
                         type: "text",
                         label: "Acquired Date",
                         key: "acquired_date",
                     },
                     {
                         visible: false,
+                        sortable: true,
                         type: "currency",
                         label: "Acquired Price",
                         key: "acquired_price",
                     },
                     {
                         visible: true,
+                        sortable: true,
                         type: "component",
                         component: "HorizontalIncrementer",
                         label: "Quantity",
@@ -72,13 +79,23 @@ export default {
                     },
                 ],
             },
+            gridName: "collection-edit",
         };
+    },
+    computed: {
+        sortFields() {
+            let fields = this.$store.getters.sortFields;
+            if (fields) {
+                return fields[this.gridName];
+            }
+
+            return {};
+        },
     },
     created() {
         this.emitter.on("collection_card_name_click", (card) => {
             this.$inertia.get(`/cards/cards/${card.id}`);
         });
-
         this.emitter.on("incrementQuantity", (card) => {
             this.emitter.emit("updateCardQuantity", {
                 change: 1,
@@ -86,7 +103,11 @@ export default {
                 finish: card.finish,
             });
         });
-
+        this.emitter.on("sort", (gridName) => {
+            if (gridName === this.gridName) {
+                this.search();
+            }
+        });
         this.emitter.on("decrementQuantity", (card) => {
             this.emitter.emit("updateCardQuantity", {
                 change: -1,
@@ -94,15 +115,21 @@ export default {
                 finish: card.finish,
             });
         });
-
         this.emitter.on("move_to_collection", (data) => {
             this.moveToCollectionPanelData = data;
             this.moveToCollectionPanelShow = true;
         });
-
         this.emitter.on("remove_from_collection", (data) => {
             this.removeFromCollectionPanelData = data;
             this.removeFromCollectionPanelShow = true;
         });
+    },
+    methods: {
+        setSort() {
+            this.$store.dispatch("setSortFields", {
+                gridName: this.gridName,
+                fields: this.page.sortQuery || {},
+            });
+        },
     },
 };

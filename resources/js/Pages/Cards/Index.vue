@@ -60,7 +60,6 @@ export default {
             setSearchTerm: "",
             cardSearchTerm: "",
             searching: false,
-            gridName: "card-index",
         };
     },
 
@@ -79,14 +78,6 @@ export default {
 
             return cards;
         },
-        sortFields() {
-            let fields = this.$store.getters.sortFields;
-            if (fields) {
-                return fields[this.gridName];
-            }
-
-            return {};
-        },
     },
 
     watch: {
@@ -104,24 +95,12 @@ export default {
 
     created() {
         this.mount();
-        this.emitter.on("card_name_click", (card) => {
-            this.showCard(card.id);
-        });
-        this.emitter.on("sort", (gridName) => {
-            if (gridName === this.gridName) {
-                this.search();
-            }
-        });
     },
 
     methods: {
         mount() {
             this.cardSearchTerm = this.cardQuery;
             this.setSearchTerm = this.setQuery;
-            this.$store.dispatch("setSortFields", {
-                gridName: this.gridName,
-                fields: this.sortQuery,
-            });
         },
         showCard(id) {
             this.$inertia.get(`/cards/cards/${id}`);

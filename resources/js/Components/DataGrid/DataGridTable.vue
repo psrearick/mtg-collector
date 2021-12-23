@@ -57,10 +57,28 @@
                                 >
                                     <a
                                         href="#"
+                                        class="flex"
                                         @click.prevent="sortField(field)"
                                     >
-                                        <span class="block">
-                                            {{ field.label ? field.label : "" }}
+                                        <span class="block flex">
+                                            <span class="whitespace-nowrap">
+                                                {{
+                                                    field.label
+                                                        ? field.label
+                                                        : ""
+                                                }}
+                                            </span>
+                                            <span>
+                                                <Icon
+                                                    v-if="getIcon(field)"
+                                                    :icon="
+                                                        'sort-' + getIcon(field)
+                                                    "
+                                                    classes="inline ml-2"
+                                                    size="1rem"
+                                                    class="inline"
+                                                />
+                                            </span>
                                         </span>
                                         <span class="block text-gray-400">
                                             {{
@@ -173,11 +191,12 @@
 import DataGridTableField from "@/Components/DataGrid/DataGridTableField";
 import UiCheckbox from "@/UI/Form/UICheckbox";
 import UiDropdown from "@/UI/Dropdown/UIDropdown";
+import Icon from "@/Components/Icon";
 
 export default {
     name: "DataTable",
 
-    components: { DataGridTableField, UiCheckbox, UiDropdown },
+    components: { DataGridTableField, UiCheckbox, UiDropdown, Icon },
 
     props: {
         gridName: {
@@ -274,6 +293,14 @@ export default {
             if (value === this.gridName) {
                 this.updateSelectAll();
             }
+        },
+        getIcon(field) {
+            let sort = this.sortFields[this.gridName];
+            if (!sort) {
+                return null;
+            }
+
+            return sort[field.key] || null;
         },
         filterFields(fields) {
             return fields.filter((field) => {
