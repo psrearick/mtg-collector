@@ -4,7 +4,6 @@ export default {
             table: {
                 data: [],
                 filter: [],
-                sort: {},
                 fields: [
                     {
                         visible: true,
@@ -12,7 +11,7 @@ export default {
                         link: true,
                         hover: true,
                         label: "Card",
-                        key: "card_name",
+                        key: "name",
                         events: {
                             click: "card_name_click",
                             hover: "card_name_hover",
@@ -25,7 +24,7 @@ export default {
                         type: "text",
                         link: true,
                         label: "Set",
-                        key: "set_name",
+                        key: "set",
                         event: "set_name_click",
                         sortable: true,
                         filterable: true,

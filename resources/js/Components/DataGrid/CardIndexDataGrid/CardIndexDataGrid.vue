@@ -13,7 +13,6 @@
         <p v-if="searching" class="text-xs text-gray-400">Searching...</p>
         <data-table
             v-if="showData"
-            v-model:sort="sortFields"
             class="mt-4"
             :data="data"
             :fields="fields"
@@ -81,8 +80,8 @@ export default {
             default: true,
         },
         data: {
-            type: Object,
-            default: () => {},
+            type: Array,
+            default: () => [],
         },
         configurableFields: {
             type: Array,
@@ -104,10 +103,6 @@ export default {
             type: Boolean,
             default: false,
         },
-        sort: {
-            type: Object,
-            default: () => {},
-        },
         filter: {
             type: Array,
             default: () => [],
@@ -127,7 +122,6 @@ export default {
     data() {
         return {
             tableData: {},
-            sortFields: {},
             cardSearchTerm: "",
             setSearchTerm: "",
             gridConfigurationPanelShow: false,
@@ -159,7 +153,6 @@ export default {
     },
 
     mounted() {
-        this.sortFields = this.sort;
         this.cardSearchTerm = this.cardTerm;
         this.setSearchTerm = this.setTerm;
     },

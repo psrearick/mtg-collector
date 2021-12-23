@@ -57,7 +57,7 @@
                                 >
                                     <a
                                         href="#"
-                                        @click.prevent="sortField(field.key)"
+                                        @click.prevent="sortField(field)"
                                     >
                                         <span class="block">
                                             {{ field.label ? field.label : "" }}
@@ -204,10 +204,6 @@ export default {
             type: Array,
             default: () => [],
         },
-        sort: {
-            type: Object,
-            default: () => {},
-        },
         classes: {
             type: Object,
             default: () => {
@@ -216,11 +212,8 @@ export default {
         },
     },
 
-    emits: ["update:sort"],
-
     data() {
         return {
-            sorts: {},
             selectAll: false,
             selectedOptions: [],
             selectMenuWithItems: [],
@@ -259,6 +252,9 @@ export default {
             }
             return [];
         },
+        sortFields() {
+            return this.$store.getters.sortFields;
+        },
     },
 
     mounted() {
@@ -285,19 +281,12 @@ export default {
             });
         },
         sortField(field) {
-            if (!(field in this.sorts)) {
-                this.sorts[field] = "ASC";
-                return;
-            }
+            this.$store.dispatch("addFieldToSort", {
+                field: field,
+                gridName: this.gridName,
+            });
 
-            let currentField = this.sorts[field];
-            if (currentField === "DESC") {
-                delete this.sorts[field];
-                return;
-            }
-
-            this.sorts[field] = "DESC";
-            this.$emit("update:sort", this.sorts);
+            this.emitter.emit("sort", this.gridName);
         },
         click(item, field) {
             this.emitter.emit(field.events.click, item);
