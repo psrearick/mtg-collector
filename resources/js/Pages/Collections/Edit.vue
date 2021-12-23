@@ -39,7 +39,7 @@
                     :force-show="true"
                     :show-search="true"
                     :pagination="filteredCollection"
-                    :grid-name="dataGridName"
+                    :grid-name="gridName"
                 />
             </div>
         </div>
@@ -102,7 +102,6 @@ export default {
             loaded: false,
             searching: false,
             filteredCollection: {},
-            dataGridName: "CollectionsEditDataGrid",
             removeFromCollectionPanelShow: false,
             removeFromCollectionPanelData: {},
             moveToCollectionPanelShow: false,
@@ -130,12 +129,12 @@ export default {
     watch: {
         cardSearchTerm() {
             if (this.cardSearchTerm !== this.page.cardQuery && this.loaded) {
-                this.query();
+                this.search();
             }
         },
         setSearchTerm() {
             if (this.setSearchTerm !== this.page.setQuery && this.loaded) {
-                this.query();
+                this.search();
             }
         },
         "page.cards.data": {
@@ -182,7 +181,7 @@ export default {
 
     methods: {
         clearDataGrid() {
-            this.emitter.emit("clear_data_grid_selections", this.dataGridName);
+            this.emitter.emit("clear_data_grid_selections", this.gridName);
         },
         clearPanelData() {
             this.moveToCollectionPanelData = {};
@@ -190,25 +189,24 @@ export default {
         mount() {
             this.cardSearchTerm = this.page.cardQuery;
             this.setSearchTerm = this.page.setQuery;
+            this.setSort();
             this.loaded = true;
+            this.searching = false;
             this.$store.dispatch("addFilteredCollection", {
                 collection: this.cardData,
             });
             this.filteredCollection = this.$store.getters.filteredCollection;
         },
-        query: _.debounce(function () {
+        search: _.debounce(function () {
             this.searching = true;
-            this.$inertia.reload({
-                data: {
+            this.$inertia.get(
+                "/collections/collections/" + this.page.collection.id + "/edit",
+                {
                     cardSearch: this.cardSearchTerm,
                     setSearch: this.setSearchTerm,
-                },
-                only: ["page"],
-                onSuccess: () => {
-                    this.searching = false;
-                    this.mount();
-                },
-            });
+                    sort: this.sortFields,
+                }
+            );
         }, 1200),
     },
 };

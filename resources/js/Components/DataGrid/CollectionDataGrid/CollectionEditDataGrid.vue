@@ -49,7 +49,7 @@ export default {
                         visible: true,
                         type: "currency",
                         label: "Today",
-                        key: "today",
+                        key: "price",
                     },
                     {
                         visible: true,

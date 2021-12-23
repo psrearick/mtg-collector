@@ -1,16 +1,19 @@
 <template>
     <div>
-        <CardSetSearch
+        <card-set-search
             v-if="showSearch"
             v-model="cardSearchTerm"
             v-model:set-name="setSearchTerm"
             :card-search="cardSearch"
             :set-search="setSearch"
+            :configure-table="configureTable"
+            @gridConfigurationClick="
+                gridConfigurationPanelShow = !gridConfigurationPanelShow
+            "
         />
         <p v-if="searching" class="text-xs text-gray-400">Searching...</p>
         <data-table
             v-if="showData"
-            v-model:sort="sortFields"
             class="mt-4"
             :data="data"
             :fields="fields"
@@ -19,6 +22,10 @@
             :grid-name="gridName"
         />
         <data-grid-pagination v-if="showPagination" :pagination="pagination" />
+        <grid-configuration-panel
+            v-model:show="gridConfigurationPanelShow"
+            :fields="configurableFields"
+        />
     </div>
 </template>
 
@@ -27,11 +34,18 @@ import DataTable from "@/Components/DataGrid/DataGridTable";
 import Search from "@/Components/Form/Search";
 import DataGridPagination from "@/Components/DataGrid/DataGridPagination";
 import CardSetSearch from "@/Components/Form/CardSearch/CardSetSearch";
+import GridConfigurationPanel from "@/Components/Panels/GridConfigurationPanel.vue";
 
 export default {
     name: "CardIndexDataGrid",
 
-    components: { CardSetSearch, DataTable, Search, DataGridPagination },
+    components: {
+        CardSetSearch,
+        DataTable,
+        Search,
+        DataGridPagination,
+        GridConfigurationPanel,
+    },
 
     props: {
         gridName: {
@@ -67,32 +81,36 @@ export default {
             default: true,
         },
         data: {
-            type: Object,
-            default: () => {},
+            type: Array,
+            default: () => [],
+        },
+        configurableFields: {
+            type: Array,
+            default: () => [],
+        },
+        configureTable: {
+            type: Boolean,
+            default: true,
         },
         fields: {
             type: Array,
-            default: () => {},
+            default: () => [],
         },
         selectMenu: {
             type: Array,
-            default: () => {},
+            default: () => [],
         },
         fieldRows: {
             type: Array,
-            default: () => {},
+            default: () => [],
         },
         hideWithoutData: {
             type: Boolean,
             default: false,
         },
-        sort: {
-            type: Object,
-            default: () => {},
-        },
         filter: {
             type: Array,
-            default: () => {},
+            default: () => [],
         },
         pagination: {
             type: Object,
@@ -109,9 +127,9 @@ export default {
     data() {
         return {
             tableData: {},
-            sortFields: {},
             cardSearchTerm: "",
             setSearchTerm: "",
+            gridConfigurationPanelShow: false,
         };
     },
 
@@ -140,7 +158,6 @@ export default {
     },
 
     mounted() {
-        this.sortFields = this.sort;
         this.cardSearchTerm = this.cardTerm;
         this.setSearchTerm = this.setTerm;
     },

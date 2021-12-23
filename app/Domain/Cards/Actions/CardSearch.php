@@ -30,6 +30,7 @@ class CardSearch
         $sets           = [];
         $setRequest     = $request->get('set');
         $cardRequest    = $request->get('card');
+        $sortRequest    = $request->get('sort');
         $hasResults     = false;
 
         if ($cardRequest) {
@@ -71,6 +72,7 @@ class CardSearch
             'perPage'       => $perPage,
             'cardQuery'     => $cardRequest,
             'setQuery'      => $setRequest,
+            'sortQuery'     => $sortRequest,
             'sets'          => $sets,
         ];
     }

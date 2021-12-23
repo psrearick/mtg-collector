@@ -4,7 +4,6 @@ export default {
             table: {
                 data: [],
                 filter: [],
-                sort: {},
                 fields: [
                     {
                         visible: true,
@@ -12,7 +11,7 @@ export default {
                         link: true,
                         hover: true,
                         label: "Card",
-                        key: "card_name",
+                        key: "name",
                         events: {
                             click: "card_name_click",
                             hover: "card_name_hover",
@@ -25,7 +24,7 @@ export default {
                         type: "text",
                         link: true,
                         label: "Set",
-                        key: "set_name",
+                        key: "set",
                         event: "set_name_click",
                         sortable: true,
                         filterable: true,
@@ -92,7 +91,33 @@ export default {
                     // },
                 ],
             },
+            gridName: "card-index",
         };
     },
-    created() {},
+    computed: {
+        sortFields() {
+            let fields = this.$store.getters.sortFields;
+            if (fields) {
+                return fields[this.gridName];
+            }
+
+            return {};
+        },
+    },
+    created() {
+        this.emitter.on("card_name_click", (card) => {
+            this.showCard(card.id);
+        });
+        this.emitter.on("sort", (gridName) => {
+            if (gridName === this.gridName) {
+                this.search();
+            }
+        });
+    },
+    mounted() {
+        this.$store.dispatch("setSortFields", {
+            gridName: this.gridName,
+            fields: this.sortQuery,
+        });
+    },
 };

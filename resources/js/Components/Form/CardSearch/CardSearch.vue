@@ -2,6 +2,7 @@
     <card-set-search
         v-model="cardSearchTerm"
         v-model:set-name="setSearchTerm"
+        :configure-table="false"
     />
     <p v-if="searching" class="text-xs text-gray-400">Searching...</p>
     <collection-card-search-results

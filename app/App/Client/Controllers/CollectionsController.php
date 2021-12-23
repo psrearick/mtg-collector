@@ -55,7 +55,7 @@ class CollectionsController extends Controller
     public function edit(Collection $collection, Request $request) : Response
     {
         return Inertia::render('Collections/Edit', [
-            'page'            => (new CollectionsEditPresenter($collection, $request))->present(),
+            'page'            => (new CollectionsEditPresenter($collection, $request))->present(''),
         ]);
     }
 

@@ -1,14 +1,14 @@
 <template>
-    <CardIndexDataGrid
+    <card-index-data-grid
         v-model:card-term="cardSearchTerm"
         v-model:set-term="setSearchTerm"
         v-model:searching="searching"
-        :data="cards.data"
+        :grid-name="gridName"
+        :data="cardData.data"
         :fields="table.fields"
         :show-search="true"
         :show-pagination="true"
         :filter="table.filter"
-        :sort="table.sort"
         :pagination="cards"
         :hide-without-data="true"
     />
@@ -45,6 +45,10 @@ export default {
             type: String,
             default: "",
         },
+        sortQuery: {
+            type: Object,
+            default: () => {},
+        },
     },
 
     title: "MTG Collector - Card Index",
@@ -57,6 +61,23 @@ export default {
             cardSearchTerm: "",
             searching: false,
         };
+    },
+
+    computed: {
+        cardData() {
+            let cards = _.cloneDeep(this.cards);
+            if (!cards || !cards.data) {
+                return cards;
+            }
+
+            if (Array.isArray(cards.data)) {
+                return cards;
+            }
+
+            cards.data = Object.values(cards.data);
+
+            return cards;
+        },
     },
 
     watch: {
@@ -74,14 +95,10 @@ export default {
 
     created() {
         this.mount();
-        this.emitter.on("card_name_click", (card) => {
-            this.showCard(card.id);
-        });
     },
 
     methods: {
         mount() {
-            this.table.data = this.cards.cards;
             this.cardSearchTerm = this.cardQuery;
             this.setSearchTerm = this.setQuery;
         },
@@ -96,11 +113,11 @@ export default {
                 {
                     card: this.cardSearchTerm,
                     set: this.setSearchTerm,
+                    sort: this.sortFields,
                 },
                 {
                     onSuccess: () => {
                         this.searching = false;
-                        this.mount();
                     },
                 }
             );

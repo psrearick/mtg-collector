@@ -22,6 +22,8 @@ class CollectionsEditPresenter extends Presenter
 
     private string $setQuery;
 
+    private array $sortQuery;
+
     private SetRepository $setRepository;
 
     public function __construct(Collection $collection, Request $request)
@@ -29,6 +31,7 @@ class CollectionsEditPresenter extends Presenter
         $this->collection       = $collection;
         $this->cardQuery        = $request->cardSearch ?? '';
         $this->setQuery         = $request->setSearch ?? '';
+        $this->sortQuery        = $request->sort ?? [];
         $this->setRepository    = new SetRepository();
     }
 
@@ -40,7 +43,21 @@ class CollectionsEditPresenter extends Presenter
             'description'   => $this->collection->description,
         ]);
 
-        $cards = $this->buildCards()->sortBy($sort)->values();
+        $sortFields = [];
+        if ($sort) {
+            $sortFields = [$sort => 'asc'];
+        }
+
+        if ($this->sortQuery) {
+            $sortFields = $this->sortQuery;
+        }
+
+        $sortBy = [];
+        foreach ($sortFields as $sortField => $direction) {
+            $sortBy[] = [$sortField, $direction];
+        }
+
+        $cards = $this->buildCards()->sortBy($sortBy)->values();
         if ($paginate && $paginate > 0) {
             $cards = $cards->paginate($paginate);
         }
@@ -50,6 +67,7 @@ class CollectionsEditPresenter extends Presenter
             'cards'         => $cards,
             'cardQuery'     => $this->cardQuery,
             'setQuery'      => $this->setQuery,
+            'sortQuery'     => $sortFields,
         ];
     }
 
@@ -68,7 +86,7 @@ class CollectionsEditPresenter extends Presenter
                 'name'              => $card->name,
                 'set'               => $card->set->code,
                 'features'          => $computed->feature,
-                'today'             => $computed->allPrices[$card->pivot->finish ?? 'nonfoil'] ?: null,
+                'price'             => $computed->allPrices[$card->pivot->finish ?? 'nonfoil'] ?: null,
                 'acquired_date'     => (new Carbon($card->pivot->date_added ?: $card->pivot->created_at))->toFormattedDateString(),
                 'acquired_price'    => $card->pivot->price_when_added,
                 'quantity'          => $card->pivot->quantity,
@@ -93,7 +111,7 @@ class CollectionsEditPresenter extends Presenter
                 'name'              => $card->name,
                 'set'               => $card->set,
                 'features'          => $card->features,
-                'today'             => $card->today,
+                'price'             => $card->price,
                 'acquired_date'     => $card->acquired_date,
                 'acquired_price'    => $card->acquired_price,
                 'quantity'          => $cardCollection->sum('quantity'),

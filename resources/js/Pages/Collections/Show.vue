@@ -6,6 +6,7 @@
                 v-model:card-term="cardSearchTerm"
                 v-model:set-term="setSearchTerm"
                 v-model:searching="searching"
+                :grid-name="gridName"
                 :data="collection.cards.data"
                 :fields="table.fields"
                 :show-pagination="true"
@@ -92,7 +93,9 @@ export default {
         mount() {
             this.cardSearchTerm = this.collection.cardQuery;
             this.setSearchTerm = this.collection.setQuery;
+            this.setSort();
             this.loaded = true;
+            this.searching = false;
         },
         search: _.debounce(function () {
             this.searching = true;
@@ -101,12 +104,7 @@ export default {
                 {
                     cardSearch: this.cardSearchTerm,
                     setSearch: this.setSearchTerm,
-                },
-                {
-                    onSuccess: () => {
-                        this.searching = false;
-                        this.mount();
-                    },
+                    sort: this.sortFields,
                 }
             );
         }, 1200),

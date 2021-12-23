@@ -40,9 +40,9 @@ class CardsSearchPresenter extends Presenter
 
             return [
                 'id'                 => $card->id,
-                'card_name'          => $card->name,
+                'name'               => $card->name,
                 'card_id'            => $card->id,
-                'set_name'           => $card->set->name,
+                'set'                => $card->set->name,
                 'set_id'             => $card->set->id,
                 'feature'            => $computedCard->feature,
                 'price'              => $computedCard->allPrices['nonfoil'],
@@ -53,6 +53,14 @@ class CardsSearchPresenter extends Presenter
                 'foil_collected'     => $foil,
             ];
         });
+
+        if ($this->cardSearch['sortQuery']) {
+            $sort = [];
+            foreach ($this->cardSearch['sortQuery'] as $sortField => $direction) {
+                $sort[] = [$sortField, $direction];
+            }
+            $cards = $cards->sortBy($sort);
+        }
 
         if ($this->perPage > 0) {
             $cards                       = $cards->paginate($this->perPage)->withQueryString();

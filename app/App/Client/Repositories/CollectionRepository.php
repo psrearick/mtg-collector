@@ -24,7 +24,7 @@ class CollectionRepository extends Repository
 
         $collection->each(function ($card) use (&$count, &$current, &$acquired) {
             $count += $card->quantity;
-            $current += $card->quantity * $card->today;
+            $current += $card->quantity * $card->price;
             $acquired += $card->quantity * $card->acquired_price;
         });
 
@@ -38,7 +38,7 @@ class CollectionRepository extends Repository
             'acquiredValue'   => $acquired,
             'gainLoss'        => $gainLoss,
             'gainLossPercent' => $gainLossPercent,
-            'top_five'        => $collection->sortByDesc('today')->take(5)->values(),
+            'top_five'        => $collection->sortByDesc('price')->take(5)->values(),
         ];
     }
 

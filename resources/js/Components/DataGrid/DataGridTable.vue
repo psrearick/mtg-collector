@@ -57,10 +57,28 @@
                                 >
                                     <a
                                         href="#"
-                                        @click.prevent="sortField(field.key)"
+                                        class="flex"
+                                        @click.prevent="sortField(field)"
                                     >
-                                        <span class="block">
-                                            {{ field.label ? field.label : "" }}
+                                        <span class="block flex">
+                                            <span class="whitespace-nowrap">
+                                                {{
+                                                    field.label
+                                                        ? field.label
+                                                        : ""
+                                                }}
+                                            </span>
+                                            <span>
+                                                <Icon
+                                                    v-if="getIcon(field)"
+                                                    :icon="
+                                                        'sort-' + getIcon(field)
+                                                    "
+                                                    classes="inline ml-2"
+                                                    size="1rem"
+                                                    class="inline"
+                                                />
+                                            </span>
                                         </span>
                                         <span class="block text-gray-400">
                                             {{
@@ -173,11 +191,12 @@
 import DataGridTableField from "@/Components/DataGrid/DataGridTableField";
 import UiCheckbox from "@/UI/Form/UICheckbox";
 import UiDropdown from "@/UI/Dropdown/UIDropdown";
+import Icon from "@/Components/Icon";
 
 export default {
     name: "DataTable",
 
-    components: { DataGridTableField, UiCheckbox, UiDropdown },
+    components: { DataGridTableField, UiCheckbox, UiDropdown, Icon },
 
     props: {
         gridName: {
@@ -204,10 +223,6 @@ export default {
             type: Array,
             default: () => [],
         },
-        sort: {
-            type: Object,
-            default: () => {},
-        },
         classes: {
             type: Object,
             default: () => {
@@ -216,11 +231,8 @@ export default {
         },
     },
 
-    emits: ["update:sort"],
-
     data() {
         return {
-            sorts: {},
             selectAll: false,
             selectedOptions: [],
             selectMenuWithItems: [],
@@ -259,6 +271,9 @@ export default {
             }
             return [];
         },
+        sortFields() {
+            return this.$store.getters.sortFields;
+        },
     },
 
     mounted() {
@@ -279,25 +294,26 @@ export default {
                 this.updateSelectAll();
             }
         },
+        getIcon(field) {
+            let sort = this.sortFields[this.gridName];
+            if (!sort) {
+                return null;
+            }
+
+            return sort[field.key] || null;
+        },
         filterFields(fields) {
             return fields.filter((field) => {
                 return field.visible;
             });
         },
         sortField(field) {
-            if (!(field in this.sorts)) {
-                this.sorts[field] = "ASC";
-                return;
-            }
+            this.$store.dispatch("addFieldToSort", {
+                field: field,
+                gridName: this.gridName,
+            });
 
-            let currentField = this.sorts[field];
-            if (currentField === "DESC") {
-                delete this.sorts[field];
-                return;
-            }
-
-            this.sorts[field] = "DESC";
-            this.$emit("update:sort", this.sorts);
+            this.emitter.emit("sort", this.gridName);
         },
         click(item, field) {
             this.emitter.emit(field.events.click, item);
