@@ -205,6 +205,7 @@ export default {
                     cardSearch: this.cardSearchTerm,
                     setSearch: this.setSearchTerm,
                     sort: this.sortFields,
+                    sortOrder: this.sortOrder,
                 }
             );
         }, 1200),

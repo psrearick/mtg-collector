@@ -259,6 +259,57 @@
                 d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z"
             />
         </svg>
+        <svg
+            v-if="icon === 'circle-x'"
+            xmlns="http://www.w3.org/2000/svg"
+            :class="classes"
+            :height="size"
+            :width="size"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+        </svg>
+        <svg
+            v-if="icon === 'arrow-narrow-down'"
+            xmlns="http://www.w3.org/2000/svg"
+            :class="classes"
+            :height="size"
+            :width="size"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M16 17l-4 4m0 0l-4-4m4 4V3"
+            />
+        </svg>
+        <svg
+            v-if="icon === 'arrow-narrow-up'"
+            xmlns="http://www.w3.org/2000/svg"
+            :class="classes"
+            :height="size"
+            :width="size"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 7l4-4m0 0l4 4m-4-4v18"
+            />
+        </svg>
     </div>
 </template>
 

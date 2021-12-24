@@ -31,6 +31,7 @@ class CardSearch
         $setRequest     = $request->get('set');
         $cardRequest    = $request->get('card');
         $sortRequest    = $request->get('sort');
+        $sortOrder      = $request->get('sortOrder');
         $hasResults     = false;
 
         if ($cardRequest) {
@@ -73,6 +74,7 @@ class CardSearch
             'cardQuery'     => $cardRequest,
             'setQuery'      => $setRequest,
             'sortQuery'     => $sortRequest,
+            'sortOrder'     => $sortOrder,
             'sets'          => $sets,
         ];
     }

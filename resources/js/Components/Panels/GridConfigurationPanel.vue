@@ -9,27 +9,56 @@
         @close="closePanel"
         @save="save"
     >
-        <!-- <p class="text-gray-500 text-sm py-4"> </p> -->
-        <form>
-            <!-- <ui-input
-                v-model="form.name"
-                name="name"
-                type="string"
-                label="Name"
-                :required="true"
-                :error-message="errorMessages.name"
-                class="mb-4"
-            />
-            <ui-text-area
-                v-model="form.description"
-                name="description"
-                type="textarea"
-                label="Description"
-                :required="false"
-                :error-message="errorMessages.description"
-                class="mb-4"
-            /> -->
-        </form>
+        <p class="text-gray-500 text-sm py-4">Sort Fields</p>
+        <div>
+            <div
+                v-for="(field, index) in sortableFields"
+                :key="index"
+                class="border border-1 rounded p-2 mb-2 shadow grid grid-cols-2"
+            >
+                <span class="whitespace-nowrap">
+                    {{ field.label }}
+                </span>
+                <div class="grid grid-cols-3">
+                    <span @click="updateSort(field)">
+                        <Icon
+                            v-if="field.sortDirection"
+                            :icon="'sort-' + field.sortDirection"
+                            classes="inline hover:text-gray-500"
+                            size="1rem"
+                            class="inline"
+                        />
+                        <Icon
+                            v-else
+                            icon="circle-x"
+                            classes="inline hover:text-gray-500"
+                            size="1rem"
+                            class="inline"
+                        />
+                    </span>
+                    <span>
+                        <Icon
+                            v-if="field.sortOrder > 0"
+                            icon="arrow-narrow-up"
+                            classes="inline hover:text-gray-500"
+                            size="1rem"
+                            class="inline"
+                            @click="moveUp(field)"
+                        />
+                    </span>
+                    <span>
+                        <Icon
+                            v-if="field.sortOrder < sortableFields.length - 1"
+                            icon="arrow-narrow-down"
+                            classes="inline hover:text-gray-500"
+                            size="1rem"
+                            class="inline"
+                            @click="moveDown(field)"
+                        />
+                    </span>
+                </div>
+            </div>
+        </div>
     </ui-panel>
 </template>
 
@@ -38,6 +67,7 @@ import UiPanel from "@/UI/UIPanel";
 import UiInput from "@/UI/Form/UIInput";
 import UiButton from "@/UI/UIButton";
 import UiTextArea from "@/UI/UITextArea";
+import Icon from "@/Components/Icon";
 
 export default {
     name: "GridConfigurationPanel",
@@ -47,20 +77,25 @@ export default {
         UiButton,
         UiInput,
         UiPanel,
+        Icon,
     },
 
     props: {
-        show: {
-            type: Boolean,
-            default: false,
+        errors: {
+            type: Object,
+            default: () => {},
         },
         fields: {
             type: Object,
             default: () => {},
         },
-        errors: {
-            type: Object,
-            default: () => {},
+        gridName: {
+            type: String,
+            default: "",
+        },
+        show: {
+            type: Boolean,
+            default: false,
         },
     },
 
@@ -74,15 +109,39 @@ export default {
                 id: null,
             },
             errorMessages: {},
+            sortFields: {},
+            sortOrder: {},
         };
     },
 
     computed: {
-        saveUrl: function () {
-            // return "/collections/collections/" + this.collection.id;
+        saveUrl() {
+            return "";
         },
-        saveMethod: function () {
+        saveMethod() {
             return "patch";
+        },
+        sortableFields() {
+            let fields = this.fields
+                .filter((field) => {
+                    return field.sortable;
+                })
+                .map((field) => {
+                    field.sortDirection = null;
+                    if (this.sortFields) {
+                        if (field.key in this.sortFields) {
+                            field.sortDirection = this.sortFields[field.key];
+                        }
+                    }
+
+                    field.sortOrder = this.sortOrder[field.key];
+
+                    return field;
+                });
+
+            return _.sortBy(fields, (field) => {
+                return field.sortOrder;
+            });
         },
     },
 
@@ -91,12 +150,10 @@ export default {
             this.errorMessages = value;
         },
         show: function (value) {
-            // if (value) {
-            //     this.form.name = this.collection.name;
-            //     this.form.description = this.collection.description;
-            //     this.form.id = this.collection.id;
-            //     return;
-            // }
+            if (value) {
+                this.sortFields = this.getCurrentSortFields();
+                this.sortOrder = this.getCurrentSortOrder();
+            }
             this.clearForm();
         },
     },
@@ -110,6 +167,54 @@ export default {
             // };
             // this.errorMessages = {};
         },
+        getCurrentSortFields() {
+            let fields = this.$store.getters.sortFields;
+            if (fields) {
+                return _.cloneDeep(fields[this.gridName]);
+            }
+
+            return {};
+        },
+        getCurrentSortOrder() {
+            const storeOrder = _.cloneDeep(this.$store.getters.sortOrder) || {};
+            let order = {};
+            if (this.gridName in storeOrder) {
+                order = storeOrder[this.gridName];
+            }
+
+            let fields = _.map(
+                this.fields.filter((field) => {
+                    return field.sortable;
+                }),
+                "key"
+            );
+
+            fields.sort((a, b) => {
+                let aPos = a in order ? order[a] : -1;
+                let bPos = b in order ? order[b] : -1;
+
+                if (aPos === bPos) {
+                    return 0;
+                }
+
+                if (aPos === -1) {
+                    return 1;
+                }
+
+                if (bPos === -1) {
+                    return -1;
+                }
+
+                return bPos < aPos ? 1 : -1;
+            });
+
+            let fieldsOrdered = {};
+            fields.forEach((field, index) => {
+                fieldsOrdered[field] = index;
+            });
+
+            return fieldsOrdered;
+        },
         close() {
             this.$emit("close");
             this.$emit("update:show", false);
@@ -118,16 +223,82 @@ export default {
             // this.clearForm();
             this.close();
         },
+        updateSort(field) {
+            let fieldname = field["key"];
+            let direction = "asc";
+
+            if (fieldname in this.sortFields) {
+                direction = "desc";
+                if (this.sortFields[fieldname] === "desc") {
+                    delete this.sortFields[fieldname];
+                    direction = null;
+                }
+            }
+
+            if (direction) {
+                this.sortFields[fieldname] = direction;
+            }
+        },
+        moveUp(field) {
+            let currentPosition = field.sortOrder;
+            let newPosition = currentPosition - 1;
+
+            let changed = [];
+            Object.keys(this.sortOrder).forEach((key) => {
+                if (
+                    this.sortOrder[key] === currentPosition &&
+                    changed.indexOf(key) === -1
+                ) {
+                    this.sortOrder[key] = newPosition;
+                    changed.push(key);
+                    return;
+                }
+                if (
+                    this.sortOrder[key] === newPosition &&
+                    changed.indexOf(key) === -1
+                ) {
+                    this.sortOrder[key] = currentPosition;
+                    changed.push(key);
+                    return;
+                }
+            });
+        },
+        moveDown(field) {
+            let currentPosition = field.sortOrder;
+            let newPosition = currentPosition + 1;
+
+            let changed = [];
+            Object.keys(this.sortOrder).forEach((key) => {
+                if (
+                    this.sortOrder[key] === currentPosition &&
+                    changed.indexOf(key) === -1
+                ) {
+                    this.sortOrder[key] = newPosition;
+                    changed.push(key);
+                    return;
+                }
+                if (
+                    this.sortOrder[key] === newPosition &&
+                    changed.indexOf(key) === -1
+                ) {
+                    this.sortOrder[key] = currentPosition;
+                    changed.push(key);
+                    return;
+                }
+            });
+        },
         save() {
             let self = this;
-            // this.$inertia.visit(this.saveUrl, {
-            //     method: this.saveMethod,
-            //     data: this.form,
-            //     preserveState: true,
-            //     onSuccess: () => {
-                    self.closePanel();
-            //     },
-            // });
+            this.$store.dispatch("setSortOrder", {
+                order: this.sortOrder,
+                gridName: this.gridName,
+            });
+            this.$store.dispatch("setSortFields", {
+                fields: this.sortFields,
+                gridName: this.gridName,
+            });
+            this.emitter.emit("sort", this.gridName);
+            self.closePanel();
         },
     },
 };
