@@ -9,7 +9,7 @@
         @close="closePanel"
         @save="save"
     >
-        <p class="text-gray-500 text-sm py-4">Sort Fields</p>
+        <p class="text-gray-500 text-sm my-4 font-bold">Sort Fields</p>
         <div>
             <div
                 v-for="(field, index) in sortableFields"
@@ -59,25 +59,44 @@
                 </div>
             </div>
         </div>
+        <p
+            v-if="filterableFields.length > 0"
+            class="text-gray-500 text-sm mt-8 mb-4 font-bold"
+        >
+            Filter Fields
+        </p>
+        <div>
+            <form>
+                <div v-for="(field, index) in filterableFields" :key="index">
+                    <component
+                        :is="field.uiComponent"
+                        v-model="form[field.key]"
+                        :field="field"
+                    />
+                </div>
+            </form>
+        </div>
     </ui-panel>
 </template>
 
 <script>
-import UiPanel from "@/UI/UIPanel";
-import UiInput from "@/UI/Form/UIInput";
-import UiButton from "@/UI/UIButton";
-import UiTextArea from "@/UI/UITextArea";
 import Icon from "@/Components/Icon";
+import UiButton from "@/UI/UIButton";
+import UiInput from "@/UI/Form/UIInput";
+import UiMinMax from "@/UI/Form/UIMinMax";
+import UiPanel from "@/UI/UIPanel";
+import UiTextArea from "@/UI/UITextArea";
 
 export default {
     name: "GridConfigurationPanel",
 
     components: {
-        UiTextArea,
+        Icon,
         UiButton,
         UiInput,
+        UiMinMax,
         UiPanel,
-        Icon,
+        UiTextArea,
     },
 
     props: {
@@ -103,11 +122,7 @@ export default {
 
     data() {
         return {
-            form: {
-                name: "",
-                description: "",
-                id: null,
-            },
+            form: {},
             errorMessages: {},
             sortFields: {},
             sortOrder: {},
@@ -115,8 +130,10 @@ export default {
     },
 
     computed: {
-        saveUrl() {
-            return "";
+        filterableFields() {
+            return this.fields.filter((field) => {
+                return field.filterable;
+            });
         },
         saveMethod() {
             return "patch";
@@ -153,6 +170,8 @@ export default {
             if (value) {
                 this.sortFields = this.getCurrentSortFields();
                 this.sortOrder = this.getCurrentSortOrder();
+                this.form = this.getCurrentFilters();
+                return;
             }
             this.clearForm();
         },
@@ -160,12 +179,15 @@ export default {
 
     methods: {
         clearForm() {
-            // this.form = {
-            //     name: "",
-            //     description: "",
-            //     id: null,
-            // };
-            // this.errorMessages = {};
+            // this.form = {};
+        },
+        getCurrentFilters() {
+            let filters = this.$store.getters.filters;
+            if (filters) {
+                return _.cloneDeep(filters[this.gridName]);
+            }
+
+            return {};
         },
         getCurrentSortFields() {
             let fields = this.$store.getters.sortFields;
@@ -220,7 +242,7 @@ export default {
             this.$emit("update:show", false);
         },
         closePanel() {
-            // this.clearForm();
+            this.clearForm();
             this.close();
         },
         updateSort(field) {
@@ -295,6 +317,10 @@ export default {
             });
             this.$store.dispatch("setSortFields", {
                 fields: this.sortFields,
+                gridName: this.gridName,
+            });
+            this.$store.dispatch("setFilters", {
+                filters: this.form,
                 gridName: this.gridName,
             });
             this.emitter.emit("sort", this.gridName);
