@@ -124,7 +124,7 @@ export default {
         sortableFields() {
             let fields = this.fields
                 .filter((field) => {
-                    return field.sortable;
+                    return field.sortable && field.visible;
                 })
                 .map((field) => {
                     field.sortDirection = null;
@@ -184,7 +184,7 @@ export default {
 
             let fields = _.map(
                 this.fields.filter((field) => {
-                    return field.sortable;
+                    return field.sortable && field.visible;
                 }),
                 "key"
             );
