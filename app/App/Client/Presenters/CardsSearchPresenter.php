@@ -56,8 +56,18 @@ class CardsSearchPresenter extends Presenter
 
         if ($this->cardSearch['sortQuery']) {
             $sort = [];
-            foreach ($this->cardSearch['sortQuery'] as $sortField => $direction) {
-                $sort[] = [$sortField, $direction];
+            if ($this->cardSearch['sortOrder']) {
+                asort($this->cardSearch['sortOrder']);
+                foreach ($this->cardSearch['sortOrder'] as $sortField => $order) {
+                    if (array_key_exists($sortField, $this->cardSearch['sortQuery'])) {
+                        $sort[] = [$sortField, $this->cardSearch['sortQuery'][$sortField]];
+                    }
+                }
+            }
+            if (empty($sort)) {
+                foreach ($this->cardSearch['sortQuery'] as $sortField => $direction) {
+                    $sort[] = [$sortField, $direction];
+                }
             }
             $cards = $cards->sortBy($sort);
         }

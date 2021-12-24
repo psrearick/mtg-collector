@@ -83,6 +83,14 @@ export default {
         };
     },
     computed: {
+        sortOrder() {
+            let fields = this.$store.getters.sortOrder;
+            if (fields) {
+                return fields[this.gridName];
+            }
+
+            return {};
+        },
         sortFields() {
             let fields = this.$store.getters.sortFields;
             if (fields) {
@@ -129,6 +137,10 @@ export default {
             this.$store.dispatch("setSortFields", {
                 gridName: this.gridName,
                 fields: this.page.sortQuery || {},
+            });
+            this.$store.dispatch("setSortOrder", {
+                gridName: this.gridName,
+                order: this.page.sortOrder || {},
             });
         },
     },

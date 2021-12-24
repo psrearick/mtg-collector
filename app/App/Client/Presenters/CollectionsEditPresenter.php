@@ -24,6 +24,8 @@ class CollectionsEditPresenter extends Presenter
 
     private array $sortQuery;
 
+    private array $sortOrder;
+
     private SetRepository $setRepository;
 
     public function __construct(Collection $collection, Request $request)
@@ -32,6 +34,7 @@ class CollectionsEditPresenter extends Presenter
         $this->cardQuery        = $request->cardSearch ?? '';
         $this->setQuery         = $request->setSearch ?? '';
         $this->sortQuery        = $request->sort ?? [];
+        $this->sortOrder        = $request->sortOrder ?? [];
         $this->setRepository    = new SetRepository();
     }
 
@@ -53,13 +56,24 @@ class CollectionsEditPresenter extends Presenter
         }
 
         $sortBy = [];
-        foreach ($sortFields as $sortField => $direction) {
-            $sortBy[] = [$sortField, $direction];
+        if ($this->sortOrder) {
+            asort($this->sortOrder);
+            foreach ($this->sortOrder as $field => $order) {
+                if (array_key_exists($field, $sortFields)){
+                    $sortBy[] = [$field, $sortFields[$field]];
+                };
+            }
+        };
+
+        if (empty($sortBy)) {
+            foreach ($sortFields as $sortField => $direction) {
+                $sortBy[] = [$sortField, $direction];
+            }
         }
 
         $cards = $this->buildCards()->sortBy($sortBy)->values();
         if ($paginate && $paginate > 0) {
-            $cards = $cards->paginate($paginate);
+            $cards = $cards->paginate($paginate)->withQueryString();
         }
 
         return [
@@ -67,6 +81,7 @@ class CollectionsEditPresenter extends Presenter
             'cards'         => $cards,
             'cardQuery'     => $this->cardQuery,
             'setQuery'      => $this->setQuery,
+            'sortOrder'     => $this->sortOrder,
             'sortQuery'     => $sortFields,
         ];
     }

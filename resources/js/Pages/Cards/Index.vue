@@ -49,6 +49,10 @@ export default {
             type: Object,
             default: () => {},
         },
+        sortOrder: {
+            type: Object,
+            default: () => {},
+        },
     },
 
     title: "MTG Collector - Card Index",
@@ -114,6 +118,7 @@ export default {
                     card: this.cardSearchTerm,
                     set: this.setSearchTerm,
                     sort: this.sortFields,
+                    sortOrder: this.sortOrder,
                 },
                 {
                     onSuccess: () => {

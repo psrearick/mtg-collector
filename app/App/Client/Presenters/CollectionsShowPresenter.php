@@ -36,11 +36,12 @@ class CollectionsShowPresenter extends Presenter
             'cardQuery'     => optional($this->request)->get('cardSearch') ?: '',
             'setQuery'      => optional($this->request)->get('setSearch') ?: '',
             'sortQuery'     => $editPresenter['sortQuery'],
+            'sortOrder'     => $editPresenter['sortOrder'],
             'id'            => $editPresenter['collection']['id'],
             'name'          => $editPresenter['collection']['name'],
             'description'   => $editPresenter['collection']['description'],
             'summary'       => $this->collectionRepository->getSummary($cards),
-            'cards'         => $cards->paginate(20),
+            'cards'         => $cards->paginate(20)->withQueryString(),
         ]);
     }
 }

@@ -24,7 +24,8 @@
         <data-grid-pagination v-if="showPagination" :pagination="pagination" />
         <grid-configuration-panel
             v-model:show="gridConfigurationPanelShow"
-            :fields="configurableFields"
+            :fields="fields"
+            :grid-name="gridName"
         />
     </div>
 </template>
@@ -81,10 +82,6 @@ export default {
             default: true,
         },
         data: {
-            type: Array,
-            default: () => [],
-        },
-        configurableFields: {
             type: Array,
             default: () => [],
         },

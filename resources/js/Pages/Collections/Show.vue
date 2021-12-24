@@ -7,7 +7,7 @@
                 v-model:set-term="setSearchTerm"
                 v-model:searching="searching"
                 :grid-name="gridName"
-                :data="collection.cards.data"
+                :data="cardData.data"
                 :fields="table.fields"
                 :show-pagination="true"
                 :force-show="true"
@@ -52,6 +52,23 @@ export default {
             loaded: false,
             searching: false,
         };
+    },
+
+    computed: {
+        cardData() {
+            let cards = _.cloneDeep(this.collection.cards);
+            if (!cards || !cards.data) {
+                return cards;
+            }
+
+            if (Array.isArray(cards.data)) {
+                return cards;
+            }
+
+            cards.data = Object.values(cards.data);
+
+            return cards;
+        },
     },
 
     watch: {
@@ -105,6 +122,7 @@ export default {
                     cardSearch: this.cardSearchTerm,
                     setSearch: this.setSearchTerm,
                     sort: this.sortFields,
+                    sortOrder: this.sortOrder,
                 }
             );
         }, 1200),
