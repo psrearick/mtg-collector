@@ -20,15 +20,15 @@ class CollectionsEditPresenter extends Presenter
 
     private Collection $collection;
 
+    private array $filters;
+
     private string $setQuery;
 
-    private array $sortQuery;
+    private SetRepository $setRepository;
 
     private array $sortOrder;
 
-    private array $filters;
-
-    private SetRepository $setRepository;
+    private array $sortQuery;
 
     public function __construct(Collection $collection, Request $request)
     {
@@ -50,7 +50,7 @@ class CollectionsEditPresenter extends Presenter
         ]);
 
         $sortBy = $this->sort($sort);
-        $cards = $this->filter($this->buildCards())->sortBy($sortBy['sortBy'])->values();
+        $cards  = $this->filter($this->buildCards())->sortBy($sortBy['sortBy'])->values();
         if ($paginate && $paginate > 0) {
             $cards = $cards->paginate($paginate)->withQueryString();
         }
@@ -118,7 +118,6 @@ class CollectionsEditPresenter extends Presenter
 
     private function filter(BaseCollection $cards) : BaseCollection
     {
-
         if ($filters = $this->filters) {
             foreach ($filters as $filter => $value) {
                 if ($filter == 'price') {
@@ -180,7 +179,7 @@ class CollectionsEditPresenter extends Presenter
         if ($this->sortOrder) {
             asort($this->sortOrder);
             foreach ($this->sortOrder as $field => $order) {
-                if (array_key_exists($field, $sortFields)){
+                if (array_key_exists($field, $sortFields)) {
                     $sortBy[] = [$field, $sortFields[$field]];
                 };
             }

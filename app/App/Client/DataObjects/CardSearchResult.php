@@ -22,11 +22,11 @@ class CardSearchResult implements DataObjectInterface
 
     public string $name;
 
+    public float $price;
+
     public int $quantity;
 
     public string $set;
-
-    public float $price;
 
     public function __construct(array $data)
     {
