@@ -27,7 +27,7 @@ export default {
                         key: "set",
                         event: "set_name_click",
                         sortable: true,
-                        filterable: true,
+                        filterable: false,
                     },
                     {
                         visible: true,
@@ -36,7 +36,7 @@ export default {
                         label: "Features",
                         key: "feature",
                         sortable: false,
-                        filterable: true,
+                        filterable: false,
                     },
                     {
                         visible: true,
@@ -45,7 +45,7 @@ export default {
                         label: "Non-Foil",
                         key: "price",
                         sortable: true,
-                        filterable: true,
+                        filterable: false,
                     },
                     {
                         visible: true,
@@ -54,7 +54,7 @@ export default {
                         label: "Foil",
                         key: "price_foil",
                         sortable: true,
-                        filterable: true,
+                        filterable: false,
                     },
                     {
                         visible: true,
@@ -63,7 +63,7 @@ export default {
                         label: "Etched",
                         key: "price_etched",
                         sortable: true,
-                        filterable: true,
+                        filterable: false,
                     },
                     {
                         visible: true,
@@ -71,7 +71,7 @@ export default {
                         label: "Collected",
                         key: "quantity_collected",
                         sortable: true,
-                        filterable: true,
+                        filterable: false,
                     },
                     // {
                     //     visible: true,
@@ -95,7 +95,7 @@ export default {
         };
     },
     computed: {
-        sortOrder() {
+        fieldSortOrder() {
             let fields = this.$store.getters.sortOrder;
             if (fields) {
                 return fields[this.gridName];

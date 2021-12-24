@@ -41,9 +41,14 @@ export default {
                     {
                         visible: true,
                         sortable: true,
+                        filterable: true,
                         type: "currency",
                         label: "Value",
                         key: "price",
+                        uiComponent: "ui-min-max",
+                        uiComponentOptions: {
+                            type: "currency",
+                        },
                     },
                     {
                         visible: false,
@@ -99,6 +104,14 @@ export default {
 
             return {};
         },
+        filters() {
+            let filters = this.$store.getters.filters;
+            if (filters) {
+                return filters[this.gridName];
+            }
+
+            return {};
+        },
     },
     created() {
         this.emitter.on("collection_card_name_click", (card) => {
@@ -136,12 +149,27 @@ export default {
         setSort() {
             this.$store.dispatch("setSortFields", {
                 gridName: this.gridName,
-                fields: this.page.sortQuery || {},
+                fields: this.getObjectValue(this.page.sortQuery),
             });
             this.$store.dispatch("setSortOrder", {
                 gridName: this.gridName,
-                order: this.page.sortOrder || {},
+                order: this.getObjectValue(this.page.sortOrder),
             });
+            this.$store.dispatch("setFilters", {
+                gridName: this.gridName,
+                filters: this.getObjectValue(this.page.filters),
+            });
+        },
+        getObjectValue(value) {
+            if (!value) {
+                return {};
+            }
+
+            if (Array.isArray(value)) {
+                return {};
+            }
+
+            return value;
         },
     },
 };

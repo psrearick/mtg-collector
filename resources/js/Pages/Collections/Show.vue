@@ -123,6 +123,7 @@ export default {
                     setSearch: this.setSearchTerm,
                     sort: this.sortFields,
                     sortOrder: this.sortOrder,
+                    filters: this.filters,
                 }
             );
         }, 1200),

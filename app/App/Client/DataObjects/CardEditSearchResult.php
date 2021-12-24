@@ -20,13 +20,13 @@ class CardEditSearchResult implements DataObjectInterface
 
     public string $name;
 
+    public array $price;
+
     public array $quantities;
 
     public string $set_code;
 
     public string $set_name;
-
-    public array $price;
 
     public function __construct(array $data)
     {

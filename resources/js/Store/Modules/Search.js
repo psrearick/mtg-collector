@@ -1,11 +1,13 @@
 const state = () => ({
     sortFields: {},
     sortOrder: {},
+    filters: {},
 });
 
 const getters = {
     sortFields: (state) => state.sortFields,
     sortOrder: (state) => state.sortOrder,
+    filters: (state) => state.filters,
 };
 
 const actions = {
@@ -17,6 +19,9 @@ const actions = {
     },
     setSortOrder({ commit }, order) {
         commit("setSortOrder", order);
+    },
+    setFilters({ commit }, filters) {
+        commit("setFilters", filters);
     },
 };
 
@@ -53,6 +58,9 @@ const mutations = {
     },
     setSortOrder(state, { gridName, order }) {
         state.sortOrder[gridName] = order;
+    },
+    setFilters(state, { gridName, filters }) {
+        state.filters[gridName] = filters;
     },
 };
 

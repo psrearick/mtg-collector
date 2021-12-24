@@ -13,6 +13,7 @@
                         flex
                         items-center
                         pointer-events-none
+                        mr-4
                     "
                 >
                     <span class="text-gray-500 sm:text-sm">
@@ -23,7 +24,8 @@
                     :id="name"
                     :type="getType()"
                     :name="name"
-                    :class="`
+                    :class="
+                        `
                         border
                         py-2
                         focus:ring-primary-500
@@ -35,7 +37,8 @@
                         border-gray-300
                         rounded-md
                         disabled:bg-gray-100
-                    `"
+                    ` + (before ? ' pl-8' : '')
+                    "
                     :placeholder="placeholder"
                     :autocomplete="autocomplete"
                     :required="required"

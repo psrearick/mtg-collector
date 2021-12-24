@@ -37,6 +37,7 @@ class CollectionsShowPresenter extends Presenter
             'setQuery'      => optional($this->request)->get('setSearch') ?: '',
             'sortQuery'     => $editPresenter['sortQuery'],
             'sortOrder'     => $editPresenter['sortOrder'],
+            'filters'       => $editPresenter['filters'],
             'id'            => $editPresenter['collection']['id'],
             'name'          => $editPresenter['collection']['name'],
             'description'   => $editPresenter['collection']['description'],

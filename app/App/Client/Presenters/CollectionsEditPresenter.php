@@ -20,13 +20,15 @@ class CollectionsEditPresenter extends Presenter
 
     private Collection $collection;
 
+    private array $filters;
+
     private string $setQuery;
 
-    private array $sortQuery;
+    private SetRepository $setRepository;
 
     private array $sortOrder;
 
-    private SetRepository $setRepository;
+    private array $sortQuery;
 
     public function __construct(Collection $collection, Request $request)
     {
@@ -35,6 +37,7 @@ class CollectionsEditPresenter extends Presenter
         $this->setQuery         = $request->setSearch ?? '';
         $this->sortQuery        = $request->sort ?? [];
         $this->sortOrder        = $request->sortOrder ?? [];
+        $this->filters          = $request->filters ?? [];
         $this->setRepository    = new SetRepository();
     }
 
@@ -46,32 +49,8 @@ class CollectionsEditPresenter extends Presenter
             'description'   => $this->collection->description,
         ]);
 
-        $sortFields = [];
-        if ($sort) {
-            $sortFields = [$sort => 'asc'];
-        }
-
-        if ($this->sortQuery) {
-            $sortFields = $this->sortQuery;
-        }
-
-        $sortBy = [];
-        if ($this->sortOrder) {
-            asort($this->sortOrder);
-            foreach ($this->sortOrder as $field => $order) {
-                if (array_key_exists($field, $sortFields)){
-                    $sortBy[] = [$field, $sortFields[$field]];
-                };
-            }
-        };
-
-        if (empty($sortBy)) {
-            foreach ($sortFields as $sortField => $direction) {
-                $sortBy[] = [$sortField, $direction];
-            }
-        }
-
-        $cards = $this->buildCards()->sortBy($sortBy)->values();
+        $sortBy = $this->sort($sort);
+        $cards  = $this->filter($this->buildCards())->sortBy($sortBy['sortBy'])->values();
         if ($paginate && $paginate > 0) {
             $cards = $cards->paginate($paginate)->withQueryString();
         }
@@ -82,7 +61,8 @@ class CollectionsEditPresenter extends Presenter
             'cardQuery'     => $this->cardQuery,
             'setQuery'      => $this->setQuery,
             'sortOrder'     => $this->sortOrder,
-            'sortQuery'     => $sortFields,
+            'sortQuery'     => $sortBy['sortFields'],
+            'filters'       => $this->filters,
         ];
     }
 
@@ -136,6 +116,36 @@ class CollectionsEditPresenter extends Presenter
         })->values();
     }
 
+    private function filter(BaseCollection $cards) : BaseCollection
+    {
+        if ($filters = $this->filters) {
+            foreach ($filters as $filter => $value) {
+                if ($filter == 'price') {
+                    $min = null;
+                    $max = null;
+                    if (is_numeric($value)) {
+                        $min = $value;
+                    }
+
+                    if (is_array($value)) {
+                        $min = $value['min'];
+                        $max = $value['max'];
+                    }
+
+                    if ($min) {
+                        $cards = $cards->where('price', '>', $min);
+                    }
+
+                    if ($max) {
+                        $cards = $cards->where('price', '<', $max);
+                    }
+                }
+            }
+        }
+
+        return $cards;
+    }
+
     private function search() : BaseCollection
     {
         $cards      = $this->collection->cards->load('prices', 'frameEffects', 'prices.priceProvider');
@@ -152,5 +162,35 @@ class CollectionsEditPresenter extends Presenter
         }
 
         return $cards;
+    }
+
+    private function sort(?string $sort) : array
+    {
+        $sortFields = [];
+        if ($sort) {
+            $sortFields = [$sort => 'asc'];
+        }
+
+        if ($this->sortQuery) {
+            $sortFields = $this->sortQuery;
+        }
+
+        $sortBy = [];
+        if ($this->sortOrder) {
+            asort($this->sortOrder);
+            foreach ($this->sortOrder as $field => $order) {
+                if (array_key_exists($field, $sortFields)) {
+                    $sortBy[] = [$field, $sortFields[$field]];
+                };
+            }
+        };
+
+        if (empty($sortBy)) {
+            foreach ($sortFields as $sortField => $direction) {
+                $sortBy[] = [$sortField, $direction];
+            }
+        }
+
+        return ['sortBy' => $sortBy, 'sortFields' => $sortFields];
     }
 }

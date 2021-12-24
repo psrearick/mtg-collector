@@ -118,7 +118,7 @@ export default {
                     card: this.cardSearchTerm,
                     set: this.setSearchTerm,
                     sort: this.sortFields,
-                    sortOrder: this.sortOrder,
+                    sortOrder: this.fieldSortOrder,
                 },
                 {
                     onSuccess: () => {
