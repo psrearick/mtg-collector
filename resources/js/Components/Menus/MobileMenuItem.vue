@@ -1,5 +1,11 @@
 <template>
-    <inertia-link :href="href" :class="classes" :method="method" :as="linkType">
+    <inertia-link
+        :href="href"
+        :class="classes"
+        :method="method"
+        :as="linkType"
+        @click="emitter.emit('mobile-menu-item-click')"
+    >
         <slot />
     </inertia-link>
 </template>

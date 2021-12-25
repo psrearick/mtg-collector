@@ -41,9 +41,7 @@
                         lg:ml-6
                         lg:justify-end
                     "
-                >
-                    <!--                    <Search dark />-->
-                </div>
+                ></div>
                 <div class="flex lg:hidden">
                     <!-- Mobile menu button -->
                     <mobile-menu-button
@@ -53,8 +51,6 @@
                 </div>
                 <div class="lg:block lg:ml-4">
                     <div class="flex items-center">
-                        <!--                        <notification-button class="hidden lg:block" />-->
-
                         <!-- Profile dropdown -->
                         <div class="ml-4 relative flex-shrink-0">
                             <div>
@@ -65,7 +61,7 @@
                             </div>
 
                             <!--
-                              Dropdown menu, show/hide based on menu state.
+                                Dropdown menu, show/hide based on menu state.
                             -->
                             <transition
                                 enter-active-class="transition ease-out duration-100"
@@ -99,7 +95,7 @@
                                             z-20
                                         "
                                     >
-                                        <menu-item
+                                        <!-- <menu-item
                                             id="user-menu-item-0"
                                             href="profile"
                                             :current="
@@ -107,10 +103,10 @@
                                             "
                                         >
                                             Your Profile
-                                        </menu-item>
+                                        </menu-item> -->
                                         <menu-item
                                             id="user-menu-item-1"
-                                            href="settings"
+                                            href="/user/settings"
                                             :current="
                                                 route().current('settings')
                                             "
@@ -135,13 +131,22 @@
         <!-- Mobile menu, show/hide based on menu state. -->
         <mobile-menu v-if="mobileMenuOpen" id="mobile-menu" class="lg:hidden">
             <mobile-menu-items>
-                <mobile-menu-item :href="route('dashboard')">
+                <mobile-menu-item
+                    :href="route('dashboard')"
+                    @click="mobileMenuOpen = !mobileMenuOpen"
+                >
                     Dashboard
                 </mobile-menu-item>
-                <mobile-menu-item :href="route('collections.index')">
+                <mobile-menu-item
+                    :href="route('collections.index')"
+                    @click="mobileMenuOpen = !mobileMenuOpen"
+                >
                     Collections
                 </mobile-menu-item>
-                <mobile-menu-item :href="route('cards.index')">
+                <mobile-menu-item
+                    :href="route('cards.index')"
+                    @click="mobileMenuOpen = !mobileMenuOpen"
+                >
                     Cards
                 </mobile-menu-item>
             </mobile-menu-items>
@@ -166,10 +171,15 @@
                 </div>
             </div>
             <mobile-menu-items>
-                <mobile-menu-item href="profile">
+                <!-- <mobile-menu-item href="profile">
                     Your Profile
+                </mobile-menu-item> -->
+                <mobile-menu-item
+                    href="/user/settings"
+                    @click="mobileMenuOpen = !mobileMenuOpen"
+                >
+                    Settings
                 </mobile-menu-item>
-                <mobile-menu-item href="settings"> Settings </mobile-menu-item>
                 <mobile-menu-item href="logout" method="post">
                     Logout
                 </mobile-menu-item>

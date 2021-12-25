@@ -1,21 +1,29 @@
 <template>
-    <button
-        id="user-menu-button"
-        type="button"
-        class="
-            bg-gray-800
-            flex
-            text-sm text-gray-500
-            focus:text-gray-200
-            hover:text-gray-200
-            focus:outline-none
-        "
-        aria-expanded="false"
-        aria-haspopup="true"
-    >
-        <span class="sr-only">Open user menu</span>
-        <Icon icon="avatar" size="2rem" />
-    </button>
+    <span class="inline-flex rounded-md">
+        <button
+            id="user-menu-button"
+            type="button"
+            class="
+                bg-gray-800
+                text-gray-500
+                hover:text-gray-200
+                inline-flex
+                items-center
+                px-3
+                py-2
+                border border-transparent
+                text-sm
+                leading-4
+                font-medium
+                rounded-md
+                focus:outline-none
+                transition
+            "
+        >
+            {{ $page.props.auth.user.name }}
+            <Icon icon="chevron-down" classes="ml-2 -mr-0.5 h-4 w-4" />
+        </button>
+    </span>
 </template>
 
 <script>
