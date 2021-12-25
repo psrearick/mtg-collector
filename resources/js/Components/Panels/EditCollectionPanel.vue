@@ -3,7 +3,7 @@
         :show="show"
         :form="true"
         :clear="false"
-        title="Edit Collection"
+        :title="title"
         save-text="Save"
         @update:show="$emit('update:show', $event)"
         @close="closePanel"
@@ -36,15 +36,13 @@
 <script>
 import UiPanel from "@/UI/UIPanel";
 import UiInput from "@/UI/Form/UIInput";
-import UiButton from "@/UI/UIButton";
-import UiTextArea from "@/UI/UITextArea";
+import UiTextArea from "@/UI/Form/UITextArea";
 
 export default {
     name: "EditCollectionPanel",
 
     components: {
         UiTextArea,
-        UiButton,
         UiInput,
         UiPanel,
     },
@@ -79,10 +77,22 @@ export default {
 
     computed: {
         saveUrl: function () {
-            return "/collections/collections/" + this.collection.id;
+            return (
+                "/collections/collections/" +
+                (this.collection.type === "collection" ? "" : "folders/") +
+                this.collection.id
+            );
         },
         saveMethod: function () {
             return "patch";
+        },
+        title: function () {
+            return (
+                "Edit " +
+                (this.collection.type === "collection"
+                    ? "Collection"
+                    : "Folder")
+            );
         },
     },
 

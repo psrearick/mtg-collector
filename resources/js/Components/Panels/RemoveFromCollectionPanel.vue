@@ -37,7 +37,7 @@
 <script>
 import UiPanel from "@/UI/UIPanel";
 import UiButton from "@/UI/UIButton";
-import UiTextArea from "@/UI/UITextArea";
+import UiTextArea from "@/UI/Form/UITextArea";
 
 export default {
     name: "RemoveFromCollectionPanel",

@@ -4,31 +4,46 @@
         :form="true"
         :clear="false"
         :title="title"
-        save-text="Delete"
-        save-button-style="danger"
+        save-text="Move"
         @update:show="$emit('update:show', $event)"
         @close="closePanel"
         @save="save"
     >
-        <p>Do you really want to delete the following {{ collection.type }}?</p>
-        <p class="text-gray-500 text-sm pt-6 font-bold">
-            {{ collection.name }}
-        </p>
-        <p class="text-gray-500 text-sm pt-1">{{ collection.description }}</p>
+        <p class="text-gray-500 text-sm py-4">{{ collection.name }}</p>
+        <form>
+            <ui-input
+                v-model="form.name"
+                name="name"
+                type="string"
+                label="Name"
+                :required="true"
+                :error-message="errorMessages.name"
+                class="mb-4"
+            />
+            <ui-text-area
+                v-model="form.description"
+                name="description"
+                type="textarea"
+                label="Description"
+                :required="false"
+                :error-message="errorMessages.description"
+                class="mb-4"
+            />
+        </form>
     </ui-panel>
 </template>
 
 <script>
 import UiPanel from "@/UI/UIPanel";
-import UiButton from "@/UI/UIButton";
+import UiInput from "@/UI/Form/UIInput";
 import UiTextArea from "@/UI/Form/UITextArea";
 
 export default {
-    name: "EditCollectionPanel",
+    name: "MoveItemPanel",
 
     components: {
         UiTextArea,
-        UiButton,
+        UiInput,
         UiPanel,
     },
 
@@ -49,6 +64,17 @@ export default {
 
     emits: ["update:show", "close"],
 
+    data() {
+        return {
+            form: {
+                name: "",
+                description: "",
+                id: null,
+            },
+            errorMessages: {},
+        };
+    },
+
     computed: {
         saveUrl: function () {
             return (
@@ -58,11 +84,11 @@ export default {
             );
         },
         saveMethod: function () {
-            return "delete";
+            return "patch";
         },
         title: function () {
             return (
-                "Delete " +
+                "Edit " +
                 (this.collection.type === "collection"
                     ? "Collection"
                     : "Folder")
@@ -74,20 +100,39 @@ export default {
         errors: function (value) {
             this.errorMessages = value;
         },
+        show: function (value) {
+            if (value) {
+                this.form.name = this.collection.name;
+                this.form.description = this.collection.description;
+                this.form.id = this.collection.id;
+                return;
+            }
+            this.clearForm();
+        },
     },
 
     methods: {
+        clearForm() {
+            this.form = {
+                name: "",
+                description: "",
+                id: null,
+            };
+            this.errorMessages = {};
+        },
         close() {
             this.$emit("close");
             this.$emit("update:show", false);
         },
         closePanel() {
+            this.clearForm();
             this.close();
         },
         save() {
             let self = this;
             this.$inertia.visit(this.saveUrl, {
                 method: this.saveMethod,
+                data: this.form,
                 preserveState: true,
                 onSuccess: () => {
                     self.closePanel();

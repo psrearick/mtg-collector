@@ -5,6 +5,7 @@ namespace App\Domain\Collections\Models;
 use App\App\Client\Traits\BelongsToUser;
 use App\Domain\Base\Model;
 use App\Domain\Cards\Models\Card;
+use App\Domain\Collections\Models\Folder;
 use App\Domain\Transactions\Models\Transaction;
 use App\Domain\Users\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -28,6 +29,11 @@ class Collection extends Model
             ->whereNull('card_collections.deleted_at')
             ->using(CardCollection::class)
             ->withTimestamps();
+    }
+
+    public function folder() : BelongsTo
+    {
+        return $this->belongsTo(Folder::class);
     }
 
     public function transactions() : HasMany

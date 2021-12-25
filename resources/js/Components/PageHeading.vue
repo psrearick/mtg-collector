@@ -34,9 +34,11 @@
 
 <script>
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
+import CollectionIndexHeaderRight from "@/Components/Header/CollectionIndexHeaderRight";
 
 const componentMap = {
     PrimaryButton: PrimaryButton,
+    CollectionIndexHeaderRight: CollectionIndexHeaderRight,
 };
 
 export default {
