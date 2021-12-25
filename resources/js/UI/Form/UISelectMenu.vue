@@ -94,6 +94,13 @@
                         role="listbox"
                     >
                         <li
+                            v-if="!options.length"
+                            class="select-none relative py-2 pl-3 pr-9"
+                            role="option"
+                        >
+                            No options available
+                        </li>
+                        <li
                             v-for="(option, index) in options"
                             :id="name + '-' + index"
                             :key="index"

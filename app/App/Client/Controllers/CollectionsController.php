@@ -35,9 +35,11 @@ class CollectionsController extends Controller
     /**
      * @return Response
      */
-    public function create() : Response
+    public function create(Request $request) : Response
     {
-        return Inertia::render('Collections/Create');
+        return Inertia::render('Collections/Create', [
+            'folder' => $request->get('folder') ? (int) $request->get('folder') : null,
+        ]);
     }
 
     public function destroy(Collection $collection) : RedirectResponse
@@ -64,9 +66,7 @@ class CollectionsController extends Controller
      */
     public function index() : Response
     {
-        return Inertia::render('Collections/Index', [
-            'collections' => (new CollectionsIndexPresenter())->present(),
-        ]);
+        return Inertia::render('Collections/Index', (new CollectionsIndexPresenter(null))->present());
     }
 
     public function show(Collection $collection, Request $request)
@@ -78,16 +78,17 @@ class CollectionsController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request) : RedirectResponse
     {
-        $form = $request->get('form');
-        $card = Collection::create([
+        $form       = $request->get('form');
+        $collection = Collection::create([
             'name'          => $form['name'],
             'description'   => $form['description'],
             'user_id'       => Auth::id(),
+            'folder_id'     => $form['folder'] ?? null,
         ]);
 
-        return redirect()->action([CollectionsController::class, 'show'], ['collection' => $card->id]);
+        return redirect()->action([CollectionsController::class, 'show'], ['collection' => $collection->id]);
     }
 
     public function update(Collection $collection, Request $request) : RedirectResponse

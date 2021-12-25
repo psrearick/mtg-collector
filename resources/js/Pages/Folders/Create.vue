@@ -15,8 +15,9 @@
                         "
                     >
                         <h3 class="text-lg leading-6 font-medium text-gray-900">
-                            Collection Details
+                            Folder Details
                         </h3>
+
                         <div class="sm:col-span-6">
                             <ui-input
                                 v-model="form.name"
@@ -24,7 +25,7 @@
                                 field-id="name"
                                 name="name"
                                 type="string"
-                                placeholder="Name your collection"
+                                placeholder="Name your folder"
                                 :required="true"
                             />
                         </div>
@@ -36,7 +37,7 @@
                                 type="textarea"
                                 label="Description"
                                 :required="false"
-                                placeholder="Write a few sentences about your collection"
+                                placeholder="Write a few sentences about your folder"
                                 class="mb-4"
                             />
                         </div>
@@ -55,7 +56,7 @@
                     <ui-button
                         type="button"
                         button-style="primary-dark"
-                        text="Create Collection"
+                        text="Create Folder"
                         @click="submitForm"
                     />
                 </div>
@@ -77,9 +78,9 @@ export default {
 
     layout: Layout,
 
-    title: "MTG Collector - Create Collection",
+    title: "MTG Collector - Create Folder",
 
-    header: "Create Collection",
+    header: "Create Folder",
 
     props: {
         folder: {
@@ -112,7 +113,7 @@ export default {
 
     methods: {
         submitForm() {
-            this.$inertia.post("/collections/collections/", {
+            this.$inertia.post("/collections/collections/folders", {
                 form: this.form,
             });
         },

@@ -1,10 +1,10 @@
 <template>
     <div :class="classes">
-        <div class="grid grid-cols-8">
+        <div :class="'grid grid-cols-8 ' + gridClasses">
             <div class="col-span-1">
                 <slot name="left"></slot>
             </div>
-            <div class="col-span-6">
+            <div :class="'col-span-6 ' + mainClasses">
                 <inertia-link
                     v-if="hasLink"
                     :href="href"
@@ -61,7 +61,15 @@ export default {
     components: { UiDropdownMenu, Icon, UiDropdownLink },
 
     props: {
+        gridClasses: {
+            type: String,
+            default: "",
+        },
         href: {
+            type: String,
+            default: "",
+        },
+        mainClasses: {
             type: String,
             default: "",
         },
