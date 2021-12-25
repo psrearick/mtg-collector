@@ -7,6 +7,8 @@ use App\Domain\Cards\Models\Card;
 use App\Domain\Collections\Actions\CollectionCardSearch;
 use App\Domain\Collections\Models\Collection;
 use Carbon\Carbon;
+use Illuminate\Contracts\Cache\LockTimeoutException;
+use Illuminate\Support\Facades\Cache;
 
 class UpdateCollectionCardQuantity
 {
@@ -28,19 +30,31 @@ class UpdateCollectionCardQuantity
 
     public function execute(array $change) : array
     {
-        $collection     = $this->findCollection($change);
-        $changeRequest  = [
-            'collection'    => $collection,
-            'id'            => $change['id'] ?? null,
-            'finish'        => $change['finish'] ?? '',
-            'date'          => $change['date'] ?? Carbon::today(),
-            'quantity'      => $change['change'] ?? $change['quantity'],
-        ];
-        $collectionCard  = $this->getCard($changeRequest);
+        $lock = Cache::lock('update-card-quantity', 10);
 
-        $this->updateCardQuantity($collectionCard, $collection, $changeRequest);
+        try {
+            $lock->block(5);
+            $collection     = $this->findCollection($change);
+            $changeRequest  = [
+                'collection'    => $collection,
+                'id'            => $change['id'] ?? null,
+                'finish'        => $change['finish'] ?? '',
+                'date'          => $change['date'] ?? Carbon::today(),
+                'quantity'      => $change['change'] ?? $change['quantity'],
+            ];
+            $collectionCard  = $this->getCard($changeRequest);
 
-        $collectionCardUpdated = $this->getCard($changeRequest)->pivot->toArray();
+            $this->updateCardQuantity($collectionCard, $collection, $changeRequest);
+
+            $collectionCardUpdated = $this->getCard($changeRequest)->pivot->toArray();
+        } catch (LockTimeoutException $e) {
+        } finally {
+            $lock->release();
+        }
+
+        if (!$collectionCardUpdated) {
+            return [];
+        }
 
         return [
             'message'        => 'Card quantity was updated',
