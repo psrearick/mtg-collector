@@ -19,7 +19,6 @@ class CardCollectionsController extends Controller
      */
     public function store(Request $request) : JsonResponse
     {
-        // dd($request->all());
         try {
             return response()->json(app(CollectionCardDataAction::class)->execute($request->all()));
         } catch (\Throwable $th) {

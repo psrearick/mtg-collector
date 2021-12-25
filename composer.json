@@ -28,7 +28,8 @@
         "pcrov/jsonreader": "^1.0",
         "predis/predis": "~1.0",
         "teamtnt/laravel-scout-tntsearch-driver": "^11.5",
-        "tightenco/ziggy": "^1.0"
+        "tightenco/ziggy": "^1.0",
+        "wildbit/swiftmailer-postmark": "^3.3"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

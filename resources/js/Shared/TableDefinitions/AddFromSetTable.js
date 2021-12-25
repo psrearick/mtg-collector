@@ -1,4 +1,3 @@
-// import HorizontalIncrementer from "@/Components/Buttons/HorizontalIncrementer";
 import CollectionSetBottomRowImage from "@/Components/DataGrid/CollectionSetDataGrid/CollectionSetBottomRowImage";
 import CollectionSetBottomRowEntries from "@/Components/DataGrid/CollectionSetDataGrid/CollectionSetBottomRowEntries";
 
@@ -140,42 +139,6 @@ export default {
                 shown,
             });
         });
-        // this.emitter.on("collection_set_card_name_click", (card) => {
-        //     axios
-        //         .get(
-        //             `/collections/collections/${this.collection.id}/set/card/${card.id}`
-        //         )
-        //         .then((res) => {
-        //             this.emitter.emit("expand_collection_card", res.data);
-        //         });
-        // });
-
-        // this.emitter.on("add_new_row", (card) => {
-        // });
-
-        // this.emitter.on("set_card_foil_click", (card) => {
-        //     this.updateQuantity({
-        //         change: 1,
-        //         id: card.id,
-        //         foil: true,
-        //     });
-        // });
-
-        // this.emitter.on("incrementQuantity", (card) => {
-        //     this.updateQuantity({
-        //         change: 1,
-        //         id: card.id,
-        //         foil: card.foil,
-        //     });
-        // });
-
-        // this.emitter.on("decrementQuantity", (card) => {
-        //     this.updateQuantity({
-        //         change: -1,
-        //         id: card.id,
-        //         foil: card.foil,
-        //     });
-        // });
     },
 
     methods: {
@@ -188,25 +151,7 @@ export default {
                 )
                 .then((res) => {
                     this.$store.dispatch("addSetCard", res.data);
-                    // this.emitter.emit("expand_collection_card", res.data);
-                    // this.card = res.data;
-                    // this.card.isSet = true;
                 });
         },
-        // updateQuantity(change) {
-        //     axios
-        //         .post("/card-collections/card-collections", {
-        //             ...change,
-        //             collection: this.collection.id,
-        //         })
-        //         .then(() => {
-        //             this.$inertia.reload({
-        //                 only: ["collection", "setCards"],
-        //             });
-        //         });
-        // },
-        // showFoil(item) {
-        //     return !(item.own_foil || item.foil);
-        // },
     },
 };
