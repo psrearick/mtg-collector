@@ -17,6 +17,8 @@ use App\App\Client\Middleware\RedirectIfAuthenticated;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\App\Client\Controllers\UserProfileInformationController;
+use App\App\Client\Controllers\UserPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +49,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/profile', function () {
             return Inertia::render('User/Profile');
         })->name('user.profile');
+        Route::put('/user-profile-information', [UserProfileInformationController::class, 'update'])->name('user-profile-information.update');
+        Route::put('/user-password', [UserPasswordController::class, 'update'])->name('user-password.update');
 
         Route::get('/settings', function () {
             return Inertia::render('User/Settings');
