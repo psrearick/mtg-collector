@@ -13,7 +13,7 @@
         <div>
             <inertia-link href="/">
                 <Logo
-                    classes="w-20 h-20 fill-current text-gray-500"
+                    classes="w-20 h-20 text-gray-500"
                     text-class="text-gray-500 text-xl"
                 />
             </inertia-link>

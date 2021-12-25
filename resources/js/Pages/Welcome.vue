@@ -11,9 +11,9 @@
     >
         <div class="w-full text-center pt-32 px-16 pb-16">
             <Icon
-                icon="logo"
+                icon="collection"
                 size="14rem"
-                classes="text-gray-600 fill-current inline-block"
+                classes="text-gray-600 inline-block"
             />
             <h1 class="text-4xl mt-4 text-gray-600">MTG Collector</h1>
         </div>

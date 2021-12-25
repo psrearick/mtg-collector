@@ -8,8 +8,9 @@
         <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Favicon -->
-        <link rel="shortcut icon" type="image/png" sizes="64x64" href="{{ URL::asset( '/favicon.png' ) }}">
-{{--        <link rel="shortcut icon" type="image/x-icon" sizes="64x64" href="{{ URL::asset( '/favicon.ico' ) }}">--}}
+        <link rel="shortcut icon" sizes="64x64" href="{{ URL::asset( '/favicon.svg' ) }}">
+        <!-- <link rel="shortcut icon" type="image/png" sizes="64x64" href="{{ URL::asset( '/favicon.png' ) }}"> -->
+<!-- {{--        <link rel="shortcut icon" type="image/x-icon" sizes="64x64" href="{{ URL::asset( '/favicon.ico' ) }}">--}} -->
 
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
