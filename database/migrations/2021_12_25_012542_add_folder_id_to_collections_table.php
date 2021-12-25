@@ -26,7 +26,7 @@ class AddFolderIdToCollectionsTable extends Migration
     public function up()
     {
         Schema::table('collections', function (Blueprint $table) {
-            $table->foreignId('folder_id')->nullable();
+            $table->foreignId('folder_id')->after('user_id')->nullable();
         });
     }
 }

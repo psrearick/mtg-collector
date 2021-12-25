@@ -16,6 +16,8 @@ class CollectionListItem implements DataObjectInterface
 
     protected string $name;
 
+    protected ?CollectionListItem $parent;
+
     protected string $type;
 
     protected float $value;
@@ -29,6 +31,7 @@ class CollectionListItem implements DataObjectInterface
         $this->value       = $data['value'] ?? 0.0;
         $this->acquired    = $data['acquired'] ?? 0.0;
         $this->count       = $data['count'] ?? 0;
+        $this->parent      = $data['parent'] ?? null;
     }
 
     public function toArray() : array
@@ -41,6 +44,7 @@ class CollectionListItem implements DataObjectInterface
             'value'         => $this->value,
             'acquired'      => $this->acquired,
             'count'         => $this->count,
+            'parent'        => $this->parent,
         ];
     }
 }

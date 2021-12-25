@@ -11,6 +11,10 @@
         @save="save"
     >
         <p>Do you really want to delete the following {{ collection.type }}?</p>
+        <p v-if="collection.type === 'folder'" class="my-4">
+            This action will also delete all folders and collections in this
+            folder.
+        </p>
         <p class="text-gray-500 text-sm pt-6 font-bold">
             {{ collection.name }}
         </p>

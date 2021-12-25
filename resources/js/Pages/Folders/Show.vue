@@ -2,11 +2,11 @@
     <div>
         <collections-show-card-list v-if="!isEmpty" :summary="totals" />
         <collection-folder-index
-            v-if="!isEmpty"
+            :folder="folder"
             :folders="folders"
             :collections="collections"
         />
-        <p v-else>This folder is empty.</p>
+        <p v-if="isEmpty">This folder is empty.</p>
     </div>
 </template>
 <script>
@@ -37,7 +37,7 @@ export default {
             default: () => [],
         },
         totals: {
-            type: Array,
+            type: Object,
             default: () => {},
         },
     },

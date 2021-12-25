@@ -4,6 +4,8 @@ use App\App\Client\Controllers\CardCollectionsController;
 use App\App\Client\Controllers\CardsController;
 use App\App\Client\Controllers\CardSearchController;
 use App\App\Client\Controllers\CollectionFoldersController;
+use App\App\Client\Controllers\CollectionFoldersMoveController;
+use App\App\Client\Controllers\CollectionFoldersTreeController;
 use App\App\Client\Controllers\CollectionsController;
 use App\App\Client\Controllers\CollectionsEditSearchController;
 use App\App\Client\Controllers\MoveCollectionsController;
@@ -53,12 +55,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('collections')->group(function () {
         Route::get('collections/index', [CollectionsController::class, 'allIndex']);
-        Route::resource('collections', CollectionsController::class);
         Route::resource('collections/folders', CollectionFoldersController::class)->names([
             'create'    => 'collection-folder.create',
             'show'      => 'collection-folder.show',
             'store'     => 'collection-folder.store',
         ]);
+        Route::get('collections/folders-tree', [CollectionFoldersTreeController::class, 'index'])->name('collection-folder-tree.index');
+        Route::patch('collections/move', [CollectionFoldersMoveController::class, 'update'])->name('collection-folder-move.update');
+        Route::resource('collections', CollectionsController::class);
         Route::post('collections/{collection}/edit/search', [CollectionsEditSearchController::class, 'store'])->name('collection-edit-search.store');
         Route::get('collections/{collection}/set/edit', [SetCollectionsController::class, 'edit'])->name('collection-set.edit');
         Route::post('collections/{collection}/set/edit', [SetCollectionsController::class, 'store'])->name('collection-set.update');
