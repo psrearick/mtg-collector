@@ -96,7 +96,11 @@ const mutations = {
             ).quantity = collectionCard.quantity;
     },
     setCardSearchResults(state, { searchResults }) {
-        state.cardSearchResults = searchResults;
+        let results = searchResults;
+        if (!Array.isArray(results)) {
+            results = Object.values(results);
+        }
+        state.cardSearchResults = results;
     },
     updateCardSearchResultsCard(state, card) {
         const srCardId = state.cardSearchResults.findIndex(
