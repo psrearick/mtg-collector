@@ -28,7 +28,7 @@ import UiButton from "@/UI/UIButton";
 import UiTextArea from "@/UI/Form/UITextArea";
 
 export default {
-    name: "EditCollectionPanel",
+    name: "DeleteCollectionPanel",
 
     components: {
         UiTextArea,

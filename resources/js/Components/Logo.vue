@@ -1,5 +1,5 @@
 <template>
-    <div class="mx-auto text-center">
+    <div :class="logoClasses">
         <Icon
             icon="collection"
             :classes="'mx-auto hover:text-blue-500 ' + classes"
@@ -30,6 +30,19 @@ export default {
         showText: {
             type: Boolean,
             default: true,
+        },
+        textLocation: {
+            type: String,
+            default: "bottom",
+        },
+    },
+    computed: {
+        logoClasses() {
+            if (this.textLocation === "bottom") {
+                return "mx-auto text-center";
+            }
+
+            return "flex gap-4";
         },
     },
 };

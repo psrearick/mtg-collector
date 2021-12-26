@@ -59,6 +59,9 @@
                     "
                     :menu="getMenu(index, 'collection')"
                 >
+                    <template v-if="collection.is_public" #left>
+                        <span class="text-sm text-primary-500">Public</span>
+                    </template>
                     <template #main>
                         <div class="py-4">
                             {{ collection.name }}
@@ -90,6 +93,10 @@
             :collection="editCollection"
             :folder="folder"
         />
+        <public-link-modal
+            v-model:show="showPublicLinkModel"
+            :collection="editCollection"
+        />
     </div>
 </template>
 
@@ -99,6 +106,7 @@ import CardList from "@/Components/CardLists/CardList";
 import CardListCardWithMenu from "@/Components/CardLists/CardListCardWithMenu";
 import EditCollectionPanel from "@/Components/Panels/EditCollectionPanel";
 import DeleteCollectionPanel from "@/Components/Panels/DeleteCollectionPanel";
+import PublicLinkModal from "@/Components/Modals/PublicLinkModal.vue";
 import MoveItemPanel from "@/Components/Panels/MoveItemPanel";
 import Icon from "@/Components/Icon";
 
@@ -110,6 +118,7 @@ export default {
         CardListCardWithMenu,
         EditCollectionPanel,
         DeleteCollectionPanel,
+        PublicLinkModal,
         Icon,
         MoveItemPanel,
     },
@@ -134,6 +143,7 @@ export default {
             showEditCollectionPanel: false,
             showDeleteCollectionPanel: false,
             showMovePanel: false,
+            showPublicLinkModel: false,
             editCollection: {},
         };
     },
@@ -183,9 +193,14 @@ export default {
                 this.showMovePanel = true;
                 return;
             }
+
+            if (clickData.action === "getLink") {
+                this.showPublicLinkModel = true;
+                return;
+            }
         },
         getMenu(index, type) {
-            return [
+            const menus = [
                 {
                     content: "Edit",
                     action: "edit",
@@ -210,7 +225,16 @@ export default {
                             ? this.collections[index]
                             : this.folders[index],
                 },
+                {
+                    content: "Get Public Link",
+                    action: "getLink",
+                    collection: this.collections[index],
+                    restriction: "collection",
+                },
             ];
+            return menus.filter((menu) => {
+                return !menu.restriction || menu.restriction === type;
+            });
         },
     },
 };

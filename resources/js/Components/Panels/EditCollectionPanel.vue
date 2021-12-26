@@ -29,6 +29,12 @@
                 :error-message="errorMessages.description"
                 class="mb-4"
             />
+            <ui-checkbox
+                v-if="collection.type === 'collection'"
+                v-model:checked="form.isPublic"
+                name="isPublic"
+                label="Public Collection"
+            />
         </form>
     </ui-panel>
 </template>
@@ -37,6 +43,7 @@
 import UiPanel from "@/UI/UIPanel";
 import UiInput from "@/UI/Form/UIInput";
 import UiTextArea from "@/UI/Form/UITextArea";
+import UiCheckbox from "@/UI/Form/UICheckbox";
 
 export default {
     name: "EditCollectionPanel",
@@ -45,6 +52,7 @@ export default {
         UiTextArea,
         UiInput,
         UiPanel,
+        UiCheckbox,
     },
 
     props: {
@@ -70,6 +78,7 @@ export default {
                 name: "",
                 description: "",
                 id: null,
+                isPublic: false,
             },
             errorMessages: {},
         };
@@ -105,6 +114,7 @@ export default {
                 this.form.name = this.collection.name;
                 this.form.description = this.collection.description;
                 this.form.id = this.collection.id;
+                this.form.isPublic = this.collection.is_public ? true : false;
                 return;
             }
             this.clearForm();

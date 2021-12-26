@@ -47,6 +47,7 @@ class CollectionsEditPresenter extends Presenter
             'id'            => $this->collection->id,
             'name'          => $this->collection->name,
             'description'   => $this->collection->description,
+            'is_public'     => $this->collection->is_public,
         ]);
 
         $sortBy = $this->sort($sort);

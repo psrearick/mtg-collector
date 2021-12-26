@@ -14,6 +14,8 @@ class CollectionListItem implements DataObjectInterface
 
     protected int $id;
 
+    protected bool $is_public;
+
     protected string $name;
 
     protected ?CollectionListItem $parent;
@@ -32,6 +34,7 @@ class CollectionListItem implements DataObjectInterface
         $this->acquired    = $data['acquired'] ?? 0.0;
         $this->count       = $data['count'] ?? 0;
         $this->parent      = $data['parent'] ?? null;
+        $this->is_public   = $data['is_public'] ?? false;
     }
 
     public function toArray() : array
@@ -45,6 +48,7 @@ class CollectionListItem implements DataObjectInterface
             'acquired'      => $this->acquired,
             'count'         => $this->count,
             'parent'        => $this->parent,
+            'is_public'     => $this->is_public,
         ];
     }
 }

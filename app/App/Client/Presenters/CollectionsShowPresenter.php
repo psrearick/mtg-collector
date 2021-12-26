@@ -41,6 +41,7 @@ class CollectionsShowPresenter extends Presenter
             'id'            => $editPresenter['collection']['id'],
             'name'          => $editPresenter['collection']['name'],
             'description'   => $editPresenter['collection']['description'],
+            'is_public'     => $editPresenter['collection']['is_public'],
             'summary'       => $this->collectionRepository->getSummary($cards),
             'cards'         => $cards->paginate(20)->withQueryString(),
         ]);

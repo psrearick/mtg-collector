@@ -9,16 +9,17 @@ use App\App\Client\Controllers\CollectionFoldersTreeController;
 use App\App\Client\Controllers\CollectionsController;
 use App\App\Client\Controllers\CollectionsEditSearchController;
 use App\App\Client\Controllers\MoveCollectionsController;
+use App\App\Client\Controllers\PublicCollectionsController;
 use App\App\Client\Controllers\RemoveCardsController;
 use App\App\Client\Controllers\SetCollectionCardsController;
 use App\App\Client\Controllers\SetCollectionsController;
 use App\App\Client\Controllers\SymbolsController;
+use App\App\Client\Controllers\UserPasswordController;
+use App\App\Client\Controllers\UserProfileInformationController;
 use App\App\Client\Middleware\RedirectIfAuthenticated;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\App\Client\Controllers\UserProfileInformationController;
-use App\App\Client\Controllers\UserPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,10 @@ Route::get('/', function () {
         'phpVersion'     => PHP_VERSION,
     ]);
 })->middleware(RedirectIfAuthenticated::class);
+
+Route::get('/public-collections/{collection}', [PublicCollectionsController::class, 'show'])
+    ->name('public-collections.show')
+    ->middleware('isPublic');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {

@@ -86,6 +86,7 @@ class CollectionsController extends Controller
             'description'   => $form['description'],
             'user_id'       => Auth::id(),
             'folder_id'     => $form['folder'] ?? null,
+            'is_public'     => $form['isPublic'],
         ]);
 
         return redirect()->action([CollectionsController::class, 'show'], ['collection' => $collection->id]);

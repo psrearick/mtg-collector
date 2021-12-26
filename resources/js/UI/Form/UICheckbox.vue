@@ -1,21 +1,22 @@
 <template>
-    <div class="flex items-center h-5">
+    <div>
         <input
             :id="name"
-            :checked="checked"
-            :aria-describedby="describedBy"
+            v-model="proxyChecked"
             :name="name"
             type="checkbox"
+            :value="value"
             class="
-                focus:ring-primary-500
-                h-4
-                w-4
-                text-primary-600
-                border-gray-300
                 rounded
+                border-gray-300
+                text-primary-600
+                shadow-sm
+                focus:border-primary-300
+                focus:ring focus:ring-primary-200 focus:ring-opacity-50
             "
-            @change="check"
         />
+        <span class="ml-2 text-sm text-gray-600">{{ label }}</span>
+        <slot />
     </div>
 </template>
 
@@ -24,47 +25,35 @@ export default {
     name: "UiCheckbox",
 
     props: {
-        value: {
-            type: Boolean,
-            default: false,
-        },
         name: {
             type: String,
             default: "",
         },
-        description: {
+        checked: {
+            type: [Array, Boolean],
+            default: false,
+        },
+        value: {
+            type: [Array, Boolean],
+            default: null,
+        },
+        label: {
             type: String,
             default: "",
         },
     },
 
-    emits: ["update:value"],
-
-    data() {
-        return {
-            checked: false,
-        };
-    },
+    emits: ["update:checked"],
 
     computed: {
-        describedBy() {
-            return this.description || this.name;
-        },
-    },
+        proxyChecked: {
+            get() {
+                return this.checked;
+            },
 
-    watch: {
-        value(value) {
-            this.checked = value;
-        },
-    },
-
-    mounted() {
-        this.checked = this.value;
-    },
-
-    methods: {
-        check(value) {
-            this.$emit("update:value", value.target.checked);
+            set(val) {
+                this.$emit("update:checked", val);
+            },
         },
     },
 };

@@ -47,6 +47,7 @@ class CollectionRepository extends Repository
         $collection->update([
             'name'          => $data['name'],
             'description'   => $data['description'],
+            'is_public'     => $data['isPublic'],
         ]);
     }
 }
