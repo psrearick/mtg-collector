@@ -105,8 +105,8 @@ export default {
             default: () => {},
         },
         fields: {
-            type: Object,
-            default: () => {},
+            type: Array,
+            default: () => [],
         },
         gridName: {
             type: String,

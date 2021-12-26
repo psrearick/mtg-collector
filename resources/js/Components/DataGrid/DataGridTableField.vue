@@ -44,10 +44,12 @@
 import { formatCurrency } from "@/Shared/api/ConvertValue";
 import HorizontalIncrementer from "@/Components/Buttons/HorizontalIncrementer";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
+import UiButton from "@/UI/UIButton";
 
 const componentMap = {
     HorizontalIncrementer: HorizontalIncrementer,
     PrimaryButton: PrimaryButton,
+    UiButton: UiButton,
 };
 
 export default {

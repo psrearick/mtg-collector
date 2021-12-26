@@ -3,6 +3,7 @@
 namespace App\App\Client\Repositories;
 
 use App\App\Base\Repository;
+use App\Domain\Cards\Actions\CardCollectionsSearch;
 use App\Domain\Collections\Models\Collection;
 use Carbon\Carbon;
 use Illuminate\Support\Collection as SupportCollection;
@@ -40,6 +41,11 @@ class CollectionRepository extends Repository
             'gainLossPercent' => $gainLossPercent,
             'top_five'        => $collection->sortByDesc('price')->take(5)->values(),
         ];
+    }
+
+    public function searchCollections(array $searchParameters) : array
+    {
+        return app(CardCollectionsSearch::class)->execute($searchParameters);
     }
 
     public function updateCollection(Collection $collection, array $data) : void

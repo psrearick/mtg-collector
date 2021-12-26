@@ -7,6 +7,7 @@ use App\App\Client\Controllers\CollectionFoldersController;
 use App\App\Client\Controllers\CollectionFoldersMoveController;
 use App\App\Client\Controllers\CollectionFoldersTreeController;
 use App\App\Client\Controllers\CollectionsController;
+use App\App\Client\Controllers\CollectionSearchController;
 use App\App\Client\Controllers\CollectionsEditSearchController;
 use App\App\Client\Controllers\MoveCollectionsController;
 use App\App\Client\Controllers\PublicCollectionsController;
@@ -47,7 +48,7 @@ Route::get('/public-collections/{collection}', [PublicCollectionsController::cla
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
+        return Inertia::render('Dashboard/Dashboard');
     })->name('dashboard');
 
     Route::prefix('user')->group(function () {
@@ -63,6 +64,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('collections')->group(function () {
+        Route::post('search', [CollectionSearchController::class, 'store'])->name('collection-search.store');
         Route::get('collections/index', [CollectionsController::class, 'allIndex']);
         Route::resource('collections/folders', CollectionFoldersController::class)->names([
             'create'    => 'collection-folder.create',

@@ -19,6 +19,15 @@ class CardRepository extends Repository
         return parent::__construct($card ?: app($this->class));
     }
 
+    public function filterOnCollections(array $collections) : Repository
+    {
+        $this->query = $this->query->with(['collections' => function ($query) use ($collections) {
+            $query->whereIn('collections.id', $collections);
+        }]);
+
+        return $this;
+    }
+
     /**
      * Limit results to those within the specified sets
      *
@@ -29,12 +38,9 @@ class CardRepository extends Repository
     {
         $this->query = $this->query->whereIn($this->getField('set_id'), $sets);
 
-        // $this->query =  $this->query->whereIn('sets.id', $sets)
-        // ->leftJoin('sets', 'sets.id', '=', $this->getField('set_id'));
-
         return $this;
     }
-//
+
 //    /**
 //     * Filter out records that are only available in an online format
 //     *
