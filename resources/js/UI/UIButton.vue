@@ -8,6 +8,7 @@
             flexType +
             ' items-center px-4 py-2 shadow-sm text-sm font-medium rounded-md focus:outline-none'
         "
+        @click="emitClick"
     >
         <slot>{{ text }}</slot>
     </button>
@@ -38,6 +39,14 @@ export default {
             type: Boolean,
             default: false,
         },
+        emit: {
+            type: String,
+            default: "",
+        },
+        emitContent: {
+            type: Object,
+            default: () => {},
+        },
     },
 
     computed: {
@@ -67,6 +76,14 @@ export default {
                 return "border border-gray-300 text-gray-700 bg-white hover:bg-gray-300 hover:text-gray-800";
             }
             return "border border-gray-200 text-gray-700 bg-gray-100 hover:bg-gray-300";
+        },
+    },
+
+    methods: {
+        emitClick() {
+            if (this.emit.length) {
+                this.emitter.emit(this.emit, this.emitContent);
+            }
         },
     },
 };

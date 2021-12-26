@@ -30,9 +30,9 @@ class VerifyCollectionIsPublic
         }
 
         $id         = $request->route('collection');
-        $collection = Collection::withoutGlobalScope(UserScope::class)->find($id);
+        $collection = Collection::find($id);
         if (!$collection) {
-            return $next($request);
+            return redirect(RouteServiceProvider::HOME);
         }
 
         if ($collection->is_public) {

@@ -13,13 +13,15 @@ class PublicCollectionsController extends Controller
 {
     public function show(Request $request)
     {
-        $collection = Collection::withoutGlobalScope(UserScope::class)
-            ->with('user', 'cards', 'cards.frameEffects', 'cards.prices', 'cards.prices.priceProvider', 'cards.set')
+        $collection = Collection::with('user', 'cards', 'cards.frameEffects', 'cards.prices', 'cards.prices.priceProvider', 'cards.set')
             ->find($request->route('collection'));
 
         return Inertia::render('Public/Collections/Show', [
             'collection' => (new CollectionsShowPresenter($collection, $request))->present(),
-            'user'       => $collection->user->name,
+            'user'       => [
+                'name'  => $collection->user->name,
+                'id'    => $collection->user->id,
+            ],
         ]);
     }
 }
