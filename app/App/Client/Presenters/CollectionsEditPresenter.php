@@ -149,7 +149,7 @@ class CollectionsEditPresenter extends Presenter
 
     private function search() : BaseCollection
     {
-        $cards      = $this->collection->cards->load('prices', 'frameEffects', 'prices.priceProvider');
+        $cards      = $this->collection->cards->loadMissing(['set', 'prices', 'frameEffects', 'prices.priceProvider']);
 
         if ($cardQuery = $this->cardQuery) {
             $cards = $cards->filter(function ($card) use ($cardQuery) {

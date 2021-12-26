@@ -58,12 +58,16 @@ class CollectionsIndexPresenter extends Presenter
     {
         $folders = Folder::withDepth()
             ->where('user_id', '=', Auth::id())
-            ->whereNull('deleted_at')->with('collections')
+            ->whereNull('deleted_at')->with([
+                'collections.cards.prices.priceProvider',
+                'collections.cards.set',
+                'collections.cards.frameEffects'
+                ])
             ->having('depth', '=', 0)
             ->get();
 
         $collections = Collection::where('user_id', '=', Auth::id())
-            ->whereNull('deleted_at')->whereNull('folder_id')->with('cards', 'cards.prices', 'cards.prices.priceProvider')
+            ->whereNull('deleted_at')->whereNull('folder_id')->with(['cards.frameEffects', 'cards.prices.priceProvider', 'cards.set'])
             ->get();
 
         return [
@@ -98,7 +102,7 @@ class CollectionsIndexPresenter extends Presenter
     private function getFolderBaseIndices() : array
     {
         $collections = $this->getFolderCollections($this->folder);
-        $folders     = $this->folder->children->load('descendants');
+        $folders     = $this->folder->children->loadMissing('descendants');
 
         return [
             'collections'   => $collections,
@@ -110,7 +114,7 @@ class CollectionsIndexPresenter extends Presenter
     {
         return $folder->collections
             ->whereNull('deleted_at')
-            ->load('cards', 'cards.prices', 'cards.prices.priceProvider');
+            ->loadMissing('cards.frameEffects', 'cards.set', 'cards.prices.priceProvider');
     }
 
     private function getFolderCounts(Folder $folder) : array
@@ -129,7 +133,11 @@ class CollectionsIndexPresenter extends Presenter
         $folderIndex = [];
         $folders->each(function ($folder) use (&$folderIndex) {
             $counts = $this->getFolderCounts($folder);
-            $descendants = $folder->descendants->load('collections');
+            $descendants = $folder->descendants->loadMissing([
+                'collections.cards.prices.priceProvider',
+                'collections.cards.set',
+                'collections.cards.frameEffects'
+            ]);
             foreach ($descendants as $descendant) {
                 $descenantCounts = $this->getFolderCounts($descendant);
                 $counts['value'] += $descenantCounts['value'];
