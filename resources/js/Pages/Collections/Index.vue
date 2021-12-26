@@ -1,5 +1,6 @@
 <template>
     <div>
+        <collections-show-card-list v-if="!isEmpty" :summary="totals" />
         <collection-folder-index
             :folders="folders"
             :collections="collections"
@@ -10,11 +11,12 @@
 <script>
 import Layout from "@/Layouts/Authenticated";
 import CollectionFolderIndex from "@/Shared/Components/CollectionFolderIndex";
+import CollectionsShowCardList from "@/Components/CardLists/CollectionsShowCardList";
 
 export default {
     name: "Index",
 
-    components: { CollectionFolderIndex },
+    components: { CollectionFolderIndex, CollectionsShowCardList },
 
     layout: Layout,
 
@@ -30,6 +32,16 @@ export default {
         folders: {
             type: Array,
             default: () => [],
+        },
+        totals: {
+            type: Object,
+            default: () => {},
+        },
+    },
+
+    computed: {
+        isEmpty() {
+            return this.folders.length === 0 && this.collections.length === 0;
         },
     },
 
