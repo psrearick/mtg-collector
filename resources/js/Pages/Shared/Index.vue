@@ -1,10 +1,12 @@
 <template>
     <div>
         <data-table
+            v-if="shared.length > 0"
             :data="shared"
             :fields="table.fields"
             grid-name="shared-collections"
         />
+        <p v-else>You have not saved any public collections.</p>
     </div>
 </template>
 <script>
