@@ -80,6 +80,9 @@
                 </card-list-card-with-menu>
             </card-list>
         </div>
+        <div v-if="isEmpty">
+            <p>You have no collections.</p>
+        </div>
         <edit-collection-panel
             v-model:show="showEditCollectionPanel"
             :collection="editCollection"
@@ -164,6 +167,9 @@ export default {
             return route("collection-folder.show", {
                 folder: this.folder.parent_id,
             });
+        },
+        isEmpty() {
+            return this.folders.length === 0 && this.collections.length === 0;
         },
     },
 
