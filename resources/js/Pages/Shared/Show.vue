@@ -1,5 +1,6 @@
 <template>
     <div>
+        <div>Saved</div>
         <CollectionsShowCardList :summary="collection.summary" />
         <div>
             <card-index-data-grid
@@ -39,6 +40,10 @@ export default {
 
     props: {
         collection: {
+            type: Object,
+            default: () => {},
+        },
+        shared: {
             type: Object,
             default: () => {},
         },
@@ -87,15 +92,6 @@ export default {
         },
     },
 
-    created() {
-        this.mount();
-        this.emitter.on("save-to-shared-collection", () => {
-            this.$inertia.post("/shared/shared", {
-                collection: this.collection.id,
-            });
-        });
-    },
-
     mounted() {
         let headerText = this.collection.name;
         let subheaderText = this.collection.description;
@@ -112,8 +108,8 @@ export default {
                         component: {
                             is: "UiButton",
                             props: {
-                                text: "Save to Shared Collections",
-                                emit: "save-to-shared-collection",
+                                text: "Remove from Shared Collections",
+                                emit: "remove-from-shared-collection",
                                 "button-style": "primary-dark",
                             },
                         },
@@ -127,6 +123,13 @@ export default {
         });
     },
 
+    created() {
+        this.mount();
+        this.emitter.on("remove-from-shared-collection", () => {
+            this.$inertia.delete(`/shared/shared/${this.shared.id}`);
+        });
+    },
+
     methods: {
         mount() {
             this.cardSearchTerm = this.collection.cardQuery;
@@ -137,7 +140,7 @@ export default {
         },
         search: _.debounce(function () {
             this.searching = true;
-            this.$inertia.get("/public-collections/" + this.collection.id, {
+            this.$inertia.get("/shared/shared/" + this.collection.id, {
                 cardSearch: this.cardSearchTerm,
                 setSearch: this.setSearchTerm,
                 sort: this.sortFields,

@@ -14,6 +14,7 @@ use App\App\Client\Controllers\PublicCollectionsController;
 use App\App\Client\Controllers\RemoveCardsController;
 use App\App\Client\Controllers\SetCollectionCardsController;
 use App\App\Client\Controllers\SetCollectionsController;
+use App\App\Client\Controllers\SharedCollectionsController;
 use App\App\Client\Controllers\SymbolsController;
 use App\App\Client\Controllers\UserPasswordController;
 use App\App\Client\Controllers\UserProfileInformationController;
@@ -89,6 +90,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('card-collections')->group(function () {
         Route::resource('card-collections', CardCollectionsController::class);
+    });
+
+    Route::prefix('shared')->group(function () {
+        Route::resource('shared', SharedCollectionsController::class)
+            ->only(['index', 'store', 'show', 'destroy']);
     });
 
     Route::prefix('api')->group(function () {

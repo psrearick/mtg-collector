@@ -6,6 +6,7 @@ use App\App\Client\Traits\BelongsToUser;
 use App\Domain\Base\Model;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Collections\Models\Folder;
+use App\Domain\Shared\Models\SharedCollection;
 use App\Domain\Transactions\Models\Transaction;
 use App\Domain\Users\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,6 +17,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Collection extends Model
 {
     use SoftDeletes, BelongsToUser;
+
+    const USERSCOPE = 'notShared';
 
     /**
      * Get all cards that are part of this collection
@@ -36,13 +39,13 @@ class Collection extends Model
         return $this->belongsTo(Folder::class);
     }
 
+    public function sharedCollections() : HasMany
+    {
+        return $this->hasMany(SharedCollection::class);
+    }
+
     public function transactions() : HasMany
     {
         return $this->hasMany(Transaction::class);
-    }
-
-    public function user() : BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Domain\Users\Models;
 
 use App\Domain\Collections\Models\Collection;
+use App\Domain\Shared\Models\SharedCollection;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -50,5 +51,10 @@ class User extends Authenticatable implements CanResetPasswordContract
     public function collections() : HasMany
     {
         return $this->hasMany(Collection::class);
+    }
+
+    public function sharedCollections() : HasMany
+    {
+        return $this->hasMany(SharedCollection::class);
     }
 }

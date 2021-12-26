@@ -3,6 +3,7 @@
 namespace App\App\Client\Traits;
 
 use App\App\Scopes\UserScope;
+use App\App\Scopes\UserScopeNotShared;
 use App\Domain\Users\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -20,6 +21,14 @@ trait BelongsToUser
      */
     protected static function bootBelongsToUser() : void
     {
-        static::addGlobalScope(new UserScope);
+        $userScope = self::USERSCOPE;
+
+        if ($userScope !== 'notShared') {
+            static::addGlobalScope(new UserScope);
+
+            return;
+        }
+
+        static::addGlobalScope(new UserScopeNotShared);
     }
 }

@@ -30,6 +30,12 @@
                             >
                                 Cards
                             </nav-link>
+                            <nav-link
+                                :href="route('shared.index')"
+                                :active="isRoute('shared.index')"
+                            >
+                                Shared
+                            </nav-link>
                         </div>
                     </div>
                 </div>
@@ -148,6 +154,12 @@
                     @click="mobileMenuOpen = !mobileMenuOpen"
                 >
                     Cards
+                </mobile-menu-item>
+                <mobile-menu-item
+                    :href="route('shared.index')"
+                    @click="mobileMenuOpen = !mobileMenuOpen"
+                >
+                    Shared
                 </mobile-menu-item>
             </mobile-menu-items>
             <div class="pt-4 pb-3 border-t border-gray-700">

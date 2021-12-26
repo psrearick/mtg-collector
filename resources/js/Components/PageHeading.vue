@@ -13,12 +13,16 @@
             "
         >
             <div>
-                <h1 v-if="headerText" class="text-3xl font-bold text-white">
-                    {{ headerText }}
-                </h1>
-                <p v-if="subheaderText" class="text-white">
-                    {{ subheaderText }}
-                </p>
+                <h1
+                    v-if="headerText"
+                    class="text-3xl font-bold text-white"
+                    v-html="headerText"
+                />
+                <p
+                    v-if="subheaderText"
+                    class="text-white"
+                    v-html="subheaderText"
+                />
             </div>
             <div class="mt-4 flex md:mt-0 md:ml-4">
                 <slot name="header-right" />
@@ -33,12 +37,14 @@
 </template>
 
 <script>
-import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import CollectionIndexHeaderRight from "@/Components/Header/CollectionIndexHeaderRight";
+import PrimaryButton from "@/Components/Buttons/PrimaryButton";
+import UiButton from "@/UI/UIButton";
 
 const componentMap = {
-    PrimaryButton: PrimaryButton,
     CollectionIndexHeaderRight: CollectionIndexHeaderRight,
+    PrimaryButton: PrimaryButton,
+    UiButton: UiButton,
 };
 
 export default {
