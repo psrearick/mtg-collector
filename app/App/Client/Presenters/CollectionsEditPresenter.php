@@ -129,8 +129,8 @@ class CollectionsEditPresenter extends Presenter
                     }
 
                     if (is_array($value)) {
-                        $min = $value['min'];
-                        $max = $value['max'];
+                        $min = $value['min'] ?? null;
+                        $max = $value['max'] ?? null;
                     }
 
                     if ($min) {
