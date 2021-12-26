@@ -3,13 +3,12 @@
 namespace App\Domain\Users\Actions;
 
 use App\Domain\Users\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
-use Illuminate\Support\Facades\Hash;
 
 class UpdateUserPassword
 {
-
     public function execute(User $user, array $input)
     {
         Validator::make($input, [

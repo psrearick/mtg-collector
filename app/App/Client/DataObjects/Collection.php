@@ -12,11 +12,14 @@ class Collection implements DataObjectInterface
 
     public string $name;
 
+    protected bool $is_public;
+
     public function __construct(array $data)
     {
         $this->id           = $data['id'] ?: null;
         $this->name         = $data['name'] ?: '';
-        $this->description  = $data['description'] ?: '';
+        $this->description  = $data['description'] ?? '';
+        $this->is_public    = $data['is_public'] ?? false;
     }
 
     public function toArray() : array
@@ -25,6 +28,7 @@ class Collection implements DataObjectInterface
             'id'            => $this->id,
             'name'          => $this->name,
             'description'   => $this->description,
+            'is_public'     => $this->is_public,
         ];
     }
 }

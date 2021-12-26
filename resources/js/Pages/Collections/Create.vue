@@ -40,6 +40,14 @@
                                 class="mb-4"
                             />
                         </div>
+
+                        <div class="sm:col-span-6">
+                            <ui-checkbox
+                                v-model:checked="form.isPublic"
+                                name="isPublic"
+                                label="Public Collection"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -69,11 +77,12 @@ import Layout from "@/Layouts/Authenticated";
 import UiInput from "@/UI/Form/UIInput";
 import UiButton from "@/UI/UIButton";
 import UiTextArea from "@/UI/Form/UITextArea";
+import UiCheckbox from "@/UI/Form/UICheckbox";
 
 export default {
     name: "Create",
 
-    components: { UiInput, UiButton, UiTextArea },
+    components: { UiInput, UiButton, UiTextArea, UiCheckbox },
 
     layout: Layout,
 
@@ -94,6 +103,7 @@ export default {
                 name: "",
                 description: "",
                 folder: this.folder,
+                isPublic: false,
             },
         };
     },

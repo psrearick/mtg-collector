@@ -84,6 +84,7 @@ class CollectionsIndexPresenter extends Presenter
                 'id'            => $collection->id,
                 'name'          => $collection->name,
                 'description'   => $collection->description,
+                'is_public'     => $collection->is_public,
                 'type'          => 'collection',
                 'value'         => $summary['currentValue'],
                 'count'         => $summary['totalCards'],

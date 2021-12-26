@@ -40,4 +40,9 @@ class Collection extends Model
     {
         return $this->hasMany(Transaction::class);
     }
+
+    public function user() : BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }
