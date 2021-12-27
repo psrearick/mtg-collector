@@ -21,17 +21,17 @@ class CardSearch
      * @param array $searchParameters
      * @return array
      */
-    public function execute(Request $request, array $searchParameters) : array
+    public function execute(?Request $request, ?array $searchParameters) : array
     {
         $perPage        = $searchParameters['perPage'] ?: 15;
         $withImage      = $searchParameters['withImage'];
         $exact          = $searchParameters['exact'] ?? false;
         $results        = [];
         $sets           = [];
-        $setRequest     = $request->get('set');
-        $cardRequest    = $request->get('card');
-        $sortRequest    = $request->get('sort');
-        $sortOrder      = $request->get('sortOrder');
+        $setRequest     = $request ? $request->get('set') : $searchParameters['set'] ?? null;
+        $cardRequest    = $request ?  $request->get('card') : $searchParameters['card'] ?? null;
+        $sortRequest    = $request ?  $request->get('sort') : $searchParameters['sort'] ?? null;
+        $sortOrder      = $request ?  $request->get('sortOrder') : $searchParameters['sortOrder'] ?? null;
         $hasResults     = false;
 
         if ($cardRequest) {
