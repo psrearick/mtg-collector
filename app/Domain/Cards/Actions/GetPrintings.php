@@ -21,7 +21,7 @@ class GetPrintings
     {
         $cardBuilder = new CardRepository($card);
         $cardBuilder->equals('oracleId', $card->oracleId);
-        $cardBuilder->withoutOnline();
+        // $cardBuilder->withoutOnline();
 
         return $cardBuilder->get();
     }

@@ -37,12 +37,14 @@
 </template>
 
 <script>
-import CollectionIndexHeaderRight from "@/Components/Header/CollectionIndexHeaderRight";
+import CollectionIndexHeaderRight from "@/Pages/Collections/Partials/CollectionIndexHeaderRight";
+import CollectionShowHeaderRight from "@/Pages/Collections/Partials/CollectionShowHeaderRight";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import UiButton from "@/UI/UIButton";
 
 const componentMap = {
     CollectionIndexHeaderRight: CollectionIndexHeaderRight,
+    CollectionShowHeaderRight: CollectionShowHeaderRight,
     PrimaryButton: PrimaryButton,
     UiButton: UiButton,
 };

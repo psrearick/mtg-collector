@@ -69,7 +69,11 @@ class CollectionsEditPresenter extends Presenter
 
     private function buildCards() : BaseCollection
     {
-        return $this->search()->map(function ($card) {
+        return $this->search()
+        ->filter(function ($card) {
+            return $card->set;
+        })
+        ->map(function ($card) {
             $compute = new GetComputed($card);
             $computed = $compute
                 ->add('feature')

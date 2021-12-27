@@ -187,7 +187,7 @@ export default {
         },
     },
 
-    emits: ["update:selected", "update:show"],
+    emits: ["update:selected", "update:show", "change"],
 
     data() {
         return {
@@ -237,6 +237,7 @@ export default {
         select(option) {
             this.toggleShow();
             this.$emit("update:selected", option.id);
+            this.$emit("change");
         },
     },
 };

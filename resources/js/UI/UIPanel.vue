@@ -144,11 +144,15 @@
                                     </div>
                                     <div>
                                         <UIButton
-                                            v-if="form"
+                                            v-if="form && !disableSave"
+                                            :disabled="disableSave"
                                             :text="saveText"
                                             :button-style="saveButtonStyle"
                                             @click="save"
                                         />
+                                        <div v-if="disableSave" class="py-2">
+                                            <ui-spinner />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -162,16 +166,22 @@
 
 <script>
 import UIButton from "@/UI/UIButton";
+import UiSpinner from "@/UI/UISpinner";
 
 export default {
     name: "UiPanel",
 
     components: {
         UIButton,
+        UiSpinner,
     },
 
     props: {
         show: {
+            type: Boolean,
+            default: false,
+        },
+        disableSave: {
             type: Boolean,
             default: false,
         },

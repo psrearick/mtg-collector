@@ -6,6 +6,7 @@ use App\App\Client\Controllers\CardSearchController;
 use App\App\Client\Controllers\CollectionFoldersController;
 use App\App\Client\Controllers\CollectionFoldersMoveController;
 use App\App\Client\Controllers\CollectionFoldersTreeController;
+use App\App\Client\Controllers\CollectionImportController;
 use App\App\Client\Controllers\CollectionsController;
 use App\App\Client\Controllers\CollectionSearchController;
 use App\App\Client\Controllers\CollectionsEditSearchController;
@@ -66,6 +67,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('collections')->group(function () {
         Route::post('search', [CollectionSearchController::class, 'store'])->name('collection-search.store');
+        Route::resource('collections/import', CollectionImportController::class)->only(['store', 'update']);
         Route::get('collections/index', [CollectionsController::class, 'allIndex']);
         Route::resource('collections/folders', CollectionFoldersController::class)->names([
             'create'    => 'collection-folder.create',

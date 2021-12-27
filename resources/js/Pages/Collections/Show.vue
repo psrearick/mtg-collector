@@ -1,6 +1,6 @@
 <template>
     <div>
-        <CollectionsShowCardList :summary="collection.summary" />
+        <collections-show-card-list :summary="collection.summary" />
         <div>
             <card-index-data-grid
                 v-model:card-term="cardSearchTerm"
@@ -15,6 +15,10 @@
                 :pagination="collection.cards"
             />
         </div>
+        <import-collection-panel
+            v-model:show="showImportCollectionPanel"
+            :collection="collection"
+        />
     </div>
 </template>
 
@@ -23,6 +27,7 @@ import Layout from "@/Layouts/Authenticated";
 import CardIndexDataGrid from "@/Components/DataGrid/CardIndexDataGrid/CardIndexDataGrid";
 import CollectionsShowCardList from "@/Components/CardLists/CollectionsShowCardList";
 import CollectionsShowTable from "@/Shared/TableDefinitions/CollectionsShowTable";
+import ImportCollectionPanel from "@/Components/Panels/ImportCollectionPanel";
 
 export default {
     name: "ShowCollection",
@@ -30,6 +35,7 @@ export default {
     components: {
         CollectionsShowCardList,
         CardIndexDataGrid,
+        ImportCollectionPanel,
     },
 
     mixins: [CollectionsShowTable],
@@ -51,6 +57,7 @@ export default {
             cardSearchTerm: "",
             loaded: false,
             searching: false,
+            showImportCollectionPanel: false,
         };
     },
 
@@ -91,12 +98,9 @@ export default {
         });
         this.$store.dispatch("updateHeaderRightComponent", {
             component: {
-                is: "PrimaryButton",
+                is: "CollectionShowHeaderRight",
                 props: {
-                    text: "Edit Collection",
-                    href: route("collections.edit", {
-                        collection: this.collection.id,
-                    }),
+                    collection: this.collection,
                 },
             },
         });
@@ -104,6 +108,9 @@ export default {
 
     created() {
         this.mount();
+        this.emitter.on("import-collection", () => {
+            this.showImportCollectionPanel = true;
+        });
     },
 
     methods: {
