@@ -41,8 +41,8 @@
                             >
                                 <th v-if="hasSelectMenu" class="p-2 pl-4">
                                     <ui-checkbox
-                                        v-model:value="selectAll"
-                                        @update:value="updateSelectAll"
+                                        :checked="selectAll"
+                                        @update:checked="updateSelectAll"
                                     />
                                 </th>
                                 <th
@@ -107,8 +107,8 @@
                             >
                                 <td v-if="hasSelectMenu" class="p-2 pl-4">
                                     <ui-checkbox
-                                        :value="selectedOptions.includes(key)"
-                                        @update:value="check(key)"
+                                        :checked="selectedOptions.includes(key)"
+                                        @update:checked="check(key)"
                                     />
                                 </td>
                                 <td
@@ -325,6 +325,7 @@ export default {
                 return;
             }
 
+            this.selectAll = true;
             this.data.forEach((el, index) => {
                 if (!this.isChecked(index)) {
                     this.check(index);

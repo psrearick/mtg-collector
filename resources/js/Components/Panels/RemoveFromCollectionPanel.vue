@@ -136,6 +136,7 @@ export default {
                 data: this.form,
                 preserveState: true,
                 onSuccess: () => {
+                    self.$emit("saved");
                     self.closePanel();
                 },
             });
