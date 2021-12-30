@@ -2,9 +2,6 @@
 
 namespace App\App\Console;
 
-use App\Jobs\GenerateApiMap;
-use App\Jobs\ImportCardDataPrices;
-use App\Jobs\ImportScryfallData;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -40,14 +37,14 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('import:prices')
-            ->dailyAt('1:00');
+            ->dailyAt('6:00');
         $schedule->command('import:cards')
-            ->weeklyOn(6, '1:00');
+            ->weeklyOn(6, '6:30');
         $schedule->command('import:symbols')
-            ->weeklyOn(6, '3:00');
+            ->weeklyOn(6, '9:00');
         $schedule->command('generate:apimap')
-            ->weeklyOn(6, '4:00');
+            ->weeklyOn(6, '10:00');
         $schedule->command('import:sets')
-            ->weeklyOn(6, '0:30');
+            ->weeklyOn(6, '5:30');
     }
 }
